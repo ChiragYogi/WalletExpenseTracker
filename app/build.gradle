@@ -1,0 +1,95 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id  'kotlin-kapt'
+    id  'androidx.navigation.safeargs.kotlin'
+    id  'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdk rootProject.compileSdkVersion
+
+    defaultConfig {
+        applicationId "com.babacode.walletexpensetracker"
+        minSdk rootProject.minSdkVersion
+        targetSdk  rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildFeatures{
+        viewBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+    //core
+    implementation "androidx.core:core-ktx:$androidXCore"
+    implementation "androidx.appcompat:appcompat:$appcompat"
+    implementation "com.google.android.material:material:$materialDesign"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout"
+
+    // Navigation Components
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigationCompVersion"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigationCompVersion"
+
+    // Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCore"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
+
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$glide"
+    kapt "com.github.bumptech.glide:compiler:$glide"
+
+
+    //Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:$hiltGradlePlugin"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltGradlePlugin"
+
+    // Room
+    implementation "androidx.room:room-runtime:$rommVersion"
+    kapt "androidx.room:room-compiler:$rommVersion"
+    implementation "androidx.room:room-ktx:$rommVersion"
+
+    // Activity KTX for viewModels()
+    implementation "androidx.activity:activity-ktx:$activityX"
+
+    // Lifecycle + ViewModel & LiveData
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersionExt"
+
+    //MpChart
+    implementation "com.github.PhilJay:MPAndroidChart:$mpChart"
+
+
+    //unit test
+    testImplementation "junit:junit:$testJunit"
+
+    //android test
+    androidTestImplementation "androidx.test.ext:junit:$androidTestJuint"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso"
+}
+
+kapt {
+    correctErrorTypes = true
+}

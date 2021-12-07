@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_twelve">12dp</dimen>
+    <dimen name="dimen_eight">8dp</dimen>
+    <dimen name="dimen_four">4dp</dimen>
+    <dimen name="dimen_eighteen">18dp</dimen>
+
+    <dimen name="dimen_one">1dp</dimen>
+    <dimen name="dimen_sixteen">16dp</dimen>
+
+
+    //for textview
+    <dimen name="eighteen_sp_text_size">18sp</dimen>
+    <dimen name="twenty_two_sp_text_size">22sp</dimen>
+    <dimen name="twenty_four_sp_text_size">24sp</dimen>
+    <dimen name="sixteen_sp_text_size">16sp</dimen>
+    <dimen name="fourteen_sp_text_size">14sp</dimen>
+
+
+
+</resources>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="for_amount_and_date" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">175dp</item>
+        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_margin">@dimen/dimen_eight</item>
+        <item name="errorEnabled">true</item>
+    </style>
+
+    <style name="txt_input_dropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+         <item name="errorEnabled">true</item>
+        <item name="android:layout_margin">@dimen/dimen_eight</item>
+    </style>
+
+    <style name="txt_note_layout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="errorEnabled">true</item>
+        <item name="android:layout_margin">@dimen/dimen_eight</item>
+
+    </style>
+</resources>

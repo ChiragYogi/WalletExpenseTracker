@@ -1,14 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/this_month_txt"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/this_month"
+        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
+        app:layout_constraintTop_toBottomOf="@id/guideline_one_on_top" />
+
+
+    <TextView
+        android:id="@+id/recent_transaction_text"
+        style="@style/TextAppearance.AppCompat.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/recent_transaction"
+        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
+        app:layout_constraintTop_toBottomOf="@id/pie_chart" />
+
+
+    <TextView
+        android:id="@+id/see_more"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/see_more"
+        android:textColor="@color/see_more_color"
+        app:layout_constraintBaseline_toBaselineOf="@+id/recent_transaction_text"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
+        app:layout_constraintTop_toBottomOf="@+id/recent_transaction_text" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="?attr/colorPrimaryVariant"
+        android:src="@drawable/add_transaction_vectore"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
+        android:contentDescription="@string/add_transaction_for_income_or_expense" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one_on_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/dimen_eight"/>
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_two_on_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/dimen_eight"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one_on_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/dimen_eight"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one_on_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/dimen_eight"/>
+
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/circal_background_expence"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
+        app:layout_constraintTop_toBottomOf="@+id/income_view" />
+
+    <include
+        android:id="@+id/income_view"
+        layout="@layout/income_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/expense_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
+        app:layout_constraintTop_toBottomOf="@+id/this_month_txt" />
+
+    <include
+        android:id="@+id/expense_view"
+        layout="@layout/expense_card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline_two_on_right"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/income_view"
+        app:layout_constraintTop_toBottomOf="@+id/this_month_txt" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

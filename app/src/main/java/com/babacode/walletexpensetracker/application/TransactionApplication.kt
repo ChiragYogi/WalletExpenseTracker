@@ -1,4 +1,4 @@
-package com.babacode.walletexpensetracker
+package com.babacode.walletexpensetracker.application
 
 import android.app.Application
 

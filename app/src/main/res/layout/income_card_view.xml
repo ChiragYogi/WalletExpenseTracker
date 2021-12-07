@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/dimen_twelve"
+   app:strokeColor="@color/income_card_view_color_"
+    app:strokeWidth="@dimen/dimen_one"
+    app:cardElevatio="@dimen/dimen_four">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/currency_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_eight"
+            android:layout_marginTop="@dimen/dimen_eight"
+            android:text="@string/currency_symbol"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:textColor="@color/currency_code"
+            android:textSize="@dimen/eighteen_sp_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/income_text_title"
+            app:layout_constraintTop_toBottomOf="@id/income_text_title" />
+
+        <TextView
+            android:id="@+id/income_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/dimen_four"
+            android:layout_marginTop="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto_condensed_bold"
+            android:textColor="@color/total_for_income_expense"
+            android:textSize="@dimen/eighteen_sp_text_size"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/currency_symbol"
+            app:layout_constraintTop_toBottomOf="@+id/income_text_title"
+            tools:text="1000000.00" />
+
+
+        <TextView
+            android:id="@+id/income_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_eight"
+            android:layout_marginTop="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/income"
+           android:textColor="@color/income_title_text_color_"
+            android:textSize="@dimen/eighteen_sp_text_size"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/income_vector_image"
+            android:layout_width="30dp"
+            android:layout_height="23dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/income_vector_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/income_vector" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
+

@@ -81,7 +81,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersionExt"
 
     //MpChart
-    implementation "com.github.PhilJay:MPAndroidChart:$mpChart"
+    implementation "com.github.Philjay:mpandroidchart:$mpChart"
 
 
     //unit test

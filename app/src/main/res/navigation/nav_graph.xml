@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.babacode.walletexpensetracker.ui.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_transactionTypeFragment"
+            app:destination="@id/transactionTypeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_transactionDetailFragment"
+            app:destination="@id/transactionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transactionTypeFragment"
+        android:name="com.babacode.walletexpensetracker.ui.TransactionTypeFragment"
+        android:label="fragment_transaction_type"
+        tools:layout="@layout/fragment_transaction_type" />
+    <fragment
+        android:id="@+id/transactionDetailFragment"
+        android:name="com.babacode.walletexpensetracker.ui.TransactionDetailFragment"
+        android:label="Transaction Detail"
+        tools:layout="@layout/fragment_transaction_detail" >
+        <action
+            android:id="@+id/action_transactionDetailFragment_to_updateTransactionFragment"
+            app:destination="@id/updateTransactionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateTransactionFragment"
+        android:name="com.babacode.walletexpensetracker.ui.UpdateTransactionFragment"
+        android:label="Edit Transaction"
+        tools:layout="@layout/fragment_update_transaction" />
+    <fragment
+        android:id="@+id/addTransactionFragment"
+        android:name="com.babacode.walletexpensetracker.ui.AddTransactionFragment"
+        android:label="Add Transaction"
+        tools:layout="@layout/fragment_add_transaction" />
+</navigation>

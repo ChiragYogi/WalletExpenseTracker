@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+            android:id="@+id/delete_button"
+            android:title="@string/delete"
+            android:contentDescription="@string/delete_button_on_menu_bar"
+            android:orderInCategory="101"
+            android:icon="@drawable/delete_vector"
+            app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/share_button"
+        android:title="@string/share"
+        android:contentDescription="@string/delete_button_on_menu_bar"
+        android:orderInCategory="102"
+        android:icon="@drawable/share_vector"
+        app:showAsAction="ifRoom"/>
+
+</menu>

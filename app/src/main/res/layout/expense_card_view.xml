@@ -1,47 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/ShapeAppearance.MaterialComponents.SmallComponent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/dimen_twelve"
-    app:cardElevation="@dimen/dimen_four"
-    app:strokeColor="@color/expense_card_view_color_"
-    app:strokeWidth="@dimen/dimen_one">
+    app:cardCornerRadius="@dimen/dimen_four"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardElevation="@dimen/dimen_four">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:id="@+id/liner_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-
-        <ImageView
-            android:id="@+id/expense_vector_image"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:contentDescription="@string/expense_vector_image"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/expense_vector" />
-
-        <TextView
-            android:id="@+id/expense_total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="@dimen/dimen_four"
-            android:layout_marginTop="@dimen/dimen_eight"
-            android:fontFamily="@font/roboto_condensed_bold"
-             android:textColor="@color/total_for_income_expense"
-            android:textSize="@dimen/eighteen_sp_text_size"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/currency_symbol"
-            app:layout_constraintTop_toBottomOf="@+id/expense_text_title"
-            tools:text="1000000.00" />
-
+            android:orientation="horizontal">
 
         <TextView
             android:id="@+id/expense_text_title"
@@ -51,28 +29,53 @@
             android:layout_marginTop="@dimen/dimen_eight"
             android:fontFamily="@font/roboto_bold"
             android:text="@string/expense"
-            android:textColor="@color/expense_title_text_color_"
-            android:textSize="@dimen/eighteen_sp_text_size"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="@dimen/sixteen_sp_text_size"
+            android:textStyle="bold"/>
 
-        <TextView
-            android:id="@+id/currency_symbol"
-            android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/expense_vector_image"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_eight"
+                android:contentDescription="@string/expense_vector_image"
+                app:srcCompat="@drawable/expese_vector"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_eight"
-            android:layout_marginTop="@dimen/dimen_eight"
-            android:fontFamily="@font/roboto_condensed_regular"
-            android:text="@string/currency_symbol"
-            android:textColor="@color/currency_code"
-            android:textSize="@dimen/eighteen_sp_text_size"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/expense_text_title"
-            app:layout_constraintTop_toBottomOf="@id/expense_text_title" />
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/currency_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_eight"
+               android:layout_marginStart="@dimen/dimen_eight"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:text="@string/currency_symbol"
+                android:textColor="@color/currency_code"
+                android:textSize="@dimen/eighteen_sp_text_size"
+                android:textStyle="bold"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:id="@+id/expense_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="@dimen/dimen_four"
+                android:fontFamily="@font/roboto_condensed_bold"
+                android:textColor="@color/total_for_income_expense"
+                android:textSize="@dimen/eighteen_sp_text_size"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                tools:text="100000.00"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
 
 
 </com.google.android.material.card.MaterialCardView>

@@ -231,9 +231,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen_eight"
         android:layout_marginBottom="@dimen/dimen_sixteen"
-
-        android:backgroundTint="@color/chip_background_color"
-        android:contentDescription="@string/edit_transaction_button"
+        android:backgroundTint="?attr/colorPrimary"
+       android:contentDescription="@string/edit_transaction_button"
         android:text="@string/update"
         app:icon="@drawable/edit_transaction"
         app:layout_constraintBottom_toTopOf="@id/guideline_one_on_bottom"

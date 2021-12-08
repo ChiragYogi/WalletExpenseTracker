@@ -15,12 +15,73 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/chip_background_color"
+        android:backgroundTint="?attr/colorOnPrimary"
         android:text="@string/attach_an_image"
         app:icon="@drawable/ic_image"
         app:layout_constraintEnd_toStartOf="@+id/guideline_one_on_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@id/transaction_tag_layout" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/card_view_with_image"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        android:layout_margin="@dimen/dimen_eight"
+        android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorOnPrimary"
+        app:cardElevation="@dimen/dimen_four"
+        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
+        app:layout_constraintBottom_toTopOf="@id/guideline_two_on_bottom"
+        app:layout_constraintTop_toBottomOf="@+id/transaction_tag_layout"
+        tools:visibility="visible">
+
+        <RelativeLayout
+            android:id="@+id/liner_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/retake_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="@dimen/dimen_sixteen"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                android:contentDescription="@string/retake_image_button"
+                android:src="@drawable/refresh_vectore"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/delete_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/retake_button"
+                android:layout_marginBottom="@dimen/dimen_sixteen"
+                android:layout_marginEnd="@dimen/dimen_sixteen"
+                android:contentDescription="@string/retake_image_button"
+                android:src="@drawable/delete_vector"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="120dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:contentDescription="@string/image_for_current_transaction"
+                android:visibility="gone"
+                tools:src="@tools:sample/avatars"
+                tools:visibility="visible" />
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_two_on_top"
@@ -29,12 +90,16 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="@dimen/dimen_eight" />
 
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_two_on_bottom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/dimen_eight" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_end="@dimen/dimen_eight"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <androidx.constraintlayout.widget.Guideline
@@ -44,7 +109,6 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="@dimen/dimen_eight" />
 
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_one_on_right"
         android:layout_width="wrap_content"
@@ -52,15 +116,29 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="@dimen/dimen_eight" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/save_transaction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:borderWidth="0dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/save_transaction_button"
+        android:src="@drawable/save_vector"
+        app:layout_constraintBottom_toTopOf="@id/guideline_two_on_bottom"
+        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right" />
+
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/date_txt_input_layout"
         style="@style/for_amount_and_date"
         android:clickable="true"
         android:focusable="true"
         android:hint="@string/date"
+        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/amount_txt_input_layout"
-        app:layout_constraintTop_toBottomOf="@id/guideline_two_on_top">
+        app:layout_constraintTop_toBottomOf="@+id/amount_txt_input_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/date_edt"
@@ -74,6 +152,10 @@
         android:id="@+id/amount_txt_input_layout"
         style="@style/for_amount_and_date"
         android:hint="@string/amount"
+        android:layout_marginEnd="@dimen/dimen_eight"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@id/guideline_two_on_top">
 
@@ -84,14 +166,13 @@
             android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/transaction_note_layout"
         style="@style/txt_note_layout"
         android:hint="@string/add_a_note_to_self"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/amount_txt_input_layout">
+        app:layout_constraintTop_toBottomOf="@id/date_txt_input_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/transaction_note_edt"
@@ -118,6 +199,7 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/transaction_tag_layout"
         style="@style/txt_input_dropdown"
@@ -134,84 +216,6 @@
             android:labelFor="@id/transaction_tag_layout" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view_with_image"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        app:cardElevation="@dimen/dimen_four"
-        android:layout_margin="@dimen/dimen_eight"
-        app:cardBackgroundColor="@color/chip_background_color"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_tag_layout"
-
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <RelativeLayout
-            android:id="@+id/liner_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="200dp"
-                android:layout_height="120dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:contentDescription="@string/image_for_current_transaction"
-                android:visibility="gone"
-                tools:src="@tools:sample/avatars"
-                tools:visibility="visible" />
-
-            <ImageButton
-                android:id="@+id/retake_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="@dimen/dimen_sixteen"
-                android:layout_marginTop="@dimen/dimen_sixteen"
-                android:contentDescription="@string/retake_image_button"
-                android:src="@drawable/refresh_vectore"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <ImageButton
-                android:id="@+id/delete_button"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginBottom="@dimen/dimen_sixteen"
-                android:layout_below="@id/retake_button"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="@dimen/dimen_sixteen"
-                tools:visibility="visible"
-                android:visibility="gone"
-                android:contentDescription="@string/retake_image_button"
-                android:src="@drawable/delete_vector" />
-        </RelativeLayout>
-
-
-
-
-    </androidx.cardview.widget.CardView>
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/save_transaction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="?attr/colorPrimaryVariant"
-        android:contentDescription="@string/save_transaction_button"
-           android:src="@drawable/save_vector"
-        app:layout_constraintBottom_toTopOf="@id/guideline_two_on_bottom"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right" />
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

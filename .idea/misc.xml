@@ -5,25 +5,29 @@
       <map>
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-v24/date_vector.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-v24/date_vectore.xml" value="0.14537037037037037" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/add_transaction_vectore.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/circal_background.xml" value="0.14907407407407408" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/circal_background_expence.xml" value="0.14907407407407408" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/circal_background_income.xml" value="0.14907407407407408" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/delete_vector.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/expence_vector.xml" value="0.14907407407407408" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/expense_vector.xml" value="0.14537037037037037" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/expese_vector.xml" value="0.2203125" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/ic_baseline_save_24.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/income_vector.xml" value="0.14907407407407408" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/refresh_vectore.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/tab_color_selector.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/chart_card_view.xml" value="0.18" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expence_view.xml" value="0.33" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expense_card_view.xml" value="0.1" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_add_transaction.xml" value="0.33" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_home.xml" value="0.16" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_add_transaction.xml" value="0.25" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_calender_view.xml" value="0.12771739130434784" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_detail.xml" value="0.14" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_detail.xml" value="0.16" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_type.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_update_transaction.xml" value="0.16" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_card_view.xml" value="0.22" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_card_view.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_expence_card_view.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/item_auto_complete_dropdown.xml" value="0.33" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/transaction_type.xml" value="0.25" />

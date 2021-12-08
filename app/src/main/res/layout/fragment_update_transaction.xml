@@ -206,8 +206,9 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:layout_marginEnd="16dp"
-        android:backgroundTint="?attr/colorPrimaryVariant"
-        android:contentDescription="Update Transaction button"
+        app:borderWidth="0dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/update_transaction_button"
         android:src="@drawable/save_vector"
         app:layout_constraintBottom_toTopOf="@id/guideline_two_on_bottom"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right" />

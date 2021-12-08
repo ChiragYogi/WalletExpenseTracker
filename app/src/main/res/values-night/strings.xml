@@ -19,13 +19,13 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="income">income</string>
+    <string name="income">Total Income</string>
     <string name="currency_symbol">$</string>
-    <string name="expense">Expense</string>
+    <string name="expense"> Total Expense</string>
     <string name="expense_vector_image">Expence Vectore Arrow Image</string>
     <string name="this_month">This month :-</string>
     <string name="recent_transaction">Recent Transaction</string>
-    <string name="see_more">see more>></string>
+    <string name="see_more">see more </string>
     <string name="add_transaction_for_income_or_expense">add Transaction for income or expense</string>
     <string name="date">Date</string>
     <string name="amount">Amount</string>
@@ -45,5 +45,8 @@
     <string name="delete">Delete</string>
     <string name="delete_button_on_menu_bar">delete buttone for transaction on menu in detail screen</string>
     <string name="share">share</string>
+    <string name="update_transaction_button">Update Transaction button</string>
+    <string name="add_income">Income</string>
+    <string name="add_expense">Expence</string>
 
 </resources>

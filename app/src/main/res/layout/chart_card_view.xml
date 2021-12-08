@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+    app:cardCornerRadius="@dimen/dimen_twelve"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardElevation="@dimen/dimen_eight"
+>
+
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pie_chart_in_card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
+        app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
+        app:layout_constraintTop_toBottomOf="@+id/income_view" />
+
+</com.google.android.material.card.MaterialCardView>

@@ -8,25 +8,12 @@
 
 
     <TextView
-        android:id="@+id/this_month_txt"
-        style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="@font/roboto_bold"
-        android:text="@string/this_month"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/guideline_one_on_top" />
-
-
-    <TextView
         android:id="@+id/recent_transaction_text"
-        style="@style/TextAppearance.AppCompat.Large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/dimen_eight"
+        android:layout_marginTop="@dimen/dimen_sixteen"
+        android:textSize="@dimen/eighteen_sp_text_size"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/recent_transaction"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
@@ -35,24 +22,54 @@
 
     <TextView
         android:id="@+id/see_more"
-        style="@style/TextAppearance.AppCompat.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="@dimen/dimen_eight"
         android:fontFamily="@font/roboto_bold"
         android:text="@string/see_more"
-        android:textColor="@color/see_more_color"
+        android:textSize="@dimen/eighteen_sp_text_size"
+        android:textColor="?attr/colorPrimary"
         app:layout_constraintBaseline_toBaselineOf="@+id/recent_transaction_text"
         app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one_on_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/dimen_eight" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_two_on_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/dimen_eight" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one_on_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="@dimen/dimen_eight" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_one_on_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="@dimen/dimen_eight" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/dimen_eight"
+        android:layout_marginEnd="@dimen/dimen_eight"
+        android:layout_marginStart="@dimen/dimen_eight"
+        android:layout_marginTop="@dimen/dimen_eight"
         app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
@@ -61,84 +78,64 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_fab"
         android:layout_width="wrap_content"
+        app:borderWidth="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="?attr/colorPrimaryVariant"
+        android:layout_marginBottom="@dimen/dimen_sixteen"
+        android:layout_marginEnd="@dimen/dimen_sixteen"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/add_transaction_for_income_or_expense"
         android:src="@drawable/add_transaction_vectore"
         app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
-        android:contentDescription="@string/add_transaction_for_income_or_expense" />
+        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right" />
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/dimen_eight"/>
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_two_on_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/dimen_eight"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/dimen_eight"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/dimen_eight"/>
-
-
-    <com.github.mikephil.charting.charts.PieChart
+    <include
         android:id="@+id/pie_chart"
+        layout="@layout/chart_card_view"
         android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/circal_background_expence"
+        android:layout_height="@dimen/dimen_two_hundred"
+        android:layout_marginEnd="@dimen/dimen_eight"
+        android:layout_marginStart="@dimen/dimen_eight"
+        android:layout_marginTop="@dimen/dimen_sixteen"
         app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/income_view" />
+        app:layout_constraintTop_toBottomOf="@+id/liner_layout_view" />
 
-    <include
-        android:id="@+id/income_view"
-        layout="@layout/income_card_view"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/liner_layout_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/expense_view"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:weightSum="2"
+        android:layout_margin="@dimen/dimen_eight"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/guideline_one_on_top"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/this_month_txt" />
-
-    <include
-        android:id="@+id/expense_view"
-        layout="@layout/expense_card_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline_two_on_right"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/income_view"
-        app:layout_constraintTop_toBottomOf="@+id/this_month_txt" />
+        android:baselineAligned="false">
+
+        <include
+            android:id="@+id/income_view"
+            layout="@layout/income_card_view"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dimen_seventy_five"
+            android:layout_marginEnd="@dimen/dimen_four"
+            android:layout_marginStart="@dimen/dimen_eight"
+            android:layout_marginTop="@dimen/dimen_eight"
+            android:layout_marginBottom="@dimen/dimen_eight"
+            android:layout_weight="1"/>
+
+        <include
+            android:id="@+id/expense_view"
+            layout="@layout/expense_card_view"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/dimen_seventy_five"
+            android:layout_marginBottom="@dimen/dimen_eight"
+            android:layout_marginEnd="@dimen/dimen_eight"
+            android:layout_marginStart="@dimen/dimen_four"
+            android:layout_marginTop="@dimen/dimen_eight"/>
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

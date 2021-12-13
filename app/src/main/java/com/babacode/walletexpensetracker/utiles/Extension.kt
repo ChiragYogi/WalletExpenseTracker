@@ -6,6 +6,7 @@ import android.view.View
 import com.google.android.material.textfield.TextInputEditText
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 
 
@@ -40,7 +41,7 @@ fun TextInputEditText.transformDatePicker(
             myCalender.set(Calendar.YEAR,year)
             myCalender.set(Calendar.MONTH,month)
             myCalender.set(Calendar.DAY_OF_MONTH,dayOfMonth)
-            val sdf = DateFormat.getDateInstance()
+            val sdf = SimpleDateFormat(format, Locale.UK)
             setText(sdf.format(myCalender.time))
 
         }

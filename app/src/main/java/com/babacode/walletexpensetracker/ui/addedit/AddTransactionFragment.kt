@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.databinding.FragmentAddTransactionBinding
+import com.babacode.walletexpensetracker.utiles.Extra.convertDateToLong
 import com.babacode.walletexpensetracker.utiles.Extra.transactionPayment
 import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
 
@@ -72,11 +73,11 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         findNavController().navigate(R.id.action_addTransactionFragment_to_homeFragment)
     }
 
+
     private fun saveTransaction(): Transaction = binding.let {
-
-
         val note = binding.transactionNoteEdt.text.toString()
-        val date = binding.dateEdt.text.toString()
+        val dateFromEditText = binding.dateEdt.text.toString()
+        val date = convertDateToLong(dateFromEditText)
         val amount = parseDouble(binding.amountEdt.text.toString())
         val transactionType = binding.transactionTypeEdt.text.toString()
         val transactionTag = binding.transactionTagEdt.text.toString()
@@ -84,6 +85,8 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         return Transaction(note, date, transactionType, amount, transactionTag, transactionMode)
 
     }
+
+
 
 
     override fun onDestroyView() {

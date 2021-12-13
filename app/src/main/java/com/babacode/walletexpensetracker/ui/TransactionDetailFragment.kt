@@ -2,9 +2,7 @@ package com.babacode.walletexpensetracker.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -12,6 +10,8 @@ import androidx.navigation.fragment.navArgs
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.databinding.FragmentTransactionDetailBinding
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
+import com.babacode.walletexpensetracker.utiles.Extra.convertDateToLong
+import com.babacode.walletexpensetracker.utiles.Extra.convertLongToTime
 import com.babacode.walletexpensetracker.utiles.exhaustive
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -37,7 +37,8 @@ class TransactionDetailFragment : Fragment(R.layout.fragment_transaction_detail)
         binding.apply {
             transactionTypeResultTxt.text = transaction?.transactionType ?: ""
             transactionAmountResultTxt.text = transaction?.amount.toString() ?: ""
-            transactionDateResultTxt.text = transaction?.date ?: ""
+            val date = transaction?.date
+            transactionDateResultTxt.text = date?.let { convertLongToTime(it) }
             transactionNoteResultTxt.text = transaction?.title ?: ""
             transactionTagResultTxt.text = transaction?.tag ?: ""
             transactionWhenCreatedResultTxt.text = transaction?.createdAtDate ?: ""

@@ -1,15 +1,21 @@
 package com.babacode.walletexpensetracker.ui.home
 
+import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.babacode.walletexpensetracker.R
+import com.babacode.walletexpensetracker.data.model.Month
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.databinding.FragmentHomeBinding
 import com.babacode.walletexpensetracker.utiles.exhaustive
@@ -21,6 +27,13 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.OffsetTime
+import java.util.*
+import kotlin.collections.ArrayList
+import com.babacode.walletexpensetracker.utiles.Extra
+import com.babacode.walletexpensetracker.utiles.Extra.getStartDateAndEndDate
 
 
 @AndroidEntryPoint
@@ -29,10 +42,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), OnItemClick {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val mAdepter = HomeAdepter(this)
-
+    private lateinit var monthDate: Month
     private val viewModel: HomeViewModel by viewModels()
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SimpleDateFormat")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
@@ -41,12 +56,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), OnItemClick {
         initPieChart()
         setUpObserver()
 
+
         binding.addFab.setOnClickListener {
             viewModel.onAddNewTransactionClick()
         }
 
 
     }
+
 
     private fun initPieChart() {
         binding.pieChart.pieChartInCardView.apply {
@@ -66,18 +83,21 @@ class HomeFragment : Fragment(R.layout.fragment_home), OnItemClick {
         }
     }
 
+    @SuppressLint("LongLogTag", "SimpleDateFormat")
     private fun setUpObserver() {
 
-        viewModel.recentTransaction.observe(viewLifecycleOwner, Observer { transactionList ->
+        viewModel.thisMonthTransaction.observe(viewLifecycleOwner, Observer { transactionList ->
 
 
             mAdepter.submitList(transactionList)
 
+            Log.d("this", transactionList.toString())
+
 
             val (totalIncome, totalExpense) = transactionList.partition { transaction ->
-                transaction.transactionType == "Income" ||
-                        transaction.transactionType == "Expense"
+                transaction.transactionType == "Income"
             }
+
 
             val incomeTotal = totalIncome.sumOf { transaction ->
                 transaction.amount
@@ -85,10 +105,15 @@ class HomeFragment : Fragment(R.layout.fragment_home), OnItemClick {
             val expenseTotal = totalExpense.sumOf { transaction ->
                 transaction.amount
             }
+
+
             binding.incomeView.incomeTotal.text = incomeTotal.toString()
             binding.expenseView.expenseTotal.text = expenseTotal.toString()
             setDataToPieChart(incomeTotal, expenseTotal)
         })
+
+
+
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.transactionEvent.collect { event ->

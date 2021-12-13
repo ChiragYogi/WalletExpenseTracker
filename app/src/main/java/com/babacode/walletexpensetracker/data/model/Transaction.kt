@@ -5,13 +5,15 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.text.DateFormat
+import java.time.LocalDate
+import java.time.OffsetDateTime
 import java.util.*
 
 @Parcelize
 @Entity(tableName = "transaction_table")
 data class Transaction(
     val title: String,
-    val date: String,
+    val date: Long,
     val transactionType: String,
     val amount: Double,
     val tag: String,

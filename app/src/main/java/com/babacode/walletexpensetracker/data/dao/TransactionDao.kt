@@ -14,6 +14,9 @@ interface TransactionDao {
     @Query("SELECT * FROM transaction_table ORDER by id DESC")
     fun getAllTransaction(): Flow<List<Transaction>>
 
+    @Query("SELECT * FROM transaction_table WHERE date >= :startDate and date <= :endDate")
+    fun getThisMonthTransaction(startDate: Long, endDate: Long): Flow<List<Transaction>>
+
     @Query("SELECT * FROM transaction_table WHERE transactionType = :type")
     fun getTransactionByType(type: String) : Flow<List<Transaction>>
 
@@ -25,6 +28,9 @@ interface TransactionDao {
 
     @Query("DELETE FROM transaction_table WHERE id = :id")
     suspend fun deleteTransactionById(id:Int)
+
+
+
 
 
 }

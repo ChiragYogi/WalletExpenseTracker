@@ -7,29 +7,18 @@
     tools:context=".ui.TransactionDetailFragment">
 
 
-    <ImageView
-        android:id="@+id/image_for_transaction"
-        android:layout_width="200dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="@dimen/dimen_sixteen"
-        android:layout_marginTop="@dimen/dimen_sixteen"
-        android:contentDescription="@string/image_for_current_transaction"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_image_txt"
-        tools:src="@tools:sample/avatars" />
-
-
     <TextView
         android:id="@+id/transaction_type_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_sixteen"
-        android:layout_marginTop="@dimen/dimen_sixteen"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/transaction_type"
-        android:textSize="@dimen/sixteen_sp_text_size"
+        android:text="@string/type"
+        android:layout_marginTop="@dimen/dimen_eight"
+        android:textSize="@dimen/fourteen_sp_text_size"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toTopOf="@+id/guideline_one_on_top" />
+        app:layout_constraintTop_toBottomOf="@id/transaction_note_result_txt"
+        tools:layout_editor_absoluteY="24dp" />
 
     <TextView
         android:id="@+id/transaction_type_result_txt"
@@ -51,12 +40,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_sixteen"
-        android:layout_marginTop="@dimen/dimen_eight"
+        android:layout_marginTop="@dimen/dimen_sixteen"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/transaction_note"
-        android:textSize="@dimen/sixteen_sp_text_size"
+        android:text="@string/title"
+        android:textSize="@dimen/fourteen_sp_text_size"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_type_result_txt" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline_one_on_top" />
 
 
     <TextView
@@ -81,10 +70,10 @@
         android:layout_marginStart="@dimen/dimen_sixteen"
         android:layout_marginTop="@dimen/dimen_eight"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/transaction_note"
-        android:textSize="@dimen/sixteen_sp_text_size"
+        android:text="@string/amount"
+        android:textSize="@dimen/fourteen_sp_text_size"
         app:layout_constraintStart_toStartOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_note_result_txt" />
+        app:layout_constraintTop_toBottomOf="@+id/transaction_type_result_txt" />
 
     <TextView
         android:id="@+id/transaction_amount_result_txt"
@@ -108,8 +97,8 @@
         android:layout_marginStart="@dimen/dimen_sixteen"
         android:layout_marginTop="@dimen/dimen_eight"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/transaction_note"
-        android:textSize="@dimen/sixteen_sp_text_size"
+        android:text="@string/date"
+        android:textSize="@dimen/fourteen_sp_text_size"
         app:layout_constraintStart_toStartOf="@id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@+id/transaction_amount_result_txt" />
 
@@ -135,8 +124,8 @@
         android:layout_marginStart="@dimen/dimen_sixteen"
         android:layout_marginTop="@dimen/dimen_eight"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/transaction_note"
-        android:textSize="@dimen/sixteen_sp_text_size"
+        android:text="@string/tag"
+        android:textSize="@dimen/fourteen_sp_text_size"
         app:layout_constraintStart_toStartOf="@id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@+id/transaction_date_result_txt" />
 
@@ -162,8 +151,8 @@
         android:layout_marginStart="@dimen/dimen_sixteen"
         android:layout_marginTop="@dimen/dimen_eight"
         android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/transaction_note"
-        android:textSize="@dimen/sixteen_sp_text_size"
+        android:text="@string/createdAt"
+        android:textSize="@dimen/fourteen_sp_text_size"
         app:layout_constraintStart_toStartOf="@id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@+id/transaction_tag_result_txt" />
 
@@ -182,18 +171,6 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
         app:layout_constraintStart_toStartOf="@+id/transaction_amount_txt"
         app:layout_constraintTop_toBottomOf="@+id/transaction_when_created_txt" />
-
-    <TextView
-        android:id="@+id/transaction_image_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_sixteen"
-        android:layout_marginTop="@dimen/dimen_eight"
-        android:fontFamily="@font/roboto_condensed_regular"
-        android:text="@string/image_for_current_transaction"
-        android:textSize="@dimen/sixteen_sp_text_size"
-        app:layout_constraintStart_toStartOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transaction_when_created_result_txt" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_one_on_left"
@@ -233,7 +210,7 @@
         android:layout_marginBottom="@dimen/dimen_sixteen"
         android:backgroundTint="?attr/colorPrimary"
        android:contentDescription="@string/edit_transaction_button"
-        android:text="@string/update"
+        android:text="@string/edit"
         app:icon="@drawable/edit_transaction"
         app:layout_constraintBottom_toTopOf="@id/guideline_one_on_bottom"
         app:layout_constraintEnd_toStartOf="@id/guideline_two_on_right" />

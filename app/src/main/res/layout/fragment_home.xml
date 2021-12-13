@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.HomeFragment">
+    tools:context=".ui.home.HomeFragment">
 
 
     <TextView
@@ -14,7 +14,8 @@
         android:layout_marginStart="@dimen/dimen_eight"
         android:layout_marginTop="@dimen/dimen_sixteen"
         android:textSize="@dimen/eighteen_sp_text_size"
-        android:fontFamily="@font/roboto_bold"
+        android:textColor="?attr/colorOnBackground"
+        android:fontFamily="@font/roboto"
         android:text="@string/recent_transaction"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@id/pie_chart" />
@@ -25,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/dimen_eight"
-        android:fontFamily="@font/roboto_bold"
+        android:fontFamily="@font/roboto"
         android:text="@string/see_more"
         android:textSize="@dimen/eighteen_sp_text_size"
         android:textColor="?attr/colorPrimary"
@@ -66,6 +67,7 @@
         android:id="@+id/rv_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        tools:listitem="@layout/transaction_rv_item"
         android:layout_marginBottom="@dimen/dimen_eight"
         android:layout_marginEnd="@dimen/dimen_eight"
         android:layout_marginStart="@dimen/dimen_eight"

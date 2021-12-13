@@ -7,4 +7,5 @@
     <dimen name="eighteen_sp_text_size">18sp</dimen>
     <dimen name="dimen_one">1dp</dimen>
     <dimen name="dimen_seventy_five">75dp</dimen>
+    <dimen name="dimen_three_hunddred_dp">300dp</dimen>
 </resources>

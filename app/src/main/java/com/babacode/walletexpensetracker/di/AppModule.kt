@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.babacode.walletexpensetracker.data.dao.TransactionDao
 import com.babacode.walletexpensetracker.data.database.TransactionDatabase
+import com.babacode.walletexpensetracker.repository.TransactionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,5 +33,12 @@ object AppModule {
     @Provides
     fun provideTransactionDao(transactionDatabase: TransactionDatabase) : TransactionDao {
         return transactionDatabase.getTransactionDao()
+    }
+
+
+    @Singleton
+    @Provides
+    fun provideTransactionRepository(transactionDao: TransactionDao): TransactionRepository{
+        return TransactionRepository(transactionDao)
     }
 }

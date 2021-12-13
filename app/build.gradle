@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id  'kotlin-kapt'
+    id 'kotlin-parcelize'
     id  'androidx.navigation.safeargs.kotlin'
     id  'dagger.hilt.android.plugin'
 }
@@ -58,8 +59,6 @@ dependencies {
 
     // Glide
     implementation "com.github.bumptech.glide:glide:$glide"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.preference:preference:1.1.1'
     kapt "com.github.bumptech.glide:compiler:$glide"
 
 
@@ -82,6 +81,12 @@ dependencies {
 
     //MpChart
     implementation "com.github.Philjay:mpandroidchart:$mpChart"
+
+    //Dexter For permission
+    implementation "com.karumi:dexter:$dexter"
+
+    implementation "androidx.activity:activity-ktx:1.4.0"
+    implementation 'androidx.fragment:fragment-ktx:1.4.0'
 
 
     //unit test

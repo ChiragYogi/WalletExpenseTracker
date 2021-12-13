@@ -7,18 +7,30 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.babacode.walletexpensetracker.ui.HomeFragment"
+        android:name="com.babacode.walletexpensetracker.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFragment_to_addTransactionFragment"
-            app:destination="@id/addTransactionFragment" />
+            app:destination="@id/addTransactionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_transactionTypeFragment"
-            app:destination="@id/transactionTypeFragment" />
+            app:destination="@id/transactionTypeFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_transactionDetailFragment"
-            app:destination="@id/transactionDetailFragment" />
+            app:destination="@id/transactionDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/transactionTypeFragment"
@@ -30,18 +42,33 @@
         android:name="com.babacode.walletexpensetracker.ui.TransactionDetailFragment"
         android:label="Transaction Detail"
         tools:layout="@layout/fragment_transaction_detail" >
+        <argument
+            android:name="transactionArgs"
+            app:argType="com.babacode.walletexpensetracker.data.model.Transaction"
+            app:nullable="true" />
         <action
-            android:id="@+id/action_transactionDetailFragment_to_updateTransactionFragment"
-            app:destination="@id/updateTransactionFragment" />
+            android:id="@+id/action_transactionDetailFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-        android:id="@+id/updateTransactionFragment"
-        android:name="com.babacode.walletexpensetracker.ui.UpdateTransactionFragment"
-        android:label="Edit Transaction"
-        tools:layout="@layout/fragment_update_transaction" />
-    <fragment
         android:id="@+id/addTransactionFragment"
-        android:name="com.babacode.walletexpensetracker.ui.AddTransactionFragment"
-        android:label="Add Transaction"
-        tools:layout="@layout/fragment_add_transaction" />
+        android:name="com.babacode.walletexpensetracker.ui.addedit.AddTransactionFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_add_transaction" >
+        <argument
+            android:name="transactionArgsInEdit"
+            app:argType="com.babacode.walletexpensetracker.data.model.Transaction"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_addTransactionFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

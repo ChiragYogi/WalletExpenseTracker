@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="@dimen/dimen_four"
+    android:id="@+id/transactionMaterialCardView"
+    android:layout_margin="@dimen/dimen_four"
+    app:cardElevation="@dimen/dimen_one">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+            <ImageView
+                android:id="@+id/image_view_for_tag"
+                android:layout_width="wrap_content"
+                android:background="@drawable/tag_rv"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_sixteen"
+                tools:src="@drawable/bill_vector"
+                android:layout_margin="@dimen/dimen_eight"
+                android:contentDescription="@string/transaction_type_tag"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/transaction_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto"
+            android:textSize="@dimen/fourteen_sp_text_size"
+            android:textColor="?attr/colorOnBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_for_tag"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="This is Sample Title" />
+
+        <TextView
+            android:id="@+id/currency_symbol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto"
+            android:text="@string/currency_symbol"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="@dimen/fourteen_sp_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_for_tag"
+            app:layout_constraintTop_toBottomOf="@id/transaction_title" />
+
+
+        <TextView
+            android:id="@+id/transaction_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="@dimen/fourteen_sp_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/transaction_type"
+            app:layout_constraintStart_toEndOf="@+id/currency_symbol"
+            app:layout_constraintTop_toBottomOf="@+id/transaction_title"
+            tools:text="1000" />
+
+        <TextView
+            android:id="@+id/transaction_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="@dimen/fourteen_sp_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transaction_title"
+            tools:text="cash" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>

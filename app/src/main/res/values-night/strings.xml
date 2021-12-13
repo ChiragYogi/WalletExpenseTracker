@@ -29,7 +29,7 @@
     <string name="add_transaction_for_income_or_expense">add Transaction for income or expense</string>
     <string name="date">Date</string>
     <string name="amount">Amount</string>
-    <string name="type">Type: </string>
+    <string name="type">Type</string>
     <string name="what_s_this_for">What\'s this for?</string>
     <string name="add_a_note_to_self">Add a note to self</string>
     <string name="transaction_type">Transaction Type</string>
@@ -48,5 +48,13 @@
     <string name="update_transaction_button">Update Transaction button</string>
     <string name="add_income">Income</string>
     <string name="add_expense">Expence</string>
+    <string name="transaction_type_tag">Transaction Type Tag</string>
+    <string name="dropdowntagimage">DropDownTagImage</string>
+
+    <string name="payment_mode">Payment Mode</string>
+
+    <string name="title">Title</string>
+    <string name="tag">Tag</string>
+    <string name="createdAt">created at</string>
 
 </resources>

@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_eight"
             android:layout_marginTop="@dimen/dimen_eight"
-            android:fontFamily="@font/roboto_bold"
+            android:fontFamily="@font/roboto"
+            android:textColor="?attr/colorOnBackground"
             android:text="@string/expense"
             android:textSize="@dimen/sixteen_sp_text_size"
             android:textStyle="bold"/>
@@ -54,7 +55,7 @@
                android:layout_marginStart="@dimen/dimen_eight"
                 android:fontFamily="@font/roboto_condensed_regular"
                 android:text="@string/currency_symbol"
-                android:textColor="@color/currency_code"
+                android:textColor="@color/currencyCode"
                 android:textSize="@dimen/eighteen_sp_text_size"
                 android:textStyle="bold"/>
 
@@ -65,8 +66,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="@dimen/dimen_four"
                 android:fontFamily="@font/roboto_condensed_bold"
-                android:textColor="@color/total_for_income_expense"
-                android:textSize="@dimen/eighteen_sp_text_size"
+               android:textSize="@dimen/eighteen_sp_text_size"
+                android:textColor="?attr/colorOnBackground"
                 android:textStyle="bold"
                 android:layout_weight="1"
                 tools:text="100000.00"/>

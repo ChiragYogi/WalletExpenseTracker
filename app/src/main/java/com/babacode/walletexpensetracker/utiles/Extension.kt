@@ -4,11 +4,11 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.view.View
 import com.google.android.material.textfield.TextInputEditText
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.util.*
 
+import java.text.SimpleDateFormat
+
+import java.util.*
+import kotlin.Exception
 
 
 val <T> T.exhaustive: T
@@ -58,7 +58,4 @@ fun TextInputEditText.transformDatePicker(
     }
 }
 
-//pars double
-fun parseDouble(value: String?) : Double{
-    return if (value == null || value.isEmpty()) Double.NaN else value.toDouble()
-}
+

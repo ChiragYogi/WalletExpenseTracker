@@ -31,13 +31,13 @@
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/dropdown_item.xml" value="0.2" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expence_view.xml" value="0.33" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expense_card_view.xml" value="0.22" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_add_transaction.xml" value="0.25" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_add_transaction.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_calender_view.xml" value="0.12771739130434784" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_detail.xml" value="0.18" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_type.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_update_transaction.xml" value="0.16" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_card_view.xml" value="0.2" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_card_view.xml" value="0.22" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_expence_card_view.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/item_auto_complete_dropdown.xml" value="0.33" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/transaction_rv_item.xml" value="0.18" />

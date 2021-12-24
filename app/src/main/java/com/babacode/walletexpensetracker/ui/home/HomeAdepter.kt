@@ -2,12 +2,12 @@ package com.babacode.walletexpensetracker.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.databinding.TransactionRvItemBinding
 
 class HomeAdepter(private val listener: OnItemClick) :
@@ -37,6 +37,16 @@ class HomeAdepter(private val listener: OnItemClick) :
                     val transaction = getItem(position)
                     listener.OnTransactionClick(transaction)
                 }
+
+            }
+
+            binding.root.setOnLongClickListener{
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val transaction = getItem(position)
+                    listener.OnLongPress(transaction.id)
+                }
+                true
             }
         }
 
@@ -46,85 +56,95 @@ class HomeAdepter(private val listener: OnItemClick) :
             binding.apply {
 
                 transactionAmount.text = currentItem.amount.toString()
-                transactionTitle.text = currentItem.title
-                transactionType.text = currentItem.paymentType
+                transactionTitle.text = currentItem.note
+                transactionType.text = currentItem.paymentType.toString()
 
-                when(currentItem.transactionType){
-                    "Expense" -> {
-                        transactionMaterialCardView.setCardBackgroundColor(ContextCompat.
-                                 getColor(root.context.applicationContext,R.color.expenseColor))
+              /*  when (currentItem.transactionType) {
+                    TransactionType.EXPENSE -> {
+                        transactionMaterialCardView.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                root.context.applicationContext,
+                                R.color.expenseColor
+                            )
+                        )
 
                     }
-                    "Income" -> {
-                        transactionMaterialCardView.setCardBackgroundColor(ContextCompat.
-                        getColor(root.context.applicationContext,R.color.incomeColor))
+                    TransactionType.INCOME -> {
+                        transactionMaterialCardView.setCardBackgroundColor(
+                            ContextCompat.getColor(
+                                root.context.applicationContext,
+                                R.color.incomeColor
+                            )
+                        )
                     }
-                }
+                }*/
 
                 when (currentItem.tag) {
-                    "Other" -> {
+
+                    TransactionTag.OTHER -> {
                         imageViewForTag.setImageResource(R.drawable.other_vector)
                     }
-                    "Food" -> {
+                    TransactionTag.FOOD -> {
                         imageViewForTag.setImageResource(R.drawable.food_vector)
                     }
-                    "Shopping" -> {
+                    TransactionTag.SHOPPING -> {
                         imageViewForTag.setImageResource(R.drawable.shopping_vector)
                     }
-                    "Travelling" -> {
+                    TransactionTag.TRAVELLING -> {
                         imageViewForTag.setImageResource(R.drawable.traveling_vector)
                     }
-                    "Entertainment" -> {
+                    TransactionTag.ENTERTAINMENT -> {
                         imageViewForTag.setImageResource(R.drawable.entertainment_vector)
                     }
-                    "Health" -> {
+                    TransactionTag.HEALTH -> {
                         imageViewForTag.setImageResource(R.drawable.medical_vector)
                     }
-                    "Education" -> {
+                    TransactionTag.EDUCATION -> {
                         imageViewForTag.setImageResource(R.drawable.education_vector)
                     }
-                    "Rent" -> {
+                    TransactionTag.RENT -> {
                         imageViewForTag.setImageResource(R.drawable.rent_vector)
                     }
-                    "bills" -> {
+                    TransactionTag.BILLS -> {
                         imageViewForTag.setImageResource(R.drawable.bill_vector)
                     }
-                    "Gift" -> {
+                    TransactionTag.GIFT -> {
                         imageViewForTag.setImageResource(R.drawable.gift_vector)
                     }
-                   "Investment" -> {
+                    TransactionTag.INVESTMENT -> {
                         imageViewForTag.setImageResource(R.drawable.investment_vector)
                     }
-                    "utils" -> {
+                    TransactionTag.UTILS -> {
                         imageViewForTag.setImageResource(R.drawable.utiles_vector)
                     }
-                    "Salary" -> {
-
+                    TransactionTag.SALARY -> {
+                        imageViewForTag.setImageResource(R.drawable.money_vector)
                     }
-                    "Coupons" -> {
+                    TransactionTag.COUPONS -> {
                         imageViewForTag.setImageResource(R.drawable.bill_vector)
                     }
-                    "CashBack" -> {
+                    TransactionTag.CASHBACK -> {
                         imageViewForTag.setImageResource(R.drawable.gift_vector)
                     }
                 }
             }
-
         }
     }
-}
 
-class DiffUtilCallBack : DiffUtil.ItemCallback<Transaction>() {
-    override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-        return oldItem.id == newItem.id
+
+        class DiffUtilCallBack : DiffUtil.ItemCallback<Transaction>() {
+            override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+            override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+                return oldItem == newItem
+            }
+
+        }
+
+        interface OnItemClick {
+            fun OnTransactionClick(transaction: Transaction)
+            fun OnLongPress(id: Int)
+        }
     }
-
-    override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-        return oldItem == newItem
-    }
-
-}
-
-interface OnItemClick {
-    fun OnTransactionClick(transaction: Transaction)
-}

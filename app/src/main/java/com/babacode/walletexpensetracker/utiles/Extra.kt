@@ -1,72 +1,148 @@
 package com.babacode.walletexpensetracker.utiles
 
-import android.annotation.SuppressLint
 import com.babacode.walletexpensetracker.data.model.Month
+import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.TransactionTag
+import com.babacode.walletexpensetracker.data.model.TransactionType
 import java.text.SimpleDateFormat
 import java.util.*
 
 object Extra {
 
 
-    const val AMOUNT_DIGIT = 8
+    const val AMOUNT_CHECK_FOR_ADD = 7
+    const val BASE_AMOUNT = 0.0
 
-    val transactionType = listOf("Income", "Expense")
+    fun transactionType(type: String): TransactionType {
 
-    val transactionPayment = listOf("Cash", "Card", "Online Banking"," UPI")
+        return when(type){
+            TransactionType.EXPENSE.toString() -> {
+                TransactionType.EXPENSE
+            }
+            TransactionType.INCOME.toString() -> {
+                TransactionType.INCOME
+            }
 
-    val transactionTag = listOf(
-        "Other",
-        "Food",
-        "Shopping",
-        "Travelling",
-        "Entertainment",
-        "Health",
-        "Education",
-        "Rent",
-        "bills",
-        "Gift",
-        "utils",
-        "Salary",
-        "Coupons",
-        "CashBack",
-    )
-
-    @SuppressLint("SimpleDateFormat")
-    fun convertDateToLong(date: String): Long {
-        val df = SimpleDateFormat("dd/MM/yyyy")
-        return df.parse(date).time
+            else -> TransactionType.EXPENSE
+        }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    fun convertDateToDateFromLong(date: Date): Long {
-        val df = SimpleDateFormat("dd/MM/yyyy")
-        return df.parse(date.toString()).toString().toLong()
+    fun paymentMode(type: String): PaymentType {
+        return when(type){
+            PaymentType.CASH.toString() -> {
+                PaymentType.CASH
+            }
+            PaymentType.CARD.toString() -> {
+                PaymentType.CARD
+            }
+            PaymentType.ONLINE.toString() -> {
+                PaymentType.ONLINE
+            }
+            PaymentType.GIFT.toString() -> {
+                PaymentType.GIFT
+            }
+
+            else -> PaymentType.CASH
+        }
     }
 
-    @SuppressLint("SimpleDateFormat")
-    fun convertLongToTime(time: Long): String {
-        val date = Date(time)
-        val format = SimpleDateFormat("dd/MM/yyyy")
+
+    fun transactionTag(tag: String): TransactionTag {
+        return when(tag){
+            TransactionTag.OTHER.toString() -> {
+                TransactionTag.OTHER
+            }
+            TransactionTag.FOOD.toString() -> {
+                TransactionTag.FOOD
+            }
+            TransactionTag.SHOPPING.toString() -> {
+                TransactionTag.SHOPPING
+            }
+            TransactionTag.TRAVELLING.toString() -> {
+                TransactionTag.TRAVELLING
+            }
+            TransactionTag.ENTERTAINMENT.toString() -> {
+                TransactionTag.ENTERTAINMENT
+            }
+            TransactionTag.HEALTH.toString() -> {
+                TransactionTag.HEALTH
+            }
+            TransactionTag.EDUCATION.toString() -> {
+                TransactionTag.EDUCATION
+            }
+            TransactionTag.RENT.toString() -> {
+                TransactionTag.RENT
+            }
+            TransactionTag.GIFT.toString() -> {
+                TransactionTag.GIFT
+            }
+            TransactionTag.UTILS.toString() -> {
+                TransactionTag.UTILS
+            }
+            TransactionTag.SALARY.toString() -> {
+                TransactionTag.SALARY
+            }
+            TransactionTag.COUPONS.toString() -> {
+                TransactionTag.COUPONS
+            }
+            TransactionTag.CASHBACK.toString() -> {
+                TransactionTag.CASHBACK
+            }
+
+
+            else -> TransactionTag.OTHER
+        }
+    }
+
+    //pars double
+    fun parseDouble(value: String?) : Double{
+        return try {
+            if (value == null || value.isEmpty()) Double.NaN else value.toDouble()
+        }catch (e: Exception){
+            e.printStackTrace()
+            return 0.0
+        }
+    }
+
+
+    fun convertDateToLong(date: String): Long? {
+        val df = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        return df.parse(date)?.time
+    }
+
+    fun convertDateLongToDateString(time: Long?): String {
+        val date = time?.let { Date(it) }
+        val format = SimpleDateFormat("dd/MM/yyyy", Locale.US)
         return format.format(date)
     }
 
+    fun currentDayDate(): Long {
 
-    @SuppressLint("SimpleDateFormat")
-    fun getStartDateAndEndDate(): Month{
+       val date = Calendar.getInstance().time
+        val df = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        val stringDate = df.format(date)
+        return df.parse(stringDate)!!.time
+    }
+
+    fun getStartDateAndEndDate(): Month {
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.MONTH, 0)
+        //take First Day Of Month
         calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DAY_OF_MONTH))
         val monthFirstDate: Date = calendar.time
+        //take First Day Of Month
         calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DAY_OF_MONTH))
         val monthLastDate: Date = calendar.time
 
-        val sdf = SimpleDateFormat("dd/MM/yyyy")
+        //Format date to string
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+        val formatOne = sdf.format(monthFirstDate)
+        val formatTwo = sdf.format(monthLastDate)
+        val stringStartDate = convertDateToLong(formatOne)
+        val stringEndDate = convertDateToLong(formatTwo)
 
-        val stringStartDate = sdf.format(monthFirstDate)
-        val stringEndDate = sdf.format(monthLastDate)
-
-        return Month(stringStartDate, stringEndDate)
+        return Month(stringStartDate!!, stringEndDate!!)
     }
-
 }
+

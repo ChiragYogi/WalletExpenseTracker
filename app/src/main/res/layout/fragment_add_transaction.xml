@@ -45,11 +45,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        app:borderWidth="0dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/save_transaction_button"
         android:src="@drawable/save_vector"
+        app:borderWidth="0dp"
         app:layout_constraintBottom_toTopOf="@id/guideline_two_on_bottom"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right" />
 
@@ -57,12 +57,12 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/dateTxtInputLayout"
         style="@style/forDate"
+        android:layout_marginStart="@dimen/dimen_eight"
         android:clickable="true"
         android:focusable="true"
-       android:layout_marginStart="@dimen/dimen_eight"
         android:hint="@string/date"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
+        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
         app:layout_constraintTop_toBottomOf="@+id/amountTxtInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -77,16 +77,16 @@
         android:id="@+id/amountTxtInputLayout"
         style="@style/forAmount"
         android:hint="@string/amount"
-        app:prefixText="@string/currency_symbol"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/guideline_two_on_top">
+        app:layout_constraintTop_toBottomOf="@id/transactionTypeLayout"
+        app:prefixText="@string/currency_symbol">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/amount_edt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="numberDecimal" />
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -101,44 +101,40 @@
             android:id="@+id/transactionNoteEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/transactionTypeLayout"
         style="@style/txtInputDropdown"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transactionNoteLayout">
+        app:layout_constraintTop_toBottomOf="@id/guideline_two_on_top">
 
         <AutoCompleteTextView
-            android:id="@+id/transactionTypeEdt"
-            android:layout_width="match_parent"
+           android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
-            android:labelFor="@id/transactionTagLayout"
-            android:hint="@string/transaction_type"/>
+            android:hint="@string/transaction_type"
+            android:inputType="none" />
 
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/transactionTagLayout"
         style="@style/txtInputDropdown"
         app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
         app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transactionTypeLayout">
+        app:layout_constraintTop_toBottomOf="@id/transactionNoteLayout">
 
         <AutoCompleteTextView
-            android:id="@+id/transactionTagEdt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
-            android:labelFor="@id/transactionTagLayout"
-            android:hint="@string/tag_for_transaction"/>
-
+            android:hint="@string/tag_for_transaction"
+            android:inputType="none"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -149,12 +145,10 @@
         app:layout_constraintTop_toBottomOf="@+id/transactionTagLayout">
 
         <AutoCompleteTextView
-            android:id="@+id/transactionModeEdt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
-            android:labelFor="@id/transactionTagLayout"
-            android:hint="@string/payment_mode"/>
+            android:hint="@string/payment_mode"
+            android:inputType="none"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

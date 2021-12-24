@@ -5,23 +5,31 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.text.DateFormat
-import java.time.LocalDate
-import java.time.OffsetDateTime
-import java.util.*
+
 
 @Parcelize
 @Entity(tableName = "transaction_table")
 data class Transaction(
-    val title: String,
+    val note: String,
     val date: Long,
-    val transactionType: String,
+    val transactionType: TransactionType,
     val amount: Double,
-    val tag: String,
-    val paymentType: String,
-    val createdAt: Long = System.currentTimeMillis(),
+    val tag: TransactionTag,
+    val paymentType: PaymentType,
     @PrimaryKey(autoGenerate = true) val id: Int = 0
-): Parcelable{
-    val createdAtDate: String
-    get() = DateFormat.getTimeInstance().format(createdAt)
+): Parcelable
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

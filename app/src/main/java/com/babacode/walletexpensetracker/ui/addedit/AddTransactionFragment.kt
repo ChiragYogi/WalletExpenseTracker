@@ -1,23 +1,34 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
+
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.core.os.bundleOf
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.babacode.walletexpensetracker.R
+import com.babacode.walletexpensetracker.data.model.PaymentType
 import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.data.model.TransactionTag
+import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.FragmentAddTransactionBinding
-import com.babacode.walletexpensetracker.utiles.Extra.convertDateToLong
-import com.babacode.walletexpensetracker.utiles.Extra.transactionPayment
-import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
-
-
+import com.babacode.walletexpensetracker.utiles.Extra.convertDateLongToDateString
+import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
 import com.babacode.walletexpensetracker.utiles.Extra.transactionType
-import com.babacode.walletexpensetracker.utiles.parseDouble
 import com.babacode.walletexpensetracker.utiles.transformDatePicker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import java.util.*
 
 @AndroidEntryPoint
@@ -25,74 +36,184 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
 
     private var _binding: FragmentAddTransactionBinding? = null
     private val binding get() = _binding!!
-    private val addEditViewModel: TransactionAddEditViewModel by viewModels()
+    private val viewModel: TransactionAddEditViewModel by viewModels()
+    private val transactionFragmentArgs: AddTransactionFragmentArgs by navArgs()
+
+    private var transaction: Transaction? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAddTransactionBinding.bind(view)
 
+
+        transaction = transactionFragmentArgs.transaction
+
+        setDataToUi()
         initView()
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                viewModel.addEditTransactionEvent.collect { event ->
+                    when (event) {
+                        is TransactionAddEditViewModel.AddEditTransactionEvent.NavigateBackWithResult -> {
+                            setFragmentResult(
+                                "add_edit_request",
+                                bundleOf("add_edit_request" to event.result)
+                            )
+                            findNavController().popBackStack()
+                        }
+                        is TransactionAddEditViewModel.AddEditTransactionEvent.ShowInvalidAmount -> {
+                            binding.amountEdt.error = event.msg
+                        }
+                        is TransactionAddEditViewModel.AddEditTransactionEvent.ShowInvalidNote -> {
+                            binding.transactionNoteEdt.error = event.msg
+                        }
+                        is TransactionAddEditViewModel.AddEditTransactionEvent.ShowSelectTransactionPaymentMode -> {
+                            binding.transactionModeLayout.editText?.error = event.msg
+                        }
+                        is TransactionAddEditViewModel.AddEditTransactionEvent.ShowSelectTransactionTag -> {
+                            binding.transactionTagLayout.editText?.error = event.msg
+                        }
+                        is TransactionAddEditViewModel.AddEditTransactionEvent.ShowSelectTransactionType -> {
+                            binding.transactionTypeLayout.editText?.error = event.msg
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    private fun setDataToUi() {
 
-    private fun initView() {
-        //adepter for transaction type
-        val transactionTypeAdepter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_auto_complete_dropdown, transactionType
-        )
-        binding.transactionTypeEdt.setAdapter(transactionTypeAdepter)
+        transaction?.let { transactionDetail ->
 
-        //adepter for transaction tag
-        val tagAdepter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_auto_complete_dropdown, transactionTag
-        )
-        binding.transactionTagEdt.setAdapter(tagAdepter)
+            binding.transactionTypeLayout.editText?.setText(transactionDetail.transactionType.toString())
+            binding.transactionModeLayout.editText?.setText(transactionDetail.paymentType.toString())
+            binding.transactionTagLayout.editText?.setText(transactionDetail.tag.toString())
+            binding.transactionNoteEdt.setText(transactionDetail.note)
+            binding.amountEdt.setText(transactionDetail.amount.toInt().toString())
+            binding.dateEdt.setText(convertDateLongToDateString(transactionDetail.date))
 
-
-        //adepter for transaction type
-        val transactionModeAdepter = ArrayAdapter(
-            requireContext(),
-            R.layout.item_auto_complete_dropdown, transactionPayment
-        )
-        binding.transactionModeEdt.setAdapter(transactionModeAdepter)
-
-        binding.dateEdt.transformDatePicker(requireContext(), "dd/MM/yyyy", Date())
-
-
-        binding.saveTransaction.setOnClickListener {
-            insertTransactionInDatabase()
         }
 
 
     }
 
-    private fun insertTransactionInDatabase() {
-        addEditViewModel.insertTransaction(saveTransaction())
-        findNavController().navigate(R.id.action_addTransactionFragment_to_homeFragment)
+    private fun initView() {
+
+
+        binding.apply {
+
+            //adepter for transaction type
+            val transactionTypeAdepter = ArrayAdapter(
+                requireContext(),
+                R.layout.item_auto_complete_dropdown, TransactionType.values()
+            )
+
+            (binding.transactionTypeLayout.editText as? AutoCompleteTextView)?.setAdapter(
+                transactionTypeAdepter
+            )
+
+
+            //adepter for transaction tag
+            val tagAdepter = ArrayAdapter(
+                requireContext(),
+                R.layout.item_auto_complete_dropdown, TransactionTag.values()
+            )
+            (binding.transactionTagLayout.editText as? AutoCompleteTextView)?.setAdapter(tagAdepter)
+
+
+            //adepter for transaction type
+            val transactionModeAdepter = ArrayAdapter(
+                requireContext(),
+                R.layout.item_auto_complete_dropdown, PaymentType.values()
+            )
+
+            (binding.transactionModeLayout.editText as? AutoCompleteTextView)?.setAdapter(
+                transactionModeAdepter
+            )
+
+            val todayDate = currentDayDate()
+            dateEdt.setText(convertDateLongToDateString(todayDate))
+            dateEdt.transformDatePicker(requireContext(), "dd/MM/yyyy", Date())
+
+            amountEdt.doAfterTextChanged {
+                amountTxtInputLayout.error = null
+            }
+            transactionNoteEdt.doAfterTextChanged {
+                transactionNoteLayout.error = null
+            }
+
+            transactionTypeLayout.editText?.addTextChangedListener {
+                transactionTypeLayout.editText?.error = null
+            }
+
+            transactionTagLayout.editText?.addTextChangedListener {
+                transactionTagLayout.editText?.error = null
+            }
+
+            transactionModeLayout.editText?.addTextChangedListener {
+                transactionModeLayout.editText?.error = null
+            }
+
+            saveTransaction.setOnClickListener {
+                saveOrUpdateTransaction()
+            }
+
+        }
+
     }
 
+    private fun saveOrUpdateTransaction() {
 
-    private fun saveTransaction(): Transaction = binding.let {
-        val note = binding.transactionNoteEdt.text.toString()
-        val dateFromEditText = binding.dateEdt.text.toString()
-        val date = convertDateToLong(dateFromEditText)
-        val amount = parseDouble(binding.amountEdt.text.toString())
-        val transactionType = binding.transactionTypeEdt.text.toString()
-        val transactionTag = binding.transactionTagEdt.text.toString()
-        val transactionMode = binding.transactionModeEdt.text.toString()
-        return Transaction(note, date, transactionType, amount, transactionTag, transactionMode)
+        val note = binding.transactionNoteEdt.text.toString().trim { it <= ' ' }
+        val amount = binding.amountEdt.text.toString().trim { it <= ' ' }
+        val transactionType = binding.transactionTypeLayout.editText?.text.toString()
+        val transactionTag = binding.transactionTagLayout.editText?.text.toString()
+        val transactionMode = binding.transactionModeLayout.editText?.text.toString()
+        val date = binding.dateEdt.text.toString()
+
+        var transactionId = 0
+
+        transaction?.let {
+            if (it.id != 0) {
+                transactionId = it.id
+            }
+        }
+
+
+        if (transactionId == 0) {
+            viewModel.validateAndInsert(
+                note,
+                date,
+                transactionType,
+                amount,
+                transactionTag,
+                transactionMode,
+                transactionId
+            )
+        } else {
+            viewModel.validateAndUpdate(
+                note,
+                date,
+                transactionType,
+                amount,
+                transactionTag,
+                transactionMode,
+                transactionId
+            )
+        }
+
 
     }
-
-
 
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+
 
 }
 

@@ -8,14 +8,14 @@ buildscript {
     }
 
     ext {
-        kotlinVersion = "1.6.0"
+        kotlinVersion = "1.6.10"
         navigationCompVersion = "2.3.5"
         hiltGradlePlugin = "2.38.1"
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigationCompVersion"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltGradlePlugin"
 
@@ -39,7 +39,7 @@ ext {
     appcompat = "1.4.0"
     materialDesign = "1.4.0"
     constraintlayout = "2.1.2"
-    rommVersion = "2.3.0"
+    rommVersion = "2.4.0"
     coroutinesCore = "1.3.9"
     coroutinesAndroid = "1.5.1"
     navigationCompVersion = "2.3.5"

@@ -24,8 +24,8 @@ import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.FragmentAddTransactionBinding
 import com.babacode.walletexpensetracker.utiles.Extra.convertDateLongToDateString
 import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
-import com.babacode.walletexpensetracker.utiles.Extra.transactionType
 import com.babacode.walletexpensetracker.utiles.transformDatePicker
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -38,7 +38,6 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
     private val binding get() = _binding!!
     private val viewModel: TransactionAddEditViewModel by viewModels()
     private val transactionFragmentArgs: AddTransactionFragmentArgs by navArgs()
-
     private var transaction: Transaction? = null
 
 
@@ -51,6 +50,7 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
 
         setDataToUi()
         initView()
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
 
@@ -70,13 +70,13 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
                             binding.transactionNoteEdt.error = event.msg
                         }
                         is TransactionAddEditViewModel.AddEditTransactionEvent.ShowSelectTransactionPaymentMode -> {
-                            binding.transactionModeLayout.editText?.error = event.msg
+                            Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                         }
                         is TransactionAddEditViewModel.AddEditTransactionEvent.ShowSelectTransactionTag -> {
-                            binding.transactionTagLayout.editText?.error = event.msg
+                            Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                         }
                         is TransactionAddEditViewModel.AddEditTransactionEvent.ShowSelectTransactionType -> {
-                            binding.transactionTypeLayout.editText?.error = event.msg
+                            Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -116,11 +116,11 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
             )
 
 
-            //adepter for transaction tag
             val tagAdepter = ArrayAdapter(
                 requireContext(),
                 R.layout.item_auto_complete_dropdown, TransactionTag.values()
             )
+
             (binding.transactionTagLayout.editText as? AutoCompleteTextView)?.setAdapter(tagAdepter)
 
 
@@ -134,8 +134,10 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
                 transactionModeAdepter
             )
 
-            val todayDate = currentDayDate()
-            dateEdt.setText(convertDateLongToDateString(todayDate))
+
+        /*    val todayDate = currentDayDate()
+
+            dateEdt.setText(convertDateLongToDateString(todayDate))*/
             dateEdt.transformDatePicker(requireContext(), "dd/MM/yyyy", Date())
 
             amountEdt.doAfterTextChanged {
@@ -145,23 +147,14 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
                 transactionNoteLayout.error = null
             }
 
-            transactionTypeLayout.editText?.addTextChangedListener {
-                transactionTypeLayout.editText?.error = null
-            }
 
-            transactionTagLayout.editText?.addTextChangedListener {
-                transactionTagLayout.editText?.error = null
-            }
-
-            transactionModeLayout.editText?.addTextChangedListener {
-                transactionModeLayout.editText?.error = null
-            }
-
-            saveTransaction.setOnClickListener {
+            saveTransaction.setOnClickListener{
                 saveOrUpdateTransaction()
             }
 
         }
+
+
 
     }
 
@@ -183,27 +176,15 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         }
 
 
-        if (transactionId == 0) {
-            viewModel.validateAndInsert(
-                note,
-                date,
-                transactionType,
-                amount,
-                transactionTag,
-                transactionMode,
-                transactionId
-            )
-        } else {
-            viewModel.validateAndUpdate(
-                note,
-                date,
-                transactionType,
-                amount,
-                transactionTag,
-                transactionMode,
-                transactionId
-            )
-        }
+        viewModel.validateAndInsertOrUpdate(
+            note,
+            date,
+            transactionType,
+            amount,
+            transactionTag,
+            transactionMode,
+            transactionId
+        )
 
 
     }

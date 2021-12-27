@@ -40,7 +40,7 @@ class HomeAdepter(private val listener: OnItemClick) :
 
             }
 
-            binding.root.setOnLongClickListener{
+            binding.root.setOnLongClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val transaction = getItem(position)
@@ -59,25 +59,25 @@ class HomeAdepter(private val listener: OnItemClick) :
                 transactionTitle.text = currentItem.note
                 transactionType.text = currentItem.paymentType.toString()
 
-              /*  when (currentItem.transactionType) {
-                    TransactionType.EXPENSE -> {
-                        transactionMaterialCardView.setCardBackgroundColor(
-                            ContextCompat.getColor(
-                                root.context.applicationContext,
-                                R.color.expenseColor
-                            )
-                        )
+                /*  when (currentItem.transactionType) {
+                      TransactionType.EXPENSE -> {
+                          transactionMaterialCardView.setCardBackgroundColor(
+                              ContextCompat.getColor(
+                                  root.context.applicationContext,
+                                  R.color.expenseColor
+                              )
+                          )
 
-                    }
-                    TransactionType.INCOME -> {
-                        transactionMaterialCardView.setCardBackgroundColor(
-                            ContextCompat.getColor(
-                                root.context.applicationContext,
-                                R.color.incomeColor
-                            )
-                        )
-                    }
-                }*/
+                      }
+                      TransactionType.INCOME -> {
+                          transactionMaterialCardView.setCardBackgroundColor(
+                              ContextCompat.getColor(
+                                  root.context.applicationContext,
+                                  R.color.incomeColor
+                              )
+                          )
+                      }
+                  }*/
 
                 when (currentItem.tag) {
 
@@ -96,16 +96,16 @@ class HomeAdepter(private val listener: OnItemClick) :
                     TransactionTag.ENTERTAINMENT -> {
                         imageViewForTag.setImageResource(R.drawable.entertainment_vector)
                     }
-                    TransactionTag.HEALTH -> {
+                    TransactionTag.HEALTH-> {
                         imageViewForTag.setImageResource(R.drawable.medical_vector)
                     }
                     TransactionTag.EDUCATION -> {
                         imageViewForTag.setImageResource(R.drawable.education_vector)
                     }
-                    TransactionTag.RENT -> {
+                    TransactionTag.RENT-> {
                         imageViewForTag.setImageResource(R.drawable.rent_vector)
                     }
-                    TransactionTag.BILLS -> {
+                    TransactionTag.BILLS-> {
                         imageViewForTag.setImageResource(R.drawable.bill_vector)
                     }
                     TransactionTag.GIFT -> {
@@ -123,7 +123,7 @@ class HomeAdepter(private val listener: OnItemClick) :
                     TransactionTag.COUPONS -> {
                         imageViewForTag.setImageResource(R.drawable.bill_vector)
                     }
-                    TransactionTag.CASHBACK -> {
+                    TransactionTag.CASHBACK-> {
                         imageViewForTag.setImageResource(R.drawable.gift_vector)
                     }
                 }
@@ -132,19 +132,19 @@ class HomeAdepter(private val listener: OnItemClick) :
     }
 
 
-        class DiffUtilCallBack : DiffUtil.ItemCallback<Transaction>() {
-            override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
-                return oldItem == newItem
-            }
-
+    class DiffUtilCallBack : DiffUtil.ItemCallback<Transaction>() {
+        override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+            return oldItem.id == newItem.id
         }
 
-        interface OnItemClick {
-            fun OnTransactionClick(transaction: Transaction)
-            fun OnLongPress(id: Int)
+        override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
+            return oldItem == newItem
         }
+
     }
+
+    interface OnItemClick {
+        fun OnTransactionClick(transaction: Transaction)
+        fun OnLongPress(id: Int)
+    }
+}

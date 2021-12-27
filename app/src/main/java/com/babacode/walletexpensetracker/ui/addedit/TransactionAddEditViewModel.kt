@@ -1,20 +1,15 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
 
-import android.os.Parcelable
+
 import androidx.lifecycle.*
-import com.babacode.walletexpensetracker.data.model.PaymentType
 import com.babacode.walletexpensetracker.data.model.Transaction
-import com.babacode.walletexpensetracker.data.model.TransactionTag
-import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
-import com.babacode.walletexpensetracker.ui.parseDouble
-import com.babacode.walletexpensetracker.utiles.Extra
 import com.babacode.walletexpensetracker.utiles.Extra.AMOUNT_CHECK_FOR_ADD
 import com.babacode.walletexpensetracker.utiles.Extra.convertDateToLong
-import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
+import com.babacode.walletexpensetracker.utiles.Extra.parseDouble
 import com.babacode.walletexpensetracker.utiles.Extra.paymentMode
 import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
 import com.babacode.walletexpensetracker.utiles.Extra.transactionType
@@ -35,7 +30,7 @@ class TransactionAddEditViewModel @Inject constructor(
     val addEditTransactionEvent = addEditTransactionChannel.receiveAsFlow()
 
 
-    fun validateAndInsert(
+    fun validateAndInsertOrUpdate(
         note: String, date: String, transactionType: String, amount: String,
         tag: String,
         paymentType: String, id: Int
@@ -77,6 +72,8 @@ class TransactionAddEditViewModel @Inject constructor(
             return
         }
 
+
+
         val addDate = convertDateToLong(date)
         val trnType = transactionType(transactionType)
         val trnTag = transactionTag(tag)
@@ -84,16 +81,28 @@ class TransactionAddEditViewModel @Inject constructor(
 
         val addAmount = parseDouble(amount)
 
-        val addNewTransaction = Transaction(
-            note, addDate!!, trnType, addAmount, trnTag,
-            trnPaymentType, id
-        )
 
-        createTransaction(transaction = addNewTransaction)
+       if (id == 0){
+           val addNewTransaction = Transaction(
+               note, addDate!!, trnType, addAmount, trnTag,
+               trnPaymentType, id
+           )
+
+           createTransaction(transaction = addNewTransaction)
+       }else {
+
+           val updateTransaction = Transaction(
+               note, addDate!!, trnType, addAmount,trnTag,
+               trnPaymentType, id
+           )
+
+           updateTransaction(transaction = updateTransaction)
+       }
+
 
     }
 
-    fun validateAndUpdate(
+    /*fun validateAndUpdate(
         note: String, date: String, transactionType: String, amount: String,
         tag: String,
         paymentType: String, id: Int
@@ -152,7 +161,7 @@ class TransactionAddEditViewModel @Inject constructor(
 
         updateTransaction(transaction = updateTransaction)
 
-    }
+    }*/
 
 
     private fun createTransaction(transaction: Transaction) = viewModelScope.launch {

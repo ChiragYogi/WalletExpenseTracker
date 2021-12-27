@@ -57,11 +57,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesAndroid"
 
 
-    // Glide
-    implementation "com.github.bumptech.glide:glide:$glide"
-    kapt "com.github.bumptech.glide:compiler:$glide"
-
-
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hiltGradlePlugin"
     kapt "com.google.dagger:hilt-android-compiler:$hiltGradlePlugin"
@@ -84,8 +79,7 @@ dependencies {
     //MpChart
     implementation "com.github.Philjay:mpandroidchart:$mpChart"
 
-    //Dexter For permission
-    implementation "com.karumi:dexter:$dexter"
+
 
     implementation "androidx.activity:activity-ktx:1.4.0"
     implementation 'androidx.fragment:fragment-ktx:1.4.0'

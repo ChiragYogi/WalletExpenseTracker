@@ -51,10 +51,33 @@
     <string name="transaction_type_tag">Transaction Type Tag</string>
     <string name="dropdowntagimage">DropDownTagImage</string>
 
-    <string name="payment_mode">Payment Mode</string>
+
 
     <string name="title">Title</string>
     <string name="tag">Tag</string>
     <string name="createdAt">created at</string>
+
+    <string name="payment_mode">Payment Mode</string>
+
+
+
+
+    <string-array name="transactionTag">
+        <item>Other</item>
+        <item>Food</item>
+        <item>Shopping</item>
+        <item>Travelling</item>
+        <item>Entertainment</item>
+        <item>Health</item>
+        <item>Education</item>
+        <item>Rent</item>
+        <item>Bills</item>
+        <item>Gift</item>
+        <item>Investment</item>
+        <item>Utils</item>
+        <item>Salary</item>
+        <item>Coupons</item>
+        <item>CashBack</item>
+    </string-array>
 
 </resources>

@@ -2,6 +2,7 @@ package com.babacode.walletexpensetracker.ui.home
 
 import androidx.lifecycle.*
 import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
@@ -33,6 +34,7 @@ class HomeViewModel @Inject constructor(
     private val _thisMonthTransaction = repository.getCurrentMonthTransaction(
         getStartAndEndDate.startDate, getStartAndEndDate.endDate
     ).asLiveData()
+
     val currentMonthTransaction: LiveData<List<Transaction>> get() = _thisMonthTransaction
 
 
@@ -46,13 +48,17 @@ class HomeViewModel @Inject constructor(
         transactionEventChannel.send(TransactionEvent.NavigateToEditScreen(transaction))
     }
 
-    fun onTransactionDeleteClick(id: Int) = viewModelScope.launch {
-        transactionEventChannel.send(TransactionEvent.NavigateToDeleteTransactionScreen(id))
+    fun onTransactionDeleteClick(transaction: Transaction) = viewModelScope.launch {
+        transactionEventChannel.send(TransactionEvent.NavigateToDeleteTransactionScreen(transaction))
     }
 
-    fun onUndoDeleteClick(transaction: Transaction) = viewModelScope.launch {
-        repository.insertNewTransaction(transaction)
+    fun deleteSingleTransaction(transaction: Transaction) = viewModelScope.launch {
+        repository.deleteSingleTransaction(transaction)
     }
+
+   fun onTransactionTotalSelected(transactionType: TransactionType) = viewModelScope.launch {
+       transactionEventChannel.send(TransactionEvent.NavigateToAllTransactionTypeScreen(transactionType))
+   }
 
 
     fun onAddEditResult(result: Int) {
@@ -71,7 +77,8 @@ class HomeViewModel @Inject constructor(
         object NavigateToAddTransactionScreen : TransactionEvent()
         data class NavigateToEditScreen(val transaction: Transaction) : TransactionEvent()
         data class ShowTransactionSavedConfirmationMessage(val message: String) : TransactionEvent()
-        data class NavigateToDeleteTransactionScreen(val id: Int) : TransactionEvent()
+        data class NavigateToDeleteTransactionScreen(val transaction: Transaction) : TransactionEvent()
+        data class NavigateToAllTransactionTypeScreen(val transactionType: TransactionType): TransactionEvent()
     }
 
 

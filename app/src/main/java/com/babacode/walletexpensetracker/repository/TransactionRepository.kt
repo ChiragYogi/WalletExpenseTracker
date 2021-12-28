@@ -4,6 +4,7 @@ package com.babacode.walletexpensetracker.repository
 import com.babacode.walletexpensetracker.data.dao.TransactionDao
 import com.babacode.walletexpensetracker.data.model.Month
 import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.data.model.TransactionType
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -20,8 +21,8 @@ class TransactionRepository @Inject constructor(
         return dao.getThisMonthTransaction(startDate,endDate)
     }
 
-    fun getTransactionByTransactionType(transactionType: String): Flow<List<Transaction>>{
-        return dao.getTransactionByType(type = transactionType)
+    fun getTransactionByTransactionType(transactionType: TransactionType): Flow<List<Transaction>>{
+        return dao.getTransactionByType(transactionType = transactionType)
     }
 
     suspend fun insertNewTransaction(transaction: Transaction){
@@ -32,8 +33,8 @@ class TransactionRepository @Inject constructor(
         dao.updateTransaction(transaction)
     }
 
-    suspend fun deleteSingleTransaction(transactionId: Int){
-        dao.deleteTransactionById(id = transactionId)
+    suspend fun deleteSingleTransaction(transaction: Transaction){
+        dao.deleteSelectedTransaction(transaction)
     }
 
 

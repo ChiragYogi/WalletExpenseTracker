@@ -1,13 +1,13 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
 
-
 import androidx.lifecycle.*
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.utiles.Extra.AMOUNT_CHECK_FOR_ADD
+import com.babacode.walletexpensetracker.utiles.Extra.NOTE_LENGTH_VALIDATE
 import com.babacode.walletexpensetracker.utiles.Extra.convertDateToLong
 import com.babacode.walletexpensetracker.utiles.Extra.parseDouble
 import com.babacode.walletexpensetracker.utiles.Extra.paymentMode
@@ -51,7 +51,7 @@ class TransactionAddEditViewModel @Inject constructor(
             return
         }
         if (amount.contains("#") || amount.contains("/") || amount.contains("+")
-            || amount.contains("-") || amount.contains("*")
+            || amount.contains("-") || amount.contains("*") || amount.contains(".")
         ) {
             showInvalidAmountMessage("Please Enter Valid Amount")
             return
@@ -59,6 +59,11 @@ class TransactionAddEditViewModel @Inject constructor(
 
         if (note.isBlank()) {
             showInvalidNoteMessage("Please Add Note With Transaction")
+            return
+        }
+
+        if (note.length >= NOTE_LENGTH_VALIDATE) {
+            showInvalidNoteMessage("Note character must Be less than 20")
             return
         }
 
@@ -71,7 +76,6 @@ class TransactionAddEditViewModel @Inject constructor(
             showSelectTransactionPaymentModeMessage("Please Select Type Of Payment")
             return
         }
-
 
 
         val addDate = convertDateToLong(date)
@@ -82,86 +86,25 @@ class TransactionAddEditViewModel @Inject constructor(
         val addAmount = parseDouble(amount)
 
 
-       if (id == 0){
-           val addNewTransaction = Transaction(
-               note, addDate!!, trnType, addAmount, trnTag,
-               trnPaymentType, id
-           )
+        if (id == 0) {
+            val addNewTransaction = Transaction(
+                note, addDate!!, trnType, addAmount, trnTag,
+                trnPaymentType, id
+            )
 
-           createTransaction(transaction = addNewTransaction)
-       }else {
+            createTransaction(transaction = addNewTransaction)
+        } else {
 
-           val updateTransaction = Transaction(
-               note, addDate!!, trnType, addAmount,trnTag,
-               trnPaymentType, id
-           )
+            val updateTransaction = Transaction(
+                note, addDate!!, trnType, addAmount, trnTag,
+                trnPaymentType, id
+            )
 
-           updateTransaction(transaction = updateTransaction)
-       }
+            updateTransaction(transaction = updateTransaction)
+        }
 
 
     }
-
-    /*fun validateAndUpdate(
-        note: String, date: String, transactionType: String, amount: String,
-        tag: String,
-        paymentType: String, id: Int
-    ) {
-
-        if (transactionType.isBlank()) {
-            showSelectTransactionTypeMessage("Please Select Type Of Transaction")
-            return
-        }
-
-        if (amount.isBlank()) {
-            showInvalidAmountMessage("Please Enter Amount")
-            return
-        }
-        if (amount.length > AMOUNT_CHECK_FOR_ADD) {
-            showInvalidAmountMessage("Amount Must Be less than  1000000")
-            return
-        }
-        if (amount.contains("#") || amount.contains("/") || amount.contains("+")
-            || amount.contains("-") || amount.contains("*")
-        ) {
-            showInvalidAmountMessage("Please Enter Valid Amount")
-            return
-        }
-
-        if (note.isBlank()) {
-            showInvalidNoteMessage("Please Add Note With Transaction")
-            return
-        }
-
-
-
-
-        if (tag.isBlank()) {
-            showSelectTransactionTagMessage("Please Select Type Of Tag")
-            return
-        }
-
-        if (paymentType.isBlank()) {
-            showSelectTransactionPaymentModeMessage("Please Select Type Of Payment")
-            return
-        }
-
-
-        val updateDate = convertDateToLong(date)
-
-        val updateTrnType = transactionType(transactionType)
-        val updateTrnTag = transactionTag(tag)
-        val updateTrnPaymentType = paymentMode(paymentType)
-
-        val updateAmount = parseDouble(amount)
-        val updateTransaction = Transaction(
-            note, updateDate!!, updateTrnType, updateAmount, updateTrnTag,
-            updateTrnPaymentType, id
-        )
-
-        updateTransaction(transaction = updateTransaction)
-
-    }*/
 
 
     private fun createTransaction(transaction: Transaction) = viewModelScope.launch {

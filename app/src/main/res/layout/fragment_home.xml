@@ -21,17 +21,7 @@
         app:layout_constraintTop_toBottomOf="@id/pie_chart" />
 
 
-    <TextView
-        android:id="@+id/see_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_eight"
-        android:fontFamily="@font/roboto"
-        android:text="@string/see_more"
-        android:textSize="@dimen/eighteen_sp_text_size"
-        android:textColor="?attr/colorPrimary"
-        app:layout_constraintBaseline_toBaselineOf="@+id/recent_transaction_text"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right" />
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_one_on_left"
@@ -68,10 +58,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         tools:listitem="@layout/transaction_rv_item"
-        android:layout_marginBottom="@dimen/dimen_eight"
-        android:layout_marginEnd="@dimen/dimen_eight"
-        android:layout_marginStart="@dimen/dimen_eight"
-        android:layout_marginTop="@dimen/dimen_eight"
         app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
         app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
         app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"

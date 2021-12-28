@@ -1,10 +1,14 @@
 package com.babacode.walletexpensetracker.ui.home
 
 
+import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -26,7 +30,8 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlin.collections.ArrayList
-import com.babacode.walletexpensetracker.utiles.Extra
+import com.babacode.walletexpensetracker.utiles.Extra.BASE_AMOUNT
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 
@@ -69,7 +74,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
                                 .show()
                         }
                         is HomeViewModel.TransactionEvent.NavigateToDeleteTransactionScreen -> {
-                            //nothing
+                            val action =
+                                HomeFragmentDirections.actionGlobalDeleteTransaction(event.transaction)
+                            findNavController().navigate(action)
                         }
                         is HomeViewModel.TransactionEvent.NavigateToEditScreen -> {
                             val action =
@@ -80,12 +87,27 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
                                 )
                             findNavController().navigate(action)
                         }
+                        is HomeViewModel.TransactionEvent.NavigateToAllTransactionTypeScreen -> {
+                            val action =
+                                HomeFragmentDirections.actionHomeFragmentToTransactionTypeFragment(
+                                    event.transactionType
+                                )
+                            findNavController().navigate(action)
+                        }
                     }
                 }
             }
         }.exhaustive
 
 
+
+        binding.incomeView.incomeViewClickId.setOnClickListener {
+            viewModel.onTransactionTotalSelected(TransactionType.INCOME)
+        }
+
+        binding.expenseView.expenseViewClickId.setOnClickListener {
+            viewModel.onTransactionTotalSelected(TransactionType.EXPENSE)
+        }
         binding.addFab.setOnClickListener {
             viewModel.onAddNewTransactionClick()
         }
@@ -122,8 +144,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
 
             } else {
                 binding.apply {
-                    incomeView.incomeTotal.text = Extra.BASE_AMOUNT.toString()
-                    expenseView.expenseTotal.text = Extra.BASE_AMOUNT.toString()
+                    incomeView.incomeTotal.text = BASE_AMOUNT.toString()
+                    expenseView.expenseTotal.text = BASE_AMOUNT.toString()
                 }
 
             }
@@ -206,6 +228,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
         }
     }
 
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -216,8 +239,8 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
 
     }
 
-    override fun OnLongPress(id: Int) {
-        viewModel.onTransactionDeleteClick(id)
+    override fun OnLongPress(transaction: Transaction) {
+        viewModel.onTransactionDeleteClick(transaction)
     }
 
 

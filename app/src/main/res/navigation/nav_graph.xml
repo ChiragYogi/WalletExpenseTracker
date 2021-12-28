@@ -24,12 +24,17 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+
     </fragment>
     <fragment
         android:id="@+id/transactionTypeFragment"
-        android:name="com.babacode.walletexpensetracker.ui.TransactionTypeFragment"
-        android:label="fragment_transaction_type"
-        tools:layout="@layout/fragment_transaction_type" />
+        android:name="com.babacode.walletexpensetracker.ui.detail.TransactionTypeFragment"
+        android:label="Detail View"
+        tools:layout="@layout/fragment_transaction_type" >
+        <argument
+            android:name="trnasactionType"
+            app:argType="com.babacode.walletexpensetracker.data.model.TransactionType" />
+    </fragment>
     <fragment
         android:id="@+id/addTransactionFragment"
         android:name="com.babacode.walletexpensetracker.ui.addedit.AddTransactionFragment"
@@ -44,4 +49,13 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <dialog
+        android:id="@+id/deleteTransaction"
+        android:name="com.babacode.walletexpensetracker.ui.home.DeleteTransaction"
+        android:label="DeleteTransaction" >
+         <argument
+            android:name="transactionDelete"
+            app:argType="com.babacode.walletexpensetracker.data.model.Transaction" />
+    </dialog>
+    <action android:id="@+id/action_global_deleteTransaction" app:destination="@id/deleteTransaction"/>
 </navigation>

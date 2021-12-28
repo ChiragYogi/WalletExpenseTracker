@@ -11,10 +11,8 @@ object Extra {
 
 
     const val AMOUNT_CHECK_FOR_ADD = 7
+    const val NOTE_LENGTH_VALIDATE = 20
     const val BASE_AMOUNT = 0.0
-
-
-
 
     fun transactionType(type: String): TransactionType {
 

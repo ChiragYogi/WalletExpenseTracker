@@ -13,6 +13,6 @@
     <color name="statusBarColor">@color/black</color>
     <color name="currencyCode">#1F201F</color>
     <color name="colorForRvTag">#A19D9D</color>
-    <color name="incomeColor">#A9BCA9</color>
-    <color name="expenseColor">#D1AEAE</color>
+    <color name="incomeColor">#F1D440</color>
+    <color name="expenseColor">#ED0B0B</color>
 </resources>

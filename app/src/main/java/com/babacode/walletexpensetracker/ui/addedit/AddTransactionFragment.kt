@@ -88,12 +88,16 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
 
         transaction?.let { transactionDetail ->
 
+
+
+
             binding.transactionTypeLayout.editText?.setText(transactionDetail.transactionType.toString())
             binding.transactionModeLayout.editText?.setText(transactionDetail.paymentType.toString())
             binding.transactionTagLayout.editText?.setText(transactionDetail.tag.toString())
             binding.transactionNoteEdt.setText(transactionDetail.note)
             binding.amountEdt.setText(transactionDetail.amount.toInt().toString())
             binding.dateEdt.setText(convertDateLongToDateString(transactionDetail.date))
+
 
         }
 
@@ -134,10 +138,13 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
                 transactionModeAdepter
             )
 
+            if (transaction?.date == null){
 
-        /*    val todayDate = currentDayDate()
+                val todayDate = currentDayDate()
 
-            dateEdt.setText(convertDateLongToDateString(todayDate))*/
+                dateEdt.setText(convertDateLongToDateString(todayDate))
+            }
+
             dateEdt.transformDatePicker(requireContext(), "dd/MM/yyyy", Date())
 
             amountEdt.doAfterTextChanged {
@@ -148,12 +155,11 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
             }
 
 
-            saveTransaction.setOnClickListener{
+            saveTransaction.setOnClickListener {
                 saveOrUpdateTransaction()
             }
 
         }
-
 
 
     }

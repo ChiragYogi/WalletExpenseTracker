@@ -54,6 +54,28 @@
     <string name="createdAt">created at</string>
 
     <string name="payment_mode">Payment Mode</string>
+    <string name="delete_this_transaction">Delete This Transaction</string>
+    <string name="delete_transaction">Transaction Deleted Successfully</string>
+    <string name="delete_this_transaction_msg">Do You Want to Delete this Transaction?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="added_success">Transaction added</string>
+    <string name="update_success">Transaction updated</string>
+    <string name="transaction_type_error">Please Select Type Of Transaction</string>
+    <string name="empty_amount_error">Please Enter Amount</string>
+    <string name="amount_length_error">Amount Must Be less than  1000000</string>
+    <string name="valid_amount_error">Please Enter Valid Amount</string>
+    <string name="add_note_error">Please Add Note With Transaction</string>
+    <string name="note_validate_error">Note character must Be less than 20</string>
+    <string name="tag_error">Please Select Type Of Tag</string>
+    <string name="payment_error">Please Select Type Of Payment</string>
+
+
+
+    <string name="cancel">Cancel</string>
+    <string name="undo">Undo</string>
+    <string name="operation_cancel">Operation Cancel</string>
 
     <string-array name="transactionTag">
         <item>Other</item>

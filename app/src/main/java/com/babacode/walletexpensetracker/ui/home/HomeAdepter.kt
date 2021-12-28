@@ -44,7 +44,7 @@ class HomeAdepter(private val listener: OnItemClick) :
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val transaction = getItem(position)
-                    listener.OnLongPress(transaction.id)
+                    listener.OnLongPress(transaction)
                 }
                 true
             }
@@ -145,6 +145,7 @@ class HomeAdepter(private val listener: OnItemClick) :
 
     interface OnItemClick {
         fun OnTransactionClick(transaction: Transaction)
-        fun OnLongPress(id: Int)
+        fun OnLongPress(transaction: Transaction)
+
     }
 }

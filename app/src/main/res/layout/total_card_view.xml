@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ShapeAppearance.MaterialComponents.SmallComponent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/dimen_four"
+    android:layout_margin="@dimen/dimen_eight"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardElevation="@dimen/dimen_four">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/expense_text_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_eight"
+            android:layout_marginTop="@dimen/dimen_eight"
+
+            android:fontFamily="@font/roboto"
+            android:gravity="center"
+            tools:text="@string/expense"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="@dimen/sixteen_sp_text_size"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/currency_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_eight"
+            android:layout_marginTop="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto_condensed_regular"
+            android:text="@string/currency_symbol"
+            android:textColor="@color/currencyCode"
+            android:textSize="@dimen/eighteen_sp_text_size"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/expense_text_title"
+            app:layout_constraintTop_toBottomOf="@id/expense_text_title" />
+
+        <TextView
+            android:id="@+id/expense_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="9dp"
+            android:layout_marginStart="@dimen/dimen_four"
+            android:layout_marginTop="@dimen/dimen_eight"
+            android:fontFamily="@font/roboto_condensed_bold"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="@dimen/eighteen_sp_text_size"
+
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/currency_symbol"
+            app:layout_constraintTop_toBottomOf="@id/expense_text_title"
+            tools:text="100000.00" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+</com.google.android.material.card.MaterialCardView>
+

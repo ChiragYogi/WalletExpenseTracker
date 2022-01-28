@@ -1,26 +1,26 @@
 package com.babacode.walletexpensetracker.ui.home
 
 
-import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.FragmentHomeBinding
-import com.babacode.walletexpensetracker.utiles.exhaustive
+import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.utiles.SettingUtils
+import com.babacode.walletexpensetracker.utiles.showSnackBar
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.data.PieData
@@ -28,12 +28,6 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlin.collections.ArrayList
-import com.babacode.walletexpensetracker.utiles.Extra.BASE_AMOUNT
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -41,177 +35,154 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val mAdepter = HomeAdepter(this)
+    private lateinit var mAdepter: HomeAdepter
     private val viewModel: HomeViewModel by viewModels()
+    private val currencyCode by lazy {
+        SettingUtils(requireContext())
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+        mAdepter = HomeAdepter(this)
+
+        binding.apply {
+            expenseView.currencySymbol.text = currencyCode.getCurrencyCode()
+            incomeView.currencySymbol.text = currencyCode.getCurrencyCode()
+        }
 
 
-        setUpRecyclerView()
         initPieChart()
         setUpCurrentMonthObserver()
-        setRecentTransactionToAdepter()
-
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.transactionEvent.collect { event ->
-                    when (event) {
-                        is HomeViewModel.TransactionEvent.NavigateToAddTransactionScreen -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToAddTransactionFragment(
-                                    "Add Transaction",
-                                    null
-                                )
-                            findNavController().navigate(action)
-                        }
-
-                        is HomeViewModel.TransactionEvent.ShowTransactionSavedConfirmationMessage -> {
-                            Snackbar.make(requireView(), event.message, Snackbar.LENGTH_SHORT)
-                                .show()
-                        }
-                        is HomeViewModel.TransactionEvent.NavigateToDeleteTransactionScreen -> {
-                            val action =
-                                HomeFragmentDirections.actionGlobalDeleteTransaction(event.transaction)
-                            findNavController().navigate(action)
-                        }
-                        is HomeViewModel.TransactionEvent.NavigateToEditScreen -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToAddTransactionFragment(
-                                    "Edit Transaction",
-                                    event.transaction
-
-                                )
-                            findNavController().navigate(action)
-                        }
-                        is HomeViewModel.TransactionEvent.NavigateToAllTransactionTypeScreen -> {
-                            val action =
-                                HomeFragmentDirections.actionHomeFragmentToTransactionTypeFragment(
-                                    event.transactionType
-                                )
-                            findNavController().navigate(action)
-                        }
-                    }
-                }
-            }
-        }.exhaustive
-
-
+        setUpRecyclerView()
 
         binding.incomeView.incomeViewClickId.setOnClickListener {
-            viewModel.onTransactionTotalSelected(TransactionType.INCOME)
+
+            val action = HomeFragmentDirections.actionHomeFragmentToTransactionTypeFragment(
+                TransactionType.INCOME
+            )
+            findNavController().navigate(action)
         }
 
         binding.expenseView.expenseViewClickId.setOnClickListener {
-            viewModel.onTransactionTotalSelected(TransactionType.EXPENSE)
+
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToTransactionTypeFragment(
+                    TransactionType.EXPENSE
+                )
+            findNavController().navigate(action)
         }
         binding.addFab.setOnClickListener {
-            viewModel.onAddNewTransactionClick()
+            val action =
+                HomeFragmentDirections.actionHomeFragmentToAddTransactionFragment(
+                    null
+                )
+            findNavController().navigate(action)
         }
 
         setFragmentResultListener("add_edit_request") { _, bundle ->
-            val result = bundle.getInt("add_edit_request")
-            viewModel.onAddEditResult(result)
-        }
-
-
-    }
-
-    private fun setUpCurrentMonthObserver() {
-        viewModel.currentMonthTransaction.observe(viewLifecycleOwner) { transactionList ->
-            if (transactionList.isNotEmpty()) {
-                val (income, expense) = transactionList.partition { transaction ->
-                    transaction.transactionType.toString() == TransactionType.INCOME.toString()
-                }
-
-                val incomeTotal = income.sumOf { transaction ->
-                    transaction.amount
-                }
-                val expenseTotal = expense.sumOf { transaction ->
-                    transaction.amount
-                }
-
-                binding.apply {
-                    incomeView.incomeTotal.text = incomeTotal.toString()
-                    expenseView.expenseTotal.text = expenseTotal.toString()
-                }
-
-                setDataToPieChart(incomeTotal, expenseTotal)
-
-
-            } else {
-                binding.apply {
-                    incomeView.incomeTotal.text = BASE_AMOUNT.toString()
-                    expenseView.expenseTotal.text = BASE_AMOUNT.toString()
-                }
-
+            when (bundle.getInt("add_edit_request")) {
+                ADD_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_added)
+                EDIT_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_update)
             }
 
         }
+
+        setHasOptionsMenu(true)
+
+    }
+
+
+    private fun setUpCurrentMonthObserver() {
+
+
+        viewModel.currentMonthTransaction.observe(viewLifecycleOwner) { currentMonthTransaction ->
+
+            getTotalForIncomeAndExpense(currentMonthTransaction)
+
+        }
+
+        viewModel.recentTransaction.observe(viewLifecycleOwner) { transactionList ->
+            mAdepter.submitList(transactionList)
+            Log.d("work", transactionList.toString())
+        }
+
+    }
+
+    private fun getTotalForIncomeAndExpense(list: List<Transaction>?) {
+
+        var incomeTotal = 0.0
+        var expenseTotal = 0.0
+
+        if (list != null) {
+            val (income, expense) = list.partition { transaction ->
+                transaction.transactionType.toString() == TransactionType.INCOME.toString()
+            }
+
+            incomeTotal = income.sumOf { incomeTransaction ->
+                incomeTransaction.amount
+            }
+
+            expenseTotal = expense.sumOf { expenseTransaction ->
+                expenseTransaction.amount
+            }
+
+        }
+        setDataToPieChart(incomeTotal, expenseTotal)
+
+        binding.incomeView.incomeTotal.text = incomeTotal.toString()
+        binding.expenseView.expenseTotal.text = expenseTotal.toString()
+
+
     }
 
 
     private fun initPieChart() {
         binding.pieChart.pieChartInCardView.apply {
             setUsePercentValues(true)
-            description.text = ""
-            //hollow pie chart
             isDrawHoleEnabled = false
+            description.isEnabled = false
+            //hollow pie chart
             setTouchEnabled(false)
             setDrawEntryLabels(false)
             //adding padding
-            setExtraOffsets(20f, 0f, 20f, 20f)
-            setUsePercentValues(true)
+            setExtraOffsets(1f, 1f, 1f, 0f)
             isRotationEnabled = false
             setDrawEntryLabels(false)
             legend.orientation = Legend.LegendOrientation.VERTICAL
+            legend.direction = Legend.LegendDirection.LEFT_TO_RIGHT
             legend.isWordWrapEnabled = true
         }
-    }
-
-
-    private fun setRecentTransactionToAdepter() {
-
-        viewModel.recentTransaction.observe(viewLifecycleOwner, { transactionList ->
-            mAdepter.submitList(transactionList)
-        })
     }
 
 
     private fun setDataToPieChart(incomeTotal: Double, expenseTotal: Double) {
 
         binding.pieChart.pieChartInCardView.apply {
-
             setUsePercentValues(true)
             val dataEntries = ArrayList<PieEntry>()
-            dataEntries.add(PieEntry(incomeTotal.toFloat(), "Income"))
             dataEntries.add(PieEntry(expenseTotal.toFloat(), "Expense"))
+            dataEntries.add(PieEntry(incomeTotal.toFloat(), "Income"))
 
 
             val colors: ArrayList<Int> = ArrayList()
-            colors.add(Color.parseColor("#4DD0E1"))
-            colors.add(Color.parseColor("#FFF176"))
+            colors.add(Color.parseColor("#EF2727"))
+            colors.add(Color.parseColor("#86DF3B"))
 
 
             val dataSet = PieDataSet(dataEntries, "")
             val data = PieData(dataSet)
             // In Percentage
-            data.setValueFormatter(PercentFormatter())
-            dataSet.sliceSpace = 1f
+            data.setDrawValues(true)
+            data.setValueFormatter(PercentFormatter(this))
+            dataSet.sliceSpace = 3f
             dataSet.colors = colors
             this.data = data
-            data.setValueTextSize(15f)
-            setExtraOffsets(5f, 10f, 5f, 5f)
+            data.setValueTextSize(12f)
+            data.setValueTextColor(Color.BLACK)
+            setExtraOffsets(1f, 1f, 1f, 0f)
             animateY(1400, Easing.EaseInOutQuad)
-
-            //create hole in center
-            holeRadius = 20f
-            transparentCircleRadius = 31f
-            isDrawHoleEnabled = true
-            setHoleColor(Color.WHITE)
             invalidate()
 
 
@@ -224,23 +195,58 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
         binding.rvView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdepter
-            setHasFixedSize(true)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.detail_screen_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.analysisViewFragment -> {
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToTransactionTypeFragment(
+                        null
+                    )
+                findNavController().navigate(action)
+            }
+            R.id.calenderViewFragment -> {
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToCalenderViewFragment()
+                findNavController().navigate(action)
+            }
+            R.id.settingsFragment -> {
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+                findNavController().navigate(action)
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
 
     override fun onDestroyView() {
+        binding.rvView.adapter = null
         super.onDestroyView()
         _binding = null
+
     }
 
     override fun OnTransactionClick(transaction: Transaction) {
-        viewModel.onTransactionSelected(transaction)
+        val action =
+            HomeFragmentDirections.actionHomeFragmentToEditTransactionFragment(transaction)
+        findNavController().navigate(action)
 
     }
 
     override fun OnLongPress(transaction: Transaction) {
-        viewModel.onTransactionDeleteClick(transaction)
+        val action =
+            HomeFragmentDirections.actionGlobalDeleteTransaction(transaction)
+        findNavController().navigate(action)
     }
 
 

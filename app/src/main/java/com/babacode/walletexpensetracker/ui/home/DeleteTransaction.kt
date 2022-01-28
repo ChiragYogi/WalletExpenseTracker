@@ -24,7 +24,8 @@ class DeleteTransaction : DialogFragment() {
             .setTitle(R.string.delete_this_transaction)
             .setMessage(R.string.delete_this_transaction_msg)
             .setIcon(R.drawable.delete_vector)
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
                 Toast.makeText(requireContext(), R.string.operation_cancel, Toast.LENGTH_LONG)
                     .show()
             }

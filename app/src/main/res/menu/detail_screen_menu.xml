@@ -2,20 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-            android:id="@+id/deleteButton"
-            android:title="@string/delete"
-            android:contentDescription="@string/delete_button_on_menu_bar"
-            android:orderInCategory="101"
-            android:icon="@drawable/delete_vector"
-            app:showAsAction="always"/>
 
     <item
-        android:id="@+id/share_button"
-        android:title="@string/share"
-        android:contentDescription="@string/delete_button_on_menu_bar"
+        android:id="@+id/analysisViewFragment"
+        android:contentDescription="@string/calender"
+        android:icon="@drawable/ic_baseline_bar_chart_24"
+        android:orderInCategory="100"
+        android:title="@string/calender"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/calenderViewFragment"
+        android:contentDescription="@string/calender"
+        android:icon="@drawable/monthly_vector"
+        android:orderInCategory="101"
+        android:title="@string/calender"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:contentDescription="@string/setting_icon"
+        android:icon="@drawable/setting_vector"
         android:orderInCategory="102"
-        android:icon="@drawable/share_vector"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/setting"
+        app:showAsAction="ifRoom" />
 
 </menu>

@@ -32,6 +32,7 @@ android {
     }
 
     compileOptions {
+        coreLibraryDesugaringEnabled = true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -43,6 +44,7 @@ android {
 dependencies {
 
     //core
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
     implementation "androidx.core:core-ktx:$androidXCore"
     implementation "androidx.appcompat:appcompat:$appcompat"
     implementation "com.google.android.material:material:$materialDesign"
@@ -59,6 +61,7 @@ dependencies {
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:$hiltGradlePlugin"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     kapt "com.google.dagger:hilt-android-compiler:$hiltGradlePlugin"
 
     // Room
@@ -66,10 +69,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$rommVersion"
     implementation "androidx.room:room-ktx:$rommVersion"
 
-    // Activity KTX for viewModels()
-    implementation "androidx.activity:activity-ktx:$activityX"
-
-    // Lifecycle + ViewModel & LiveData
+   // Lifecycle + ViewModel & LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
      implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"
@@ -79,11 +79,12 @@ dependencies {
     //MpChart
     implementation "com.github.Philjay:mpandroidchart:$mpChart"
 
+    // setting
+    implementation "androidx.preference:preference-ktx:$preference"
 
-
-    implementation "androidx.activity:activity-ktx:1.4.0"
-    implementation 'androidx.fragment:fragment-ktx:1.4.0'
-
+    //ktx
+    implementation "androidx.activity:activity-ktx:$activityX"
+    implementation "androidx.fragment:fragment-ktx:$fragmentX"
 
     //unit test
     testImplementation "junit:junit:$testJunit"

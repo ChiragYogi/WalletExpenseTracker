@@ -13,10 +13,15 @@ interface TransactionDao {
     fun getAllTransaction(): Flow<List<Transaction>>
 
     @Query("SELECT * FROM transaction_table WHERE date >= :startDate and date <= :endDate")
-    fun getThisMonthTransaction(startDate: Long, endDate: Long): Flow<List<Transaction>>
+    fun getTransactionByStartDateAndEndDate(startDate: Long, endDate: Long): Flow<List<Transaction>>
 
-    @Query("SELECT * FROM transaction_table WHERE transactionType = :transactionType ORDER BY id DESC")
-    fun getTransactionByType(transactionType: TransactionType) : Flow<List<Transaction>>
+    @Query("SELECT * FROM transaction_table WHERE(transactionType = :transactionType) AND (date >= :startDate and date <= :endDate) ORDER BY id DESC")
+    fun getTransactionByType(
+        transactionType: TransactionType,
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<Transaction>>
+
 
     @Insert
     suspend fun insertNewTransaction(transaction: Transaction)
@@ -28,10 +33,20 @@ interface TransactionDao {
     suspend fun deleteSelectedTransaction(transaction: Transaction)
 
     @Query("DELETE FROM transaction_table WHERE id = :id")
-    suspend fun deleteTransactionById(id:Int)
+    suspend fun deleteTransactionById(id: Int)
+
+    @Query("SELECT * FROM transaction_table WHERE date = :date ORDER BY id DESC")
+    fun getSingleDayTransaction(date: Long): Flow<List<Transaction>>
+
+    @Query("SELECT * FROM transaction_table WHERE(transactionType = :transactionType) AND (date = :date) ORDER BY id DESC")
+    fun getSingleDayTransactionByType(
+        transactionType: TransactionType,
+        date: Long
+    ): Flow<List<Transaction>>
 
 
-
+    @Query("DELETE FROM transaction_table")
+    suspend fun deleteAllTheTransaction()
 
 
 }

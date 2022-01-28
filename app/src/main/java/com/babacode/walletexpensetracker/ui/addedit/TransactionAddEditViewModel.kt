@@ -1,14 +1,15 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.utiles.Extra.AMOUNT_CHECK_FOR_ADD
 import com.babacode.walletexpensetracker.utiles.Extra.NOTE_LENGTH_VALIDATE
-import com.babacode.walletexpensetracker.utiles.Extra.convertDateToLong
+import com.babacode.walletexpensetracker.utiles.Extra.convertStringDateToLong
 import com.babacode.walletexpensetracker.utiles.Extra.parseDouble
 import com.babacode.walletexpensetracker.utiles.Extra.paymentMode
 import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
@@ -22,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TransactionAddEditViewModel @Inject constructor(
-    private val repository: TransactionRepository
+    private val repository: TransactionRepository,
 ) : ViewModel() {
 
 
@@ -30,10 +31,15 @@ class TransactionAddEditViewModel @Inject constructor(
     val addEditTransactionEvent = addEditTransactionChannel.receiveAsFlow()
 
 
+
     fun validateAndInsertOrUpdate(
-        note: String, date: String, transactionType: String, amount: String,
-        tag: String,
-        paymentType: String, id: Int
+        transactionType: String,
+        transactionAmount: String,
+        transactionNote: String,
+        transactionDate: String,
+        transactionTag: String,
+        transactionPaymentType: String,
+        transactionID: Int?
     ) {
 
 
@@ -42,67 +48,76 @@ class TransactionAddEditViewModel @Inject constructor(
             return
         }
 
-        if (amount.isBlank()) {
+        if (transactionAmount.isBlank()) {
             showInvalidAmountMessage("Please Enter Amount")
             return
         }
-        if (amount.length > AMOUNT_CHECK_FOR_ADD) {
+        if (transactionAmount.length > AMOUNT_CHECK_FOR_ADD) {
             showInvalidAmountMessage("Amount Must Be less than  1000000")
             return
         }
-        if (amount.contains("#") || amount.contains("/") || amount.contains("+")
-            || amount.contains("-") || amount.contains("*") || amount.contains(".")
+        if (transactionAmount.contains("#") || transactionAmount.contains("/") || transactionAmount.contains(
+                "+"
+            )
+            || transactionAmount.contains("-") || transactionAmount.contains("*") || transactionAmount.contains(
+                "."
+            )
         ) {
             showInvalidAmountMessage("Please Enter Valid Amount")
             return
         }
 
-        if (note.isBlank()) {
+        if (transactionNote.isBlank()) {
             showInvalidNoteMessage("Please Add Note With Transaction")
             return
         }
 
-        if (note.length >= NOTE_LENGTH_VALIDATE) {
+        if (transactionNote.length >= NOTE_LENGTH_VALIDATE) {
             showInvalidNoteMessage("Note character must Be less than 20")
             return
         }
 
-        if (tag.isBlank()) {
+        if (transactionTag.isBlank()) {
             showSelectTransactionTagMessage("Please Select Type Of Tag")
             return
         }
 
-        if (paymentType.isBlank()) {
+        if (transactionPaymentType.isBlank()) {
             showSelectTransactionPaymentModeMessage("Please Select Type Of Payment")
             return
         }
 
 
-        val addDate = convertDateToLong(date)
-        val trnType = transactionType(transactionType)
-        val trnTag = transactionTag(tag)
-        val trnPaymentType = paymentMode(paymentType)
+        val addAmount = parseDouble(transactionAmount)
+        val addType = transactionType(transactionType)
+        val addTag = transactionTag(transactionTag)
+        val addDate = convertStringDateToLong(transactionDate)
+        val addPaymentMode = paymentMode(transactionPaymentType)
 
-        val addAmount = parseDouble(amount)
 
+        if (transactionID == null) {
 
-        if (id == 0) {
             val addNewTransaction = Transaction(
-                note, addDate!!, trnType, addAmount, trnTag,
-                trnPaymentType, id
+                transactionNote,
+                addDate,
+                addType,
+                addAmount,
+                addTag,
+                addPaymentMode
             )
-
-            createTransaction(transaction = addNewTransaction)
+            createTransaction(addNewTransaction)
         } else {
-
-            val updateTransaction = Transaction(
-                note, addDate!!, trnType, addAmount, trnTag,
-                trnPaymentType, id
+            val updateCurrentTransaction = Transaction(
+                transactionNote,
+                addDate,
+                addType,
+                addAmount,
+                addTag,
+                addPaymentMode,
+                transactionID
             )
-
-            updateTransaction(transaction = updateTransaction)
+            updateTransaction(updateCurrentTransaction)
         }
-
 
     }
 

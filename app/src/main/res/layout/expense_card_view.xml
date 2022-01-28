@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/ShapeAppearance.MaterialComponents.SmallComponent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/dimen_seventy_five"
     app:cardCornerRadius="@dimen/dimen_four"
     android:layout_margin="@dimen/dimen_eight"
     app:cardBackgroundColor="?attr/colorOnPrimary"
@@ -21,7 +21,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dimen_eight">
 
         <TextView
             android:id="@+id/expense_text_title"
@@ -35,14 +36,17 @@
             android:textSize="@dimen/sixteen_sp_text_size"
             android:textStyle="bold"/>
 
-            <ImageView
-                android:id="@+id/expense_vector_image"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/thisMonth"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_eight"
-                android:contentDescription="@string/expense_vector_image"
-                app:srcCompat="@drawable/expese_vector"
-                android:layout_weight="1"/>
+                android:layout_marginStart="@dimen/dimen_eight"
+                android:layout_marginTop="@dimen/dimen_eight"
+                android:fontFamily="@font/roboto"
+                android:textColor="?attr/colorOnBackground"
+                android:text="@string/thisMonthTxt"
+                android:textSize="@dimen/twelve_sp_text_size"/>
+
 
         </LinearLayout>
         <LinearLayout
@@ -56,7 +60,7 @@
                 android:layout_marginBottom="@dimen/dimen_eight"
                android:layout_marginStart="@dimen/dimen_eight"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="@string/currency_symbol"
+                tools:text="@string/currency_symbol"
                 android:textColor="@color/currencyCode"
                 android:textSize="@dimen/eighteen_sp_text_size"
                 android:textStyle="bold"/>

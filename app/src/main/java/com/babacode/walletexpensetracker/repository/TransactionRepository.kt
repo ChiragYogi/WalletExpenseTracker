@@ -2,7 +2,6 @@ package com.babacode.walletexpensetracker.repository
 
 
 import com.babacode.walletexpensetracker.data.dao.TransactionDao
-import com.babacode.walletexpensetracker.data.model.Month
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import kotlinx.coroutines.flow.Flow
@@ -13,31 +12,48 @@ class TransactionRepository @Inject constructor(
     private val dao: TransactionDao
 ) {
 
-    fun getAllTransaction(): Flow<List<Transaction>>{
+    fun getAllTransaction(): Flow<List<Transaction>> {
         return dao.getAllTransaction()
     }
 
-    fun getCurrentMonthTransaction(startDate: Long, endDate: Long): Flow<List<Transaction>>{
-        return dao.getThisMonthTransaction(startDate,endDate)
+    fun getTransactionForSelectedDate(startDate: Long, endDate: Long): Flow<List<Transaction>> {
+        return dao.getTransactionByStartDateAndEndDate(startDate, endDate)
     }
 
-    fun getTransactionByTransactionType(transactionType: TransactionType): Flow<List<Transaction>>{
-        return dao.getTransactionByType(transactionType = transactionType)
+    fun getSingleDayTransaction(date: Long): Flow<List<Transaction>> {
+        return dao.getSingleDayTransaction(date)
     }
 
-    suspend fun insertNewTransaction(transaction: Transaction){
+    fun getSingleDayTransactionByType(
+        transactionType: TransactionType,
+        currentDate: Long
+    ): Flow<List<Transaction>> {
+        return dao.getSingleDayTransactionByType(transactionType,currentDate)
+    }
+
+    fun getTransactionByTransactionType(
+        transactionType: TransactionType,
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<Transaction>> {
+        return dao.getTransactionByType(transactionType = transactionType, startDate, endDate)
+    }
+
+    suspend fun insertNewTransaction(transaction: Transaction) {
         dao.insertNewTransaction(transaction)
     }
 
-    suspend fun updateTransaction(transaction: Transaction){
+    suspend fun updateTransaction(transaction: Transaction) {
         dao.updateTransaction(transaction)
     }
 
-    suspend fun deleteSingleTransaction(transaction: Transaction){
+    suspend fun deleteSingleTransaction(transaction: Transaction) {
         dao.deleteSelectedTransaction(transaction)
     }
 
-
+    suspend fun deleteAllTheTransaction() {
+        dao.deleteAllTheTransaction()
+    }
 
 
 }

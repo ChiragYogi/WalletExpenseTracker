@@ -5,11 +5,33 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/homeFragment">
 
+    <action
+        android:id="@+id/action_global_deleteTransaction"
+        app:destination="@id/deleteTransaction" />
+    <dialog
+        android:id="@+id/deleteTransaction"
+        android:name="com.babacode.walletexpensetracker.ui.home.DeleteTransaction"
+        android:label="DeleteTransaction">
+        <argument
+            android:name="transactionDelete"
+            app:argType="com.babacode.walletexpensetracker.data.model.Transaction" />
+    </dialog>
+    <fragment
+        android:id="@+id/addTransactionFragment"
+        android:name="com.babacode.walletexpensetracker.ui.addedit.AddTransactionFragment"
+        android:label="Add Transaction"
+        tools:layout="@layout/fragment_add_transaction" >
+        <argument
+            android:name="transactionArgsForAddTransction"
+            app:argType="com.babacode.walletexpensetracker.data.model.Transaction"
+            app:nullable="true" />
+
+    </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.babacode.walletexpensetracker.ui.home.HomeFragment"
         android:label="Home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment"
@@ -24,38 +46,71 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_calenderViewFragment"
+            app:destination="@id/calenderViewFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_homeFragment_to_editTransactionFragment"
+            app:destination="@id/editTransactionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
     <fragment
         android:id="@+id/transactionTypeFragment"
         android:name="com.babacode.walletexpensetracker.ui.detail.TransactionTypeFragment"
         android:label="Detail View"
-        tools:layout="@layout/fragment_transaction_type" >
+        tools:layout="@layout/fragment_transaction_type">
+        <action
+            android:id="@+id/action_transactionTypeFragment_to_editTransactionFragment"
+            app:destination="@id/editTransactionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
         <argument
-            android:name="trnasactionType"
-            app:argType="com.babacode.walletexpensetracker.data.model.TransactionType" />
+            android:name="transactionType"
+            app:argType="com.babacode.walletexpensetracker.data.model.TransactionType"
+            app:nullable="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.babacode.walletexpensetracker.ui.setting.SettingsFragment"
+        android:label="Settings" />
+    <fragment
+        android:id="@+id/calenderViewFragment"
+        android:name="com.babacode.walletexpensetracker.ui.calender.TransactionCalenderViewFragment"
+        android:label="@string/calender"
+        tools:layout="@layout/fragment_transaction_calender_view">
+        <action
+            android:id="@+id/action_calenderViewFragment_to_editTransactionFragment"
+            app:destination="@id/editTransactionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-        android:id="@+id/addTransactionFragment"
-        android:name="com.babacode.walletexpensetracker.ui.addedit.AddTransactionFragment"
-        android:label="{title}"
-        tools:layout="@layout/fragment_add_transaction" >
+        android:id="@+id/editTransactionFragment"
+        android:name="com.babacode.walletexpensetracker.ui.addedit.EditTransactionFragment"
+        android:label="Edit Transaction"
+        tools:layout="@layout/fragment_edit_transaction">
         <argument
-            android:name="title"
-            app:argType="string" />
-        <argument
-            android:name="transaction"
-            app:argType="com.babacode.walletexpensetracker.data.model.Transaction"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </fragment>
-    <dialog
-        android:id="@+id/deleteTransaction"
-        android:name="com.babacode.walletexpensetracker.ui.home.DeleteTransaction"
-        android:label="DeleteTransaction" >
-         <argument
-            android:name="transactionDelete"
+            android:name="transactionArgs"
             app:argType="com.babacode.walletexpensetracker.data.model.Transaction" />
-    </dialog>
-    <action android:id="@+id/action_global_deleteTransaction" app:destination="@id/deleteTransaction"/>
+    </fragment>
 </navigation>

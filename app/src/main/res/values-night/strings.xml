@@ -6,6 +6,10 @@
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
+
+    <string name="transaction_added">Transaction added</string>
+    <string name="transaction_update">Transaction updated</string>
+
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
@@ -17,11 +21,11 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="income_vector_image">income vector image</string>
-    <string name="income">Total Income</string>
+    <string name="income">Income</string>
     <string name="currency_symbol">$</string>
-    <string name="expense">Total Expense</string>
+    <string name="expense">Expense</string>
     <string name="expense_vector_image">Expence Vectore Arrow Image</string>
-    <string name="this_month">This month :-</string>
+    <string name="thisMonthTxt">(this month)</string>
     <string name="recent_transaction">Recent Transaction</string>
     <string name="see_more">see more </string>
     <string name="add_transaction_for_income_or_expense">add Transaction for income or expense</string>
@@ -56,8 +60,14 @@
     <string name="payment_mode">Payment Mode</string>
     <string name="delete_this_transaction">Delete This Transaction</string>
     <string name="delete_transaction">Transaction Deleted Successfully</string>
-    <string name="delete_this_transaction_msg">Do You Want to Delete this Transaction?</string>
+    <string name="delete_this_transaction_msg">This action will delete this transaction</string>
+    <string name="deleteAllTransactionTitle">Delete All Data</string>
+    <string name="deleteAllTransactionToastMsg">Transaction Deleted Successfully</string>
+    <string name="deleteAllTransactionText">This Will delete all your transaction data and cannot be undone! Do you want to proceed? </string>
     <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+
     <string name="added_success">Transaction added</string>
     <string name="update_success">Transaction updated</string>
     <string name="transaction_type_error">Please Select Type Of Transaction</string>
@@ -69,11 +79,59 @@
     <string name="tag_error">Please Select Type Of Tag</string>
     <string name="payment_error">Please Select Type Of Payment</string>
 
+    <string name="euroCurrencyCodeValue">€</string>
+    <string name="poundsCurrencyCodeValue">£</string>
+    <string name="usDollarCurrencyCodeValue">$</string>
+    <string name="rupCurrencyCodeValue">₹</string>
+    <string name="japaneseYenCurrencyCodeValue">¥</string>
 
 
-    <string name="cancel">Cancel</string>
+
     <string name="undo">Undo</string>
     <string name="operation_cancel">Operation Cancel</string>
+    <string name="calender">CalenderView</string>
+    <string name="setting">Setting</string>
+    <string name="setting_icon">Setting button for setting screen</string>
+    <string name="noTransaction">No Transaction To Show</string>
+    <string name="currency_code_header">Select Currency</string>
+    <string name="currency">Set Your Currency</string>
+    <string name="theme">Theme</string>
+    <string name="currencyKey">currencyCodeKey</string>
+    <string name="defultValueCurrency">RUP</string>
+
+    <string name="dark_theme_preference_value">2</string>
+    <string name="light_theme_preference_value">1</string>
+    <string name="system_theme_preference_value">-1</string>
+
+    <string name="dark_theme_description">Dark mode</string>
+    <string name="light_theme_description">Light mode</string>
+    <string name="system_theme_description">System default</string>
+
+
+    <string name="themeKey">theme</string>
+    <string name="notifications">Notifications</string>
+    <string name="notificationKey">notificationKey</string>
+    <string name="notificationTitle">Notification For New Day</string>
+    <string name="links">Links</string>
+    <string name="privacyPolicy">privacyPolicy</string>
+    <string name="showPrivacyPolicy">Show Privacy Policy</string>
+    <string name="contactSupport">contactsupport</string>
+    <string name="contactSupportTitle">Contact Support</string>
+    <string name="contactSummery">Request a feature or Report a bug</string>
+    <string name="general">General</string>
+    <string name="resetData">Reset Data</string>
+    <string name="deleteAllData">deleteAllData</string>
+
+    <string name="previousButton">Previous Button For New Week Month Year</string>
+    <string name="nextButton">Next Button For New Week Month Year</string>
+    <string name="weeklyAnalysis">WeeklyAnalysis</string>
+    <string name="total">Total</string>
+
+    <string name="thisWeek">This Week</string>
+    <string name="thisYear">This Year</string>
+    <string name="thisMonth">This Month</string>
+    <string name="today">For Today</string>
+
 
     <string-array name="transactionTag">
         <item>Other</item>
@@ -92,7 +150,6 @@
         <item>Coupons</item>
         <item>CashBack</item>
     </string-array>
-
 
 
 </resources>

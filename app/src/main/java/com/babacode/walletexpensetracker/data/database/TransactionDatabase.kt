@@ -7,7 +7,7 @@ import com.babacode.walletexpensetracker.data.dao.TransactionDao
 import com.babacode.walletexpensetracker.data.model.Transaction
 
 
-@Database(entities = [Transaction::class], version = 1, exportSchema = true)
+@Database(entities = [Transaction::class], version = 1, exportSchema = false)
 
 abstract class TransactionDatabase: RoomDatabase() {
 

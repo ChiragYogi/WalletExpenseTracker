@@ -1,12 +1,33 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+
+
+    <string-array name="currency_entries">
+        <item>€ - EUR</item>
+        <item>£ - GBP</item>
+        <item>$ - USD</item>
+        <item>₹ - RUP</item>
+        <item>¥ - JPY</item>
+       </string-array>
+
+    <string-array name="currency_values">
+        <item>@string/euroCurrencyCodeValue</item>
+        <item>@string/poundsCurrencyCodeValue</item>
+        <item>@string/usDollarCurrencyCodeValue</item>
+        <item>@string/rupCurrencyCodeValue</item>
+        <item>@string/japaneseYenCurrencyCodeValue</item>
+     </string-array>
+
+
+    <string-array name="themes_entries">
+        <item>Light</item>
+        <item>Dark</item>
+       <item>System default</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="themes_values">
+        <item>@string/light_theme_preference_value</item>
+        <item>@string/dark_theme_preference_value</item>
+         <item>@string/system_theme_preference_value</item>
     </string-array>
+
 </resources>

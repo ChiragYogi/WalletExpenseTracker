@@ -1,129 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     tools:context=".ui.home.HomeFragment">
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-    <TextView
-        android:id="@+id/recent_transaction_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_eight"
-        android:layout_marginTop="@dimen/dimen_sixteen"
-        android:textSize="@dimen/eighteen_sp_text_size"
-        android:textColor="?attr/colorOnBackground"
-        android:fontFamily="@font/roboto"
-        android:text="@string/recent_transaction"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/pie_chart" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/liner_layout_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_margin="@dimen/dimen_four"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/income_view"
+                    layout="@layout/income_card_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_seventy_five"
+                    android:layout_margin="@dimen/dimen_four"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/expense_view"
+                    layout="@layout/expense_card_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_seventy_five"
+                    android:layout_margin="@dimen/dimen_four"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
 
+            <TextView
+                android:id="@+id/recent_transaction_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                android:layout_marginStart="@dimen/dimen_eight"
+                android:fontFamily="@font/roboto"
+                android:text="@string/recent_transaction"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/eighteen_sp_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pie_chart" />
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/dimen_eight" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_two_on_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/dimen_eight" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_four"
+                android:layout_marginEnd="@dimen/dimen_four"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recent_transaction_text"
+                tools:listitem="@layout/transaction_rv_item" />
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/dimen_eight" />
+            <include
+                android:id="@+id/pie_chart"
+                layout="@layout/chart_card_view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_two_hundred"
+                android:layout_marginEnd="@dimen/dimen_eight"
+                android:layout_marginStart="@dimen/dimen_eight"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/liner_layout_view" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_end="@dimen/dimen_eight" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        tools:listitem="@layout/transaction_rv_item"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/recent_transaction_text" />
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_fab"
         android:layout_width="wrap_content"
-        app:borderWidth="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/dimen_sixteen"
         android:layout_marginEnd="@dimen/dimen_sixteen"
         android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/add_transaction_for_income_or_expense"
         android:src="@drawable/add_transaction_vectore"
-        app:layout_constraintBottom_toTopOf="@+id/guideline_one_on_bottom"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right" />
+        app:borderWidth="0dp" />
 
-
-    <include
-        android:id="@+id/pie_chart"
-        layout="@layout/chart_card_view"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/dimen_two_hundred"
-        android:layout_marginEnd="@dimen/dimen_eight"
-        android:layout_marginStart="@dimen/dimen_eight"
-        android:layout_marginTop="@dimen/dimen_sixteen"
-        app:layout_constraintEnd_toStartOf="@+id/guideline_two_on_right"
-        app:layout_constraintStart_toStartOf="@+id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/liner_layout_view" />
-
-    <LinearLayout
-        android:id="@+id/liner_layout_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="2"
-        android:layout_margin="@dimen/dimen_eight"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/guideline_one_on_top"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintEnd_toStartOf="@id/guideline_two_on_right"
-        android:baselineAligned="false">
-
-        <include
-            android:id="@+id/income_view"
-            layout="@layout/income_card_view"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_seventy_five"
-            android:layout_marginEnd="@dimen/dimen_four"
-            android:layout_marginStart="@dimen/dimen_eight"
-            android:layout_marginTop="@dimen/dimen_eight"
-            android:layout_marginBottom="@dimen/dimen_eight"
-            android:layout_weight="1"/>
-
-        <include
-            android:id="@+id/expense_view"
-            layout="@layout/expense_card_view"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="@dimen/dimen_seventy_five"
-            android:layout_marginBottom="@dimen/dimen_eight"
-            android:layout_marginEnd="@dimen/dimen_eight"
-            android:layout_marginStart="@dimen/dimen_four"
-            android:layout_marginTop="@dimen/dimen_eight"/>
-
-    </LinearLayout>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

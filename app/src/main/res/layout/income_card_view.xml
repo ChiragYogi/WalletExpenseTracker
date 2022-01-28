@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/income_view_click_id"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/income_view_click_id"
     style="@style/ShapeAppearance.MaterialComponents.MediumComponent"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="?attr/colorOnPrimary"
     android:layout_margin="@dimen/dimen_eight"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
     app:cardCornerRadius="@dimen/dimen_four"
     app:cardElevation="@dimen/dimen_four">
 
@@ -21,8 +21,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_eight"
             android:orientation="horizontal">
-
 
 
             <TextView
@@ -32,19 +32,22 @@
                 android:layout_marginStart="@dimen/dimen_eight"
                 android:layout_marginTop="@dimen/dimen_eight"
                 android:fontFamily="@font/roboto"
-                android:textColor="?attr/colorOnBackground"
                 android:text="@string/income"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="@dimen/sixteen_sp_text_size"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/income_vector_image"
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/thisMonth"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_eight"
-                android:layout_weight="1"
-                android:contentDescription="@string/income_vector_image"
-                app:srcCompat="@drawable/income_vector" />
+                android:layout_marginStart="@dimen/dimen_eight"
+                android:layout_marginTop="@dimen/dimen_eight"
+                android:fontFamily="@font/roboto"
+                android:text="@string/thisMonthTxt"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/twelve_sp_text_size" />
+
 
         </LinearLayout>
 
@@ -60,10 +63,10 @@
                 android:layout_marginBottom="@dimen/dimen_eight"
                 android:layout_marginStart="@dimen/dimen_eight"
                 android:fontFamily="@font/roboto_condensed_regular"
-                android:text="@string/currency_symbol"
                 android:textColor="@color/currencyCode"
                 android:textSize="@dimen/eighteen_sp_text_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="@string/currency_symbol" />
 
             <TextView
                 android:id="@+id/income_total"
@@ -73,8 +76,8 @@
                 android:layout_marginStart="@dimen/dimen_four"
                 android:layout_weight="1"
                 android:fontFamily="@font/roboto_condensed_bold"
-                android:textSize="@dimen/eighteen_sp_text_size"
                 android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/eighteen_sp_text_size"
                 android:textStyle="bold"
                 tools:text="100000.00" />
         </LinearLayout>

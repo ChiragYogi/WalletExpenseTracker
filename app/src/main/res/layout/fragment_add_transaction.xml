@@ -1,154 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.addedit.AddTransactionFragment">
+    android:fillViewport="true"
+    android:scrollbars="none">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_two_on_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="@dimen/dimen_eight" />
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_two_on_bottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_end="@dimen/dimen_eight"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="@dimen/dimen_eight" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline_one_on_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="@dimen/dimen_eight" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/saveTransaction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginEnd="16dp"
-        android:backgroundTint="?attr/colorPrimary"
-        android:contentDescription="@string/save_transaction_button"
-        android:src="@drawable/save_vector"
-        app:borderWidth="0dp"
-        app:layout_constraintBottom_toTopOf="@id/guideline_two_on_bottom"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right" />
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/dateTxtInputLayout"
-        style="@style/forDate"
-        android:layout_marginStart="@dimen/dimen_eight"
-        android:clickable="true"
-        android:focusable="true"
-        android:hint="@string/date"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/amountTxtInputLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/date_edt"
-            android:layout_width="match_parent"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/saveTransaction"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/date_vector"
-            android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginEnd="@dimen/dimen_sixteen"
+            android:layout_marginTop="@dimen/dimen_twenty_four"
+            android:backgroundTint="?attr/colorPrimary"
+            android:contentDescription="@string/save_transaction_button"
+            android:src="@drawable/save_vector"
+            app:borderWidth="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addTransaction" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/amountTxtInputLayout"
-        style="@style/forAmount"
-        android:hint="@string/amount"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/transactionTypeLayout"
-        app:prefixText="@string/currency_symbol">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/amount_edt"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="number" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/transactionNoteLayout"
-        style="@style/txtNoteLayout"
-        android:hint="@string/add_a_note_to_self"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/dateTxtInputLayout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/transactionNoteEdt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:inputType="text" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        <include
+            android:id="@+id/addTransaction"
+            layout="@layout/add_edit_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/transactionTypeLayout"
-        style="@style/txtInputDropdown"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/guideline_two_on_top">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <AutoCompleteTextView
-           android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/transaction_type"
-            android:inputType="none" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/transactionTagLayout"
-        style="@style/txtInputDropdown"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@id/transactionNoteLayout">
-
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/tag_for_transaction"
-            android:inputType="none"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/transactionModeLayout"
-        style="@style/txtInputDropdown"
-        app:layout_constraintEnd_toStartOf="@id/guideline_one_on_right"
-        app:layout_constraintStart_toEndOf="@id/guideline_one_on_left"
-        app:layout_constraintTop_toBottomOf="@+id/transactionTagLayout">
-
-        <AutoCompleteTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/payment_mode"
-            android:inputType="none"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

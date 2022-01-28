@@ -23,7 +23,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_eight"
             android:layout_marginTop="@dimen/dimen_eight"
-
             android:fontFamily="@font/roboto"
             android:gravity="center"
             tools:text="@string/expense"
@@ -40,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_eight"
+            android:layout_marginStart="@dimen/dimen_four"
             android:layout_marginTop="@dimen/dimen_eight"
             android:fontFamily="@font/roboto_condensed_regular"
             android:text="@string/currency_symbol"

@@ -1,0 +1,72 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <PreferenceCategory app:title="@string/general">
+
+        <ListPreference
+            app:defaultValue="@string/system_theme_preference_value"
+            app:entries="@array/themes_entries"
+            app:entryValues="@array/themes_values"
+            app:key="@string/themeKey"
+            app:title="@string/theme"
+            app:icon="@drawable/theme_vector"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="@string/usDollarCurrencyCodeValue"
+            app:entries="@array/currency_entries"
+            app:entryValues="@array/currency_values"
+            app:key="@string/currencyKey"
+            app:summary="@string/calender"
+            app:title="@string/currency"
+            app:icon="@drawable/currency_code_vector"
+            app:useSimpleSummaryProvider="true"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/notifications">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="@string/notificationKey"
+            app:icon="@drawable/notifications_vector"
+            app:title="@string/notificationTitle" />
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="@string/links">
+        <Preference
+            app:key="@string/privacyPolicy"
+            app:title="@string/showPrivacyPolicy"
+            app:icon="@drawable/bill_vector"/>
+
+        <Preference
+            app:key="@string/contactSupportKey"
+            app:summary="@string/contactSummery"
+            app:title="@string/contactSupportTitle"
+            app:icon="@drawable/ic_baseline_chat_bubble_24"/>
+        <Preference
+            app:key="@string/raiseBugKey"
+            app:summary="@string/raiseBugKeySummery"
+            app:title="@string/raiseBugTitle"
+            app:icon="@drawable/ic_baseline_bug_report_24">
+
+        </Preference>
+
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory app:title="@string/resetData">
+
+        <Preference
+            app:key="@string/deleteAllData"
+            app:icon="@drawable/delete_vector"
+            app:title="Reset All Transaction" />
+
+    </PreferenceCategory>
+
+
+</androidx.preference.PreferenceScreen>

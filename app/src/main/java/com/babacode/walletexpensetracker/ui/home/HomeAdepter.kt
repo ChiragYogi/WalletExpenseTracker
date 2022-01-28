@@ -1,17 +1,26 @@
 package com.babacode.walletexpensetracker.ui.home
 
+import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionTag
+import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.TransactionRvItemBinding
+import com.babacode.walletexpensetracker.ui.MainActivity
+import com.babacode.walletexpensetracker.utiles.Extra
+import com.babacode.walletexpensetracker.utiles.SettingUtils
 
 class HomeAdepter(private val listener: OnItemClick) :
     ListAdapter<Transaction, HomeAdepter.HomeViewHolder>(DiffUtilCallBack()) {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeViewHolder {
         val binding =
@@ -59,25 +68,34 @@ class HomeAdepter(private val listener: OnItemClick) :
                 transactionTitle.text = currentItem.note
                 transactionType.text = currentItem.paymentType.toString()
 
-                /*  when (currentItem.transactionType) {
-                      TransactionType.EXPENSE -> {
-                          transactionMaterialCardView.setCardBackgroundColor(
-                              ContextCompat.getColor(
-                                  root.context.applicationContext,
-                                  R.color.expenseColor
-                              )
-                          )
+                val currencyCode by lazy {
+                    SettingUtils(binding.root.context)
+                }
 
-                      }
-                      TransactionType.INCOME -> {
-                          transactionMaterialCardView.setCardBackgroundColor(
-                              ContextCompat.getColor(
-                                  root.context.applicationContext,
-                                  R.color.incomeColor
-                              )
-                          )
-                      }
-                  }*/
+                currencySymbol.text = currencyCode.getCurrencyCode()
+                val date = Extra.convertLongDateToStringDate(currentItem.date)
+                transactionDate.text = date
+
+                when (currentItem.transactionType) {
+                    TransactionType.EXPENSE -> {
+                        imageViewForTag.setColorFilter(
+                            ContextCompat.getColor(
+                                root.context.applicationContext,
+                                R.color.expenseColor
+                            )
+                        )
+
+                    }
+                    TransactionType.INCOME -> {
+                        imageViewForTag.setColorFilter(
+                            ContextCompat.getColor(
+                                root.context.applicationContext,
+                                R.color.incomeColor
+                            )
+                        )
+                    }
+                }
+
 
                 when (currentItem.tag) {
 
@@ -96,16 +114,16 @@ class HomeAdepter(private val listener: OnItemClick) :
                     TransactionTag.ENTERTAINMENT -> {
                         imageViewForTag.setImageResource(R.drawable.entertainment_vector)
                     }
-                    TransactionTag.HEALTH-> {
+                    TransactionTag.HEALTH -> {
                         imageViewForTag.setImageResource(R.drawable.medical_vector)
                     }
                     TransactionTag.EDUCATION -> {
                         imageViewForTag.setImageResource(R.drawable.education_vector)
                     }
-                    TransactionTag.RENT-> {
+                    TransactionTag.RENT -> {
                         imageViewForTag.setImageResource(R.drawable.rent_vector)
                     }
-                    TransactionTag.BILLS-> {
+                    TransactionTag.BILLS -> {
                         imageViewForTag.setImageResource(R.drawable.bill_vector)
                     }
                     TransactionTag.GIFT -> {
@@ -123,7 +141,7 @@ class HomeAdepter(private val listener: OnItemClick) :
                     TransactionTag.COUPONS -> {
                         imageViewForTag.setImageResource(R.drawable.bill_vector)
                     }
-                    TransactionTag.CASHBACK-> {
+                    TransactionTag.CASHBACK -> {
                         imageViewForTag.setImageResource(R.drawable.gift_vector)
                     }
                 }
@@ -142,6 +160,7 @@ class HomeAdepter(private val listener: OnItemClick) :
         }
 
     }
+
 
     interface OnItemClick {
         fun OnTransactionClick(transaction: Transaction)

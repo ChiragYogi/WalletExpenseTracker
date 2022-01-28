@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <string-array name="currency_entries">
+        <item>€ - Euro</item>
+        <item>£ - Pounds sterling</item>
+        <item>$ - US dollar</item>
+        <item>₹ - RUP</item>
+        <item>¥ - Japanese Yen</item>
+        </string-array>
+
+    <string-array name="currency_values">
+        <item>@string/euroCurrencyCodeValue</item>
+        <item>@string/poundsCurrencyCodeValue</item>
+        <item>@string/usDollarCurrencyCodeValue</item>
+        <item>@string/rupCurrencyCodeValue</item>
+        <item>@string/japaneseYenCurrencyCodeValue</item>
+    </string-array>
+
+
+    <string-array name="themes_entries">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System default</item>
+    </string-array>
+
+    <string-array name="themes_values">
+        <item>@string/light_theme_preference_value</item>
+        <item>@string/dark_theme_preference_value</item>
+        <item>@string/system_theme_preference_value</item>
+    </string-array>
+
+
+</resources>

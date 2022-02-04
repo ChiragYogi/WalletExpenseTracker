@@ -38,16 +38,10 @@ class YearlyDetails : Fragment(R.layout.fragment_yearly_details), HomeAdepter.On
 
         transactionType = arguments?.getParcelable(TRANSACTION_TYPE_KEY)
 
-        binding.yearlyDetails.total.currencySymbol.text =
-            currencyCode.getCurrencyCode()
-        if (transactionType != null) {
-            binding.yearlyDetails.total.transactionTypeTxt.text = transactionType.toString()
-        } else {
-            binding.yearlyDetails.total.transactionTypeTxt.text =
-                context?.getString(R.string.thisYear)
-        }
 
         mAdepter = HomeAdepter(this)
+        setUpObserver()
+        setUpRecyclerView()
 
         getTheDataForYear(yearlyDate)
 
@@ -62,8 +56,6 @@ class YearlyDetails : Fragment(R.layout.fragment_yearly_details), HomeAdepter.On
             getTheDataForYear(yearlyDate)
 
         }
-        setUpObserver()
-        setUpRecyclerView()
 
 
     }
@@ -76,9 +68,6 @@ class YearlyDetails : Fragment(R.layout.fragment_yearly_details), HomeAdepter.On
         val startDateForTxt = Extra.convertDateLongToDateStringYearly(yearStartDate)
         val newQuery = QueryForTransaction(transactionType, yearStartDate, yearEndDate)
         mViewModel.getTheQueryDate(queryData = newQuery)
-
-
-
         binding.yearlyDetails.dateTxtView.text = startDateForTxt
     }
 
@@ -90,34 +79,66 @@ class YearlyDetails : Fragment(R.layout.fragment_yearly_details), HomeAdepter.On
         )
         { transactionList ->
 
-            if (transactionList.isEmpty()) {
-                binding.yearlyDetails.totalRvView.hide()
-                binding.yearlyDetails.total.totalCardView.hide()
-                binding.yearlyDetails.noTransactionTv.show()
+            if (transactionList.isNotEmpty()) {
+
+                showViewInYearly(transactionList)
+
             } else {
-                binding.yearlyDetails.noTransactionTv.hide()
-                binding.yearlyDetails.totalRvView.show()
-                binding.yearlyDetails.total.totalCardView.show()
-                mAdepter.submitList(transactionList)
-                val total = transactionList.sumOf { transaction ->
-                    transaction.amount
-                }
-                binding.yearlyDetails.total.expenseTotal.text = total.toString()
+
+                hideViewInYearly()
+
             }
 
 
         }
     }
 
-    override fun OnTransactionClick(transaction: Transaction) {
+    private fun showViewInYearly(transactionList: List<Transaction>) {
+        binding.yearlyDetails.apply {
+            noTransactionTv.hide()
+
+            total.totalCardView.show()
+            val totalForYear = transactionList.sumOf { transaction ->
+                transaction.amount
+            }
+            total.expenseTotal.text = totalForYear.toString()
+
+            total.currencySymbol.text =
+                currencyCode.getCurrencyCode()
+            if (transactionType != null) {
+                total.transactionTypeTxt.text = transactionType.toString()
+            } else {
+                total.transactionTypeTxt.text =
+                    context?.getString(R.string.thisYear)
+            }
+
+            totalRvView.show()
+            mAdepter.submitList(transactionList)
+
+        }
+
+    }
+
+    private fun hideViewInYearly() {
+        binding.yearlyDetails.apply {
+            totalRvView.hide()
+            total.totalCardView.hide()
+            noTransactionTv.show()
+        }
+    }
+
+    override fun onTransactionClick(transaction: Transaction) {
         val action =
-            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToEditTransactionFragment(
-                transaction
+            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToAddTransactionFragment(
+                transaction,
+                getString(
+                    R.string.edit_transaction_title
+                )
             )
         findNavController().navigate(action)
     }
 
-    override fun OnLongPress(transaction: Transaction) {
+    override fun onLongPress(transaction: Transaction) {
         val action =
             TransactionTypeFragmentDirections.actionGlobalDeleteTransaction(
                 transaction
@@ -130,10 +151,11 @@ class YearlyDetails : Fragment(R.layout.fragment_yearly_details), HomeAdepter.On
         binding.yearlyDetails.totalRvView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdepter
-          }
+        }
     }
 
     override fun onDestroyView() {
+        binding.yearlyDetails.totalRvView.adapter = null
         super.onDestroyView()
         _binding = null
 

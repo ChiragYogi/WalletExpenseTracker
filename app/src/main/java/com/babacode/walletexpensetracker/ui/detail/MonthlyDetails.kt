@@ -41,19 +41,12 @@ class MonthlyDetails : Fragment(R.layout.fragment_monthly_details), HomeAdepter.
 
         transactionType = arguments?.getParcelable(TRANSACTION_TYPE_KEY)
 
-        binding.monthlyDetails.total.currencySymbol.text =
-            currencyCode.getCurrencyCode()
-        if (transactionType != null) {
-            binding.monthlyDetails.total.transactionTypeTxt.text = transactionType.toString()
-        } else {
-            binding.monthlyDetails.total.transactionTypeTxt.text =
-                context?.getString(R.string.thisMonth)
-        }
-
-
         mAdepter = HomeAdepter(this)
+        setUpObserver()
+        setUpRecyclerView()
 
         getTheDataForMonth(monthlyDate)
+
         binding.monthlyDetails.nextWeekAction.setOnClickListener {
             monthlyDate = monthlyDate.plusMonths(1)
             getTheDataForMonth(monthlyDate)
@@ -63,9 +56,6 @@ class MonthlyDetails : Fragment(R.layout.fragment_monthly_details), HomeAdepter.
             monthlyDate = monthlyDate.minusMonths(1)
             getTheDataForMonth(monthlyDate)
         }
-        setUpObserver()
-        setUpRecyclerView()
-
 
     }
 
@@ -77,26 +67,21 @@ class MonthlyDetails : Fragment(R.layout.fragment_monthly_details), HomeAdepter.
         val startDateForTxt = Extra.convertDateLongToDateStringMonthly(monthStartDateLong)
         val monthQuery = QueryForTransaction(transactionType, monthStartDateLong, monthEndDateLong)
         mViewModel.getTheQueryDate(queryData = monthQuery)
-        binding.monthlyDetails . dateTxtView . text = startDateForTxt
+        binding.monthlyDetails.dateTxtView.text = startDateForTxt
 
     }
 
     private fun setUpObserver() {
         mViewModel.allDataBetweenStartAndEndDate.observe(viewLifecycleOwner) { transactionList ->
 
-            if (transactionList.isEmpty()) {
-                binding.monthlyDetails.totalRvView.hide()
-                binding.monthlyDetails.total.totalCardView.hide()
-                binding.monthlyDetails.noTransactionTv.show()
+            if (transactionList.isNotEmpty()) {
+
+                showViewInMonthly(transactionList)
+
             } else {
-                binding.monthlyDetails.noTransactionTv.hide()
-                binding.monthlyDetails.total.totalCardView.show()
-                binding.monthlyDetails.totalRvView.show()
-                mAdepter.submitList(transactionList)
-                val total = transactionList.sumOf { transaction ->
-                    transaction.amount
-                }
-                binding.monthlyDetails.total.expenseTotal.text = total.toString()
+
+                hideViewInMonthly()
+
             }
 
 
@@ -104,15 +89,18 @@ class MonthlyDetails : Fragment(R.layout.fragment_monthly_details), HomeAdepter.
 
     }
 
-    override fun OnTransactionClick(transaction: Transaction) {
+    override fun onTransactionClick(transaction: Transaction) {
         val action =
-            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToEditTransactionFragment(
-                transaction
+            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToAddTransactionFragment(
+                transaction,
+                getString(
+                    R.string.edit_transaction_title
+                )
             )
         findNavController().navigate(action)
     }
 
-    override fun OnLongPress(transaction: Transaction) {
+    override fun onLongPress(transaction: Transaction) {
         val action =
             TransactionTypeFragmentDirections.actionGlobalDeleteTransaction(
                 transaction
@@ -128,7 +116,44 @@ class MonthlyDetails : Fragment(R.layout.fragment_monthly_details), HomeAdepter.
         }
     }
 
+
+    private fun showViewInMonthly(transactionList: List<Transaction>) {
+        binding.monthlyDetails.apply {
+
+            noTransactionTv.hide()
+
+            total.totalCardView.show()
+            if (transactionType != null) {
+                total.transactionTypeTxt.text = transactionType.toString()
+            } else {
+                total.transactionTypeTxt.text =
+                    context?.getString(R.string.thisMonth)
+            }
+            total.currencySymbol.text =
+                currencyCode.getCurrencyCode()
+
+            totalRvView.show()
+            mAdepter.submitList(transactionList)
+            val totalForMonth = transactionList.sumOf { transaction ->
+                transaction.amount
+            }
+            binding.monthlyDetails.total.expenseTotal.text = totalForMonth.toString()
+
+
+        }
+    }
+
+    private fun hideViewInMonthly() {
+        binding.apply {
+            monthlyDetails.totalRvView.hide()
+            monthlyDetails.total.totalCardView.hide()
+            monthlyDetails.noTransactionTv.show()
+        }
+
+    }
+
     override fun onDestroyView() {
+        binding.monthlyDetails.totalRvView.adapter = null
         super.onDestroyView()
         _binding = null
 

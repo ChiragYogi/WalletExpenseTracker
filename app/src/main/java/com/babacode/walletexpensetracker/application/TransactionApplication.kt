@@ -12,7 +12,7 @@ import dagger.hilt.android.HiltAndroidApp
 class TransactionApplication : Application() {
 
     private val mTheme by lazy {
-        ThemeProvider(this).getThemeFromPreferences()
+        ThemeProvider(applicationContext).getThemeFromPreferences()
     }
 
     override fun onCreate() {

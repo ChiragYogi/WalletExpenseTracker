@@ -14,6 +14,7 @@ import com.babacode.walletexpensetracker.databinding.FragmentTransactionCalender
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.home.HomeAdepter
+import com.babacode.walletexpensetracker.utiles.Extra.REQUEST_KEY_FOR_ADD_EDIT
 import com.babacode.walletexpensetracker.utiles.Extra.convertCalenderDateToLong
 import com.babacode.walletexpensetracker.utiles.hide
 import com.babacode.walletexpensetracker.utiles.show
@@ -50,13 +51,11 @@ class TransactionCalenderViewFragment : Fragment(R.layout.fragment_transaction_c
             currentDayDate = calender.time
 
             getTransactionForSelectedDate(currentDayDate)
-            Log.d("date", currentDayDate.toString())
-
 
         }
 
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            when(bundle.getInt("add_edit_request")){
+        setFragmentResultListener(REQUEST_KEY_FOR_ADD_EDIT) { _, bundle ->
+            when (bundle.getInt(REQUEST_KEY_FOR_ADD_EDIT)) {
                 ADD_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_added)
                 EDIT_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_update)
             }
@@ -65,6 +64,19 @@ class TransactionCalenderViewFragment : Fragment(R.layout.fragment_transaction_c
 
     }
 
+    private fun showViewInCalenderFrag(transactionList: List<Transaction>) {
+        binding.apply {
+            noTransactionTv.hide()
+            calenderRecyclerView.show()
+        }
+        mAdepter.submitList(transactionList)
+
+    }
+
+    private fun hideViewInCalender() {
+        binding.noTransactionTv.show()
+        binding.calenderRecyclerView.hide()
+    }
 
 
     private fun getTransactionForSelectedDate(date: Date) {
@@ -73,6 +85,7 @@ class TransactionCalenderViewFragment : Fragment(R.layout.fragment_transaction_c
     }
 
     override fun onDestroyView() {
+        binding.calenderRecyclerView.adapter= null
         super.onDestroyView()
         _binding = null
 
@@ -81,13 +94,13 @@ class TransactionCalenderViewFragment : Fragment(R.layout.fragment_transaction_c
 
     private fun setUpObserver() {
         viewModel.selectedDateTransaction.observe(viewLifecycleOwner) { transactionList ->
-            if (transactionList.isEmpty()) {
-                binding.noTransactionTv.show()
-                binding.calenderRecyclerView.hide()
+            if (transactionList.isNotEmpty()) {
+
+                showViewInCalenderFrag(transactionList)
+
             } else {
-                binding.noTransactionTv.hide()
-                binding.calenderRecyclerView.show()
-                mAdepter.submitList(transactionList)
+
+                hideViewInCalender()
             }
 
         }
@@ -97,20 +110,23 @@ class TransactionCalenderViewFragment : Fragment(R.layout.fragment_transaction_c
         binding.calenderRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdepter
-         }
+        }
     }
 
 
-    override fun OnTransactionClick(transaction: Transaction) {
+    override fun onTransactionClick(transaction: Transaction) {
         val action =
-            TransactionCalenderViewFragmentDirections.actionCalenderViewFragmentToEditTransactionFragment(
-                transaction
+            TransactionCalenderViewFragmentDirections.actionCalenderViewFragmentToAddTransactionFragment(
+                transaction,
+                getString(
+                    R.string.edit_transaction_title
+                )
             )
 
         findNavController().navigate(action)
     }
 
-    override fun OnLongPress(transaction: Transaction) {
+    override fun onLongPress(transaction: Transaction) {
         val action =
             TransactionCalenderViewFragmentDirections.actionGlobalDeleteTransaction(
                 transaction

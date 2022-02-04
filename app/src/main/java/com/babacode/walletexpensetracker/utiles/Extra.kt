@@ -21,6 +21,7 @@ object Extra {
     const val DAILY_TAB_NAME = "Daily"
     const val MONTHLY_TAB_NAME = "Monthly"
     const val YEARLY_TAB_NAME = "Yearly"
+    const val REQUEST_KEY_FOR_ADD_EDIT = "add_edit_request"
 
 
     fun transactionType(type: String): TransactionType {
@@ -166,6 +167,13 @@ object Extra {
         val formatDateForTodayLocal = date.format(currentDate)
         return convertStringDateToLong(formatDateForTodayLocal)
     }
+
+    fun convertLocalLongDateToStringAndGetLocalDate(date: Long): LocalDate {
+        val newDate = convertLongDateToStringDate(date)
+        val formatter = DateTimeFormatter.ofPattern("dd MMM, yyyy", Locale.US)
+        return LocalDate.parse(newDate, formatter)
+    }
+
     fun convertCalenderDateToLong(currentDate: Date): Long{
 
         val date = SimpleDateFormat("dd MMM, yyyy", Locale.US)

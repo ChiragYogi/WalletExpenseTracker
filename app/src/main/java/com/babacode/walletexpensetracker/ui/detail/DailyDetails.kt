@@ -29,7 +29,9 @@ class DailyDetails : Fragment(R.layout.fragment_daily_details), HomeAdepter.OnIt
     private val mViewModel: DetailViewViewModel by viewModels()
     private var transactionType: TransactionType? = null
     private lateinit var mAdepter: HomeAdepter
-    private var todayDate = LocalDate.now()!!
+
+    private var todayDate:LocalDate = LocalDate.now()
+
     private val currencyCode by lazy {
         SettingUtils(requireContext())
     }
@@ -39,19 +41,13 @@ class DailyDetails : Fragment(R.layout.fragment_daily_details), HomeAdepter.OnIt
         _binding = FragmentDailyDetailsBinding.bind(view)
 
         transactionType = arguments?.getParcelable(Extra.TRANSACTION_TYPE_KEY)
-        Log.d("daily", transactionType.toString())
 
-        binding.dailyDetails.total.currencySymbol.text =
-            currencyCode.getCurrencyCode()
-        if (transactionType != null) {
-            binding.dailyDetails.total.transactionTypeTxt.text = transactionType.toString()
-        } else {
-            binding.dailyDetails.total.transactionTypeTxt.text =
-                context?.getString(R.string.today)
-        }
 
+
+        Log.d("dateForToday",todayDate.toString())
         mAdepter = HomeAdepter(this)
-
+        setUpObserver()
+        setUpRecyclerView()
         getDataForToday(todayDate)
 
         binding.dailyDetails.nextWeekAction.setOnClickListener {
@@ -63,26 +59,17 @@ class DailyDetails : Fragment(R.layout.fragment_daily_details), HomeAdepter.OnIt
             getDataForToday(todayDate)
         }
 
-        setUpObserver()
-        setUpRecyclerView()
-
 
     }
 
     private fun getDataForToday(todayDate: LocalDate) {
 
         val dateToLong = Extra.convertLocalDateToLong(todayDate)
-        if (transactionType == null) {
-            Log.d("daily", transactionType.toString())
-            val newQuery = DailyQueryForTransaction(transactionType, dateToLong)
-            mViewModel.getDailyDateForQuery(newQuery)
-        } else {
-            val newQuery = DailyQueryForTransaction(transactionType = null, dateToLong)
-            mViewModel.getDailyDateForQuery(newQuery)
-        }
+
+        val newQuery = DailyQueryForTransaction(transactionType, dateToLong)
+        mViewModel.getDailyDateForQuery(newQuery)
+
         val dateText = Extra.convertLongDateToStringDate(dateToLong)
-
-
         binding.dailyDetails.dateTxtView.text = dateText
     }
 
@@ -90,7 +77,6 @@ class DailyDetails : Fragment(R.layout.fragment_daily_details), HomeAdepter.OnIt
         binding.dailyDetails.totalRvView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdepter
-            setHasFixedSize(true)
         }
     }
 
@@ -98,42 +84,73 @@ class DailyDetails : Fragment(R.layout.fragment_daily_details), HomeAdepter.OnIt
 
         mViewModel.dailyData.observe(viewLifecycleOwner) { transactionList ->
 
-            if (transactionList.isEmpty()) {
-                binding.dailyDetails.totalRvView.hide()
-                binding.dailyDetails.total.totalCardView.hide()
-                binding.dailyDetails.noTransactionTv.show()
-
+            if (transactionList.isNotEmpty()) {
+                showViewInDaily(transactionList)
             } else {
-                binding.dailyDetails.noTransactionTv.hide()
-                binding.dailyDetails.totalRvView.show()
-                binding.dailyDetails.total.totalCardView.show()
-                mAdepter.submitList(transactionList)
-                val total = transactionList.sumOf { transaction ->
-                    transaction.amount
-                }
-                binding.dailyDetails.total.expenseTotal.text = total.toString()
+                hideViewInDaily()
             }
-
-
         }
 
 
     }
 
+    private fun showViewInDaily(transactionList: List<Transaction>) {
+        binding.dailyDetails.apply {
+            noTransactionTv.hide()
+            total.totalCardView.show()
 
-    override fun OnTransactionClick(transaction: Transaction) {
+            totalRvView.show()
+            binding.dailyDetails.total.currencySymbol.text =
+                currencyCode.getCurrencyCode()
+            if (transactionType != null) {
+                binding.dailyDetails.total.transactionTypeTxt.text = transactionType.toString()
+            } else {
+                binding.dailyDetails.total.transactionTypeTxt.text =
+                    context?.getString(R.string.today)
+            }
+            val totalForDaily = transactionList.sumOf { transaction ->
+                transaction.amount
+            }
+            total.expenseTotal.text = totalForDaily.toString()
+
+        }
+        mAdepter.submitList(transactionList)
+
+    }
+
+    private fun hideViewInDaily() {
+        binding.dailyDetails.apply {
+            totalRvView.hide()
+            total.totalCardView.hide()
+            noTransactionTv.show()
+        }
+    }
+
+
+    override fun onTransactionClick(transaction: Transaction) {
         val action =
-            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToEditTransactionFragment(
-                transaction
+            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToAddTransactionFragment(
+                transaction,
+                getString(
+                    R.string.edit_transaction_title
+                )
             )
         findNavController().navigate(action)
     }
 
-    override fun OnLongPress(transaction: Transaction) {
+    override fun onLongPress(transaction: Transaction) {
         val action =
             TransactionTypeFragmentDirections.actionGlobalDeleteTransaction(
                 transaction
             )
         findNavController().navigate(action)
     }
+
+
+    override fun onDestroyView() {
+        binding.dailyDetails.totalRvView.adapter = null
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

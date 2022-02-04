@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_for_vector">48dp</dimen>
+    <dimen name="noTransactionTvSize">48sp</dimen>
+    <dimen name="noTransactionSecondTvSize">32sp</dimen>
+</resources>

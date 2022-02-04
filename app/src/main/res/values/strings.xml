@@ -1,24 +1,7 @@
 <resources>
     <string name="app_name">Wallet Expense Tracker</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
     <string name="transaction_added">Transaction added</string>
     <string name="transaction_update">Transaction updated</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="income_vector_image">income vector image</string>
     <string name="income">Income</string>
     <string name="currency_symbol">$</string>
@@ -69,16 +52,6 @@
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
 
-    <string name="added_success">Transaction added</string>
-    <string name="update_success">Transaction updated</string>
-    <string name="transaction_type_error">Please Select Type Of Transaction</string>
-    <string name="empty_amount_error">Please Enter Amount</string>
-    <string name="amount_length_error">Amount Must Be less than  1000000</string>
-    <string name="valid_amount_error">Please Enter Valid Amount</string>
-    <string name="add_note_error">Please Add Note With Transaction</string>
-    <string name="note_validate_error">Note character must Be less than 20</string>
-    <string name="tag_error">Please Select Type Of Tag</string>
-    <string name="payment_error">Please Select Type Of Payment</string>
 
     <string name="euroCurrencyCodeValue">€</string>
     <string name="poundsCurrencyCodeValue">£</string>
@@ -140,25 +113,19 @@
     <string name="requestFromUser">New Feature Idea -</string>
     <string name="emailError">Something Went Wrong</string>
     <string name="today">For Today</string>
-
-
-    <string-array name="transactionTag">
-        <item>Other</item>
-        <item>Food</item>
-        <item>Shopping</item>
-        <item>Travelling</item>
-        <item>Entertainment</item>
-        <item>Health</item>
-        <item>Education</item>
-        <item>Rent</item>
-        <item>Bills</item>
-        <item>Gift</item>
-        <item>Investment</item>
-        <item>Utils</item>
-        <item>Salary</item>
-        <item>Coupons</item>
-        <item>CashBack</item>
-    </string-array>
+    <string name="cancle_button">Cancel</string>
+    <string name="yes_button">Yes</string>
+    <string name="add_transaction_title">Add Transaction</string>
+    <string name="edit_transaction_title">Edit Transaction</string>
+    <string name="type_key">type</string>
+    <string name="tag_key">tag</string>
+    <string name="mode_key">mode</string>
+    <string name="date_formate">dd MMM, yyyy</string>
+    <string name="daily_date_key">dailyDateKey</string>
+    <string name="image_for_no_transaction">Image For No Transaction</string>
+    <string name="no_transaction_yet">No Transaction Yet!</string>
+    <string name="add_a_new_transaction_to_get_started">Add a new transaction to get started</string>
+    <string name="zero_for_no_transaction">0.0</string>
 
 
 </resources>

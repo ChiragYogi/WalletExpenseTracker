@@ -1,11 +1,8 @@
 package com.babacode.walletexpensetracker.ui.home
 
-import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +11,6 @@ import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.TransactionRvItemBinding
-import com.babacode.walletexpensetracker.ui.MainActivity
 import com.babacode.walletexpensetracker.utiles.Extra
 import com.babacode.walletexpensetracker.utiles.SettingUtils
 
@@ -44,7 +40,7 @@ class HomeAdepter(private val listener: OnItemClick) :
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val transaction = getItem(position)
-                    listener.OnTransactionClick(transaction)
+                    listener.onTransactionClick(transaction)
                 }
 
             }
@@ -53,7 +49,7 @@ class HomeAdepter(private val listener: OnItemClick) :
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     val transaction = getItem(position)
-                    listener.OnLongPress(transaction)
+                    listener.onLongPress(transaction)
                 }
                 true
             }
@@ -163,8 +159,8 @@ class HomeAdepter(private val listener: OnItemClick) :
 
 
     interface OnItemClick {
-        fun OnTransactionClick(transaction: Transaction)
-        fun OnLongPress(transaction: Transaction)
+        fun onTransactionClick(transaction: Transaction)
+        fun onLongPress(transaction: Transaction)
 
     }
 }

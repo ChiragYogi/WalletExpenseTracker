@@ -3,10 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-sw600dp/add_transaction_vectore.xml" value="0.149" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-v24/date_vector.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-v24/date_vectore.xml" value="0.14537037037037037" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.13914473684210527" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-v24/monthly_vector.xml" value="0.12314814814814815" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-w600dp/add_edi_layout_vectore.xml" value="0.149" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-w600dp/add_transaction_vectore.xml" value="0.149" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-xhdpi/add_transaction_vectore.xml" value="0.149" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-xxhdpi/add_transaction_vectore.xml" value="0.149" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable-xxxhdpi/add_transaction_vectore.xml" value="0.149" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/add_transaction_vectore.xml" value="0.16111111111111112" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/bill_vector.xml" value="0.1125" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/drawable/bills_vector.xml" value="0.1125" />
@@ -61,29 +67,44 @@
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-land/fragment_weekly_details.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-land/fragment_yearly_details.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-land/total_transaction_view.xml" value="0.14635416666666667" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/add_edit_layout.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/chart_card_view.xml" value="0.15256410256410258" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/empty_home_scrren.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/expense_card_view.xml" value="0.16" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/fragment_add_transaction.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/fragment_home.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/fragment_transaction_calender_view.xml" value="0.12" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/home_layout_with_view.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/income_card_view.xml" value="0.15" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/item_auto_complete_dropdown.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/total_card_view_for_detail.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/total_transaction_view.xml" value="0.14" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-sw600dp/transaction_rv_item.xml" value="0.14" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-w480dp-port/fragment_home.xml" value="0.18" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-w600dp/fragment_home.xml" value="0.1728395061728395" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout-w720dp/fragment_home.xml" value="0.1728395061728395" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/activity_main.xml" value="0.18" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/add_edit_layout.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/add_edit_layout.xml" value="0.67" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/bar_chart.xml" value="0.12273550724637682" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/chart_card_view.xml" value="0.18" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/chart_card_view.xml" value="0.25" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/custome_list.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/delete_bottam_sheet.xml" value="0.18" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/dropdown_item.xml" value="0.2" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/empty_home_scrren.xml" value="0.16" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expence_view.xml" value="0.33" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expense_card_view.xml" value="0.18" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_add_transaction.xml" value="0.11" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_daily_details.xml" value="0.16530797101449277" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/expense_card_view.xml" value="0.22" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_add_transaction.xml" value="0.25" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_daily_details.xml" value="0.13" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_edit_transaction.xml" value="0.12" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_home.xml" value="0.22" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_monthly_details.xml" value="0.18" />
-        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_calender_view.xml" value="0.22" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_calender_view.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_detail.xml" value="0.18" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_transaction_type.xml" value="0.14" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_update_transaction.xml" value="0.16" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_weekly_details.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/fragment_yearly_details.xml" value="0.13043478260869565" />
+        <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/home_layout_with_view.xml" value="0.2" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_card_view.xml" value="0.25" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/income_expence_card_view.xml" value="0.1" />
         <entry key="..\:/Users/chirag/AndroidStudioProjects/WalletExpenseTracker/app/src/main/res/layout/item_auto_complete_dropdown.xml" value="0.33" />
@@ -113,7 +134,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.1" />
+        <option name="scale" value="0.22" />
       </ProjectState>
     </option>
   </component>

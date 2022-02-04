@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <string name="app_name">Wallet Expense Tracker</string>
+        <string name="transaction_added">Transaction added</string>
+        <string name="transaction_update">Transaction updated</string>
+        <string name="income_vector_image">income vector image</string>
+        <string name="income">Income</string>
+        <string name="currency_symbol">$</string>
+        <string name="expense">Expense</string>
+        <string name="expense_vector_image">Expence Vectore Arrow Image</string>
+        <string name="thisMonthTxt">(this month)</string>
+        <string name="recent_transaction">Recent Transaction</string>
+        <string name="see_more">see more </string>
+        <string name="add_transaction_for_income_or_expense">add Transaction for income or expense</string>
+        <string name="date">Date</string>
+        <string name="amount">Amount</string>
+        <string name="type">Type</string>
+        <string name="what_s_this_for">What\'s this for?</string>
+        <string name="add_a_note_to_self">Add a note to self</string>
+        <string name="transaction_type">Transaction Type</string>
+        <string name="tag_for_transaction">Tag for Transaction</string>
+        <string name="attach_an_image">*Attach an Image</string>
+        <string name="image_for_current_transaction">image for current transaction</string>
+        <string name="retake_image_button">retake image button</string>
+        <string name="save_transaction_button">save transaction button</string>
+        <string name="transaction_note">Transaction Note</string>
+        <string name="edit">Edit</string>
+        <string name="update">Update</string>
+        <string name="edit_transaction_button">Edit transaction button in detail screen</string>
+        <string name="delete">Delete</string>
+        <string name="delete_button_on_menu_bar">delete buttone for transaction on menu in detail screen</string>
+        <string name="share">share</string>
+        <string name="update_transaction_button">Update Transaction button</string>
+        <string name="add_income">Income</string>
+        <string name="add_expense">Expense</string>
+        <string name="transaction_type_tag">Transaction Tag</string>
+        <string name="dropdowntagimage">DropDownTagImage</string>
+
+        <string name="title">Title</string>
+        <string name="tag">Tag</string>
+        <string name="createdAt">created at</string>
+        <string name="ok">OK</string>
+
+
+        <string name="payment_mode">Payment Mode</string>
+        <string name="delete_this_transaction">Delete All Transaction</string>
+        <string name="delete_transaction">Transaction Deleted Successfully</string>
+        <string name="delete_this_transaction_msg">Do You Want to Delete this Transaction?</string>
+
+        <string name="deleteAllTransactionTitle">Delete All Data</string>
+        <string name="deleteAllTransactionToastMsg">All Transaction Deleted Successfully</string>
+        <string name="deleteAllTransactionText">This Will delete all your transaction data and cannot be undone! Do you want to proceed? </string>
+        <string name="yes">Yes</string>
+        <string name="cancel">Cancel</string>
+
+
+        <string name="euroCurrencyCodeValue">€</string>
+        <string name="poundsCurrencyCodeValue">£</string>
+        <string name="usDollarCurrencyCodeValue">$</string>
+        <string name="rupCurrencyCodeValue">₹</string>
+        <string name="japaneseYenCurrencyCodeValue">¥</string>
+        <string name="emailForQuery">chirag433@gmail.com</string>
+
+
+        <string name="undo">Undo</string>
+        <string name="operation_cancel">Operation Cancel</string>
+        <string name="calender">CalenderView</string>
+        <string name="setting">Setting</string>
+        <string name="setting_icon">Setting button for setting screen</string>
+        <string name="noTransaction">No Transaction To Show</string>
+        <string name="currency_code_header">Select Currency</string>
+        <string name="currency">Set Your Currency</string>
+        <string name="theme">Theme</string>
+        <string name="currencyKey">currencyCodeKey</string>
+        <string name="defultValueCurrency">RUP</string>
+
+        <string name="dark_theme_preference_value">2</string>
+        <string name="light_theme_preference_value">1</string>
+        <string name="system_theme_preference_value">-1</string>
+
+        <string name="dark_theme_description">Dark mode</string>
+        <string name="light_theme_description">Light mode</string>
+        <string name="system_theme_description">System default</string>
+
+
+        <string name="themeKey">theme</string>
+        <string name="notifications">Notifications</string>
+        <string name="notificationKey">notificationKey</string>
+        <string name="notificationTitle">Notification For New Day</string>
+        <string name="links">Links</string>
+        <string name="privacyPolicy">privacyPolicy</string>
+        <string name="showPrivacyPolicy">Show Privacy Policy</string>
+        <string name="contactSupport">contactSupport</string>
+        <string name="contactSupportKey">contactSupportKey</string>
+        <string name="contactSupportTitle">Request New feature</string>
+        <string name="contactSummery">Have a idea for new feature?</string>
+
+        <string name="raiseBugKey">reportBug</string>
+        <string name="raiseBugTitle">Report a Bug</string>
+        <string name="raiseBugKeySummery">Found some problem?</string>
+
+        <string name="general">General</string>
+        <string name="resetData">Reset Data</string>
+        <string name="deleteAllData">deleteAllData</string>
+
+        <string name="previousButton">Previous Button For New Week Month Year</string>
+        <string name="nextButton">Next Button For New Week Month Year</string>
+        <string name="weeklyAnalysis">WeeklyAnalysis</string>
+        <string name="total">Total</string>
+        <string name="thisWeek">This Week</string>
+        <string name="thisYear">This Year</string>
+        <string name="thisMonth">This Month</string>
+        <string name="foundABugInApp">Found A New Bug In App</string>
+        <string name="requestFromUser">New Feature Idea -</string>
+        <string name="emailError">Something Went Wrong</string>
+        <string name="today">For Today</string>
+        <string name="cancle_button">Cancel</string>
+        <string name="yes_button">Yes</string>
+        <string name="add_transaction_title">Add Transaction</string>
+        <string name="edit_transaction_title">Edit Transaction</string>
+        <string name="type_key">type</string>
+        <string name="tag_key">tag</string>
+        <string name="mode_key">mode</string>
+        <string name="date_formate">dd MMM, yyyy</string>
+        <string name="daily_date_key">dailyDateKey</string>
+        <string name="image_for_no_transaction">Image For No Transaction</string>
+
+        <string name="no_transaction_yet">No Transaction Yet!</string>
+        <string name="add_a_new_transaction_to_get_started">Add a new transaction to get started</string>
+        <string name="zero_for_no_transaction">0.0</string>
+
+
+
+</resources>

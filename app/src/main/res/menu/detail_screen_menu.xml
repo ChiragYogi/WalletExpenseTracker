@@ -13,7 +13,7 @@
     <item
         android:id="@+id/calenderViewFragment"
         android:contentDescription="@string/calender"
-        android:icon="@drawable/monthly_vector"
+        android:icon="@drawable/yearly_calender"
         android:orderInCategory="101"
         android:title="@string/calender"
         app:showAsAction="always" />

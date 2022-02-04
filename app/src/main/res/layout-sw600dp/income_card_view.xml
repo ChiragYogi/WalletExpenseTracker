@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/income_view_click_id"
+    style="@style/ShapeAppearance.MaterialComponents.MediumComponent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_sixteen"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardCornerRadius="@dimen/dimen_four"
+    app:cardElevation="@dimen/dimen_four">
+
+
+    <LinearLayout
+        android:id="@+id/liner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_sixteen"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/income_text_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_sixteen"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                android:fontFamily="@font/roboto"
+                android:text="@string/income"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/thirty_two_sp_text_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/thisMonth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_sixteen"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                android:fontFamily="@font/roboto"
+                android:text="@string/thisMonthTxt"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/twenty_four_sp_text_size" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/currency_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/dimen_sixteen"
+                android:layout_marginStart="@dimen/dimen_sixteen"
+                android:fontFamily="@font/roboto_condensed_regular"
+                android:textColor="@color/currencyCode"
+                android:textSize="@dimen/thirty_two_sp_text_size"
+                android:textStyle="bold"
+                tools:text="@string/currency_symbol" />
+
+            <TextView
+                android:id="@+id/income_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/dimen_sixteen"
+                android:layout_marginStart="@dimen/dimen_eight"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_condensed_bold"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/thirty_two_sp_text_size"
+                android:textStyle="bold"
+                android:text="@string/zero_for_no_transaction" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
+

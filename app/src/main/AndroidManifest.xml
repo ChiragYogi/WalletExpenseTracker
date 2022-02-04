@@ -4,6 +4,7 @@
     package="com.babacode.walletexpensetracker">
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+
     <application
         android:name=".application.TransactionApplication"
         android:allowBackup="true"

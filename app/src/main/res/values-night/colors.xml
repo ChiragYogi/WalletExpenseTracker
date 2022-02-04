@@ -17,6 +17,4 @@
     <color name="expenseColor">#DB0909</color>
     <color name="chartCenterBackground">?attr/colorOnBackground</color>
     <color name="background">#121212</color>
-
-
 </resources>

@@ -42,18 +42,9 @@ class WeeklyDetails : Fragment(R.layout.fragment_weekly_details), HomeAdepter.On
 
         transactionType = arguments?.getParcelable(TRANSACTION_TYPE_KEY)
 
-        binding.weeklyDetails.total.currencySymbol.text =
-            currencyCode.getCurrencyCode()
-        if (transactionType != null) {
-            binding.weeklyDetails.total.transactionTypeTxt.text = transactionType.toString()
-        } else {
-            binding.weeklyDetails.total.transactionTypeTxt.text =
-                context?.getString(R.string.thisWeek)
-        }
-
-
         mAdepter = HomeAdepter(this)
-
+        setUpObserver()
+        setUpRecyclerView()
 
         getTheDataForWeek(weeklyDate)
 
@@ -68,8 +59,6 @@ class WeeklyDetails : Fragment(R.layout.fragment_weekly_details), HomeAdepter.On
             getTheDataForWeek(weeklyDate)
 
         }
-        setUpObserver()
-        setUpRecyclerView()
 
 
     }
@@ -82,9 +71,8 @@ class WeeklyDetails : Fragment(R.layout.fragment_weekly_details), HomeAdepter.On
         val startDateForTxt = convertDateLongToDateStringWeekly(weekStartDateLong)
         val endDateForTxt = convertDateLongToDateStringWeekly(weekEndDateLong)
         val newQuery =
-                QueryForTransaction(transactionType, weekStartDateLong, weekEndDateLong)
-            mViewModel.getTheQueryDate(queryData = newQuery)
-
+            QueryForTransaction(transactionType, weekStartDateLong, weekEndDateLong)
+        mViewModel.getTheQueryDate(queryData = newQuery)
 
         binding.weeklyDetails.dateTxtView.text = "$startDateForTxt to $endDateForTxt"
     }
@@ -93,26 +81,18 @@ class WeeklyDetails : Fragment(R.layout.fragment_weekly_details), HomeAdepter.On
     private fun setUpObserver() {
 
         mViewModel.allDataBetweenStartAndEndDate.observe(
-            viewLifecycleOwner)
+            viewLifecycleOwner
+        )
 
-             { transactionList ->
+        { transactionList ->
 
-                if (transactionList.isEmpty()) {
-                    binding.weeklyDetails.totalRvView.hide()
-                    binding.weeklyDetails.total.totalCardView.hide()
-                    binding.weeklyDetails.noTransactionTv.show()
+            if (transactionList.isNotEmpty()) {
 
-                } else {
-                    binding.weeklyDetails.noTransactionTv.hide()
-                    binding.weeklyDetails.totalRvView.show()
-                    binding.weeklyDetails.total.totalCardView.show()
-                    mAdepter.submitList(transactionList)
-                    val total = transactionList.sumOf { transaction ->
-                        transaction.amount
-                    }
-                    binding.weeklyDetails.total.expenseTotal.text = total.toString()
-                }
+                showViewInWeekly(transactionList)
 
+            } else {
+
+                hideViewInWeekly()
 
             }
 
@@ -120,29 +100,69 @@ class WeeklyDetails : Fragment(R.layout.fragment_weekly_details), HomeAdepter.On
         }
 
 
+    }
+
+    private fun showViewInWeekly(transactionList: List<Transaction>) {
+        binding.weeklyDetails.apply {
+            noTransactionTv.hide()
+
+            total.totalCardView.show()
+
+            binding.weeklyDetails.total.currencySymbol.text =
+                currencyCode.getCurrencyCode()
+
+            if (transactionType != null) {
+                total.transactionTypeTxt.text = transactionType.toString()
+            } else {
+                total.transactionTypeTxt.text =
+                    context?.getString(R.string.thisWeek)
+            }
+
+            val totalInWeekly = transactionList.sumOf { transaction ->
+                transaction.amount
+            }
+            total.expenseTotal.text = totalInWeekly.toString()
+
+            totalRvView.show()
+            mAdepter.submitList(transactionList)
+        }
+    }
+
+    private fun hideViewInWeekly() {
+        binding.weeklyDetails.apply {
+            totalRvView.hide()
+            total.totalCardView.hide()
+            noTransactionTv.show()
+        }
+    }
+
 
     private fun setUpRecyclerView() {
         binding.weeklyDetails.totalRvView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = mAdepter
-          }
+        }
     }
 
     override fun onDestroyView() {
+        binding.weeklyDetails.totalRvView.adapter = null
         super.onDestroyView()
         _binding = null
 
     }
 
-    override fun OnTransactionClick(transaction: Transaction) {
+    override fun onTransactionClick(transaction: Transaction) {
         val action =
-            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToEditTransactionFragment(
-                transaction
+            TransactionTypeFragmentDirections.actionTransactionTypeFragmentToAddTransactionFragment(
+                transaction,
+                getString(
+                    R.string.edit_transaction_title
+                )
             )
         findNavController().navigate(action)
     }
 
-    override fun OnLongPress(transaction: Transaction) {
+    override fun onLongPress(transaction: Transaction) {
         val action =
             TransactionTypeFragmentDirections.actionGlobalDeleteTransaction(
                 transaction

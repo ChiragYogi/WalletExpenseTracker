@@ -12,11 +12,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.FragmentAddTransactionBinding
+import com.babacode.walletexpensetracker.utiles.Extra.REQUEST_KEY_FOR_ADD_EDIT
 import com.babacode.walletexpensetracker.utiles.Extra.convertLongDateToStringDate
 import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
 import com.babacode.walletexpensetracker.utiles.SettingUtils
@@ -33,18 +36,21 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
     private var _binding: FragmentAddTransactionBinding? = null
     private val binding get() = _binding!!
     private val viewModel: TransactionAddEditViewModel by viewModels()
-
-
+    private val transactionArgs: AddTransactionFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAddTransactionBinding.bind(view)
 
         initView()
+
+        val transaction = transactionArgs.editTransaction
+        setEditTransactionToUi(transaction)
+
         if (savedInstanceState != null) {
-            val type = savedInstanceState.getString("typeInEdit")
-            val tag = savedInstanceState.getString("tagInEdit")
-            val mode = savedInstanceState.getString("modeInEdit")
+            val type = savedInstanceState.getString(getString(R.string.type_key))
+            val tag = savedInstanceState.getString(getString(R.string.tag_key))
+            val mode = savedInstanceState.getString(getString(R.string.mode_key))
 
             binding.apply {
                 addTransaction.typeEdt.setText(type, false)
@@ -56,6 +62,17 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
 
     }
 
+    private fun setEditTransactionToUi(transaction: Transaction?) = with(binding.addTransaction) {
+        if (transaction != null) {
+            typeEdt.setText(transaction.transactionType.toString(), false)
+            paymentEdt.setText(transaction.paymentType.toString(), false)
+            tagEdt.setText(transaction.tag.toString(), false)
+            transactionNoteEdt.setText(transaction.note)
+            amountEdt.setText(transaction.amount.toInt().toString())
+            dateEdt.setText(convertLongDateToStringDate(transaction.date))
+        }
+
+    }
 
 
     private fun initView() {
@@ -92,7 +109,11 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
             addTransaction.dateEdt.setText(convertLongDateToStringDate(todayDate))
 
 
-            addTransaction.dateEdt.transformDatePicker(requireContext(), "dd MMM, yyyy", Date())
+            addTransaction.dateEdt.transformDatePicker(
+                requireContext(),
+                getString(R.string.date_formate),
+                Date()
+            )
 
             saveTransaction.setOnClickListener {
                 saveTransactionData()
@@ -112,7 +133,9 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         val transactionType = it.transactionTypeLayout.editText?.text.toString()
         val transactionTag = it.transactionTagLayout.editText?.text.toString()
         val transactionPaymentType = it.transactionModeLayout.editText?.text.toString()
-        val transactionId = 0
+        val editTransaction = transactionArgs.editTransaction
+        val  transactionId = editTransaction?.id ?: 0
+
 
 
         viewModel.validateAndInsertOrUpdate(
@@ -139,12 +162,12 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
     private fun eventObserver() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.addEditTransactionEvent.collect{ event ->
+                viewModel.addEditTransactionEvent.collect { event ->
                     when (event) {
                         is TransactionAddEditViewModel.AddEditTransactionEvent.NavigateBackWithResult -> {
                             setFragmentResult(
-                                "add_edit_request",
-                                bundleOf("add_edit_request" to event.result)
+                                REQUEST_KEY_FOR_ADD_EDIT,
+                                bundleOf(REQUEST_KEY_FOR_ADD_EDIT to event.result)
                             )
                             findNavController().popBackStack()
                         }
@@ -180,9 +203,9 @@ class AddTransactionFragment : Fragment(R.layout.fragment_add_transaction) {
         val type = binding.addTransaction.typeEdt.text.toString()
         val tag = binding.addTransaction.tagEdt.text.toString()
         val mode = binding.addTransaction.paymentEdt.text.toString()
-        outState.putString("type", type)
-        outState.putString("tag", tag)
-        outState.putString("mode", mode)
+        outState.putString(getString(R.string.type_key), type)
+        outState.putString(getString(R.string.tag_key), tag)
+        outState.putString(getString(R.string.mode_key), mode)
 
     }
 

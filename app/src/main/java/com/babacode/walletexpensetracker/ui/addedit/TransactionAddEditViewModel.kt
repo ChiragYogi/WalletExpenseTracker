@@ -39,7 +39,7 @@ class TransactionAddEditViewModel @Inject constructor(
         transactionDate: String,
         transactionTag: String,
         transactionPaymentType: String,
-        transactionID: Int?
+        transactionID: Int
     ) {
 
 
@@ -95,7 +95,7 @@ class TransactionAddEditViewModel @Inject constructor(
         val addPaymentMode = paymentMode(transactionPaymentType)
 
 
-        if (transactionID == null) {
+        if (transactionID == 0) {
 
             val addNewTransaction = Transaction(
                 transactionNote,
@@ -103,7 +103,8 @@ class TransactionAddEditViewModel @Inject constructor(
                 addType,
                 addAmount,
                 addTag,
-                addPaymentMode
+                addPaymentMode,
+                transactionID
             )
             createTransaction(addNewTransaction)
         } else {

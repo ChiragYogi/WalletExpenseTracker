@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".ui.home.HomeFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/main_layout_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/liner_layout_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="@dimen/dimen_eight"
+                android:layout_marginStart="@dimen/dimen_eight"
+                android:layout_marginEnd="@dimen/dimen_eight"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include
+                    android:id="@+id/income_view"
+                    layout="@layout/income_card_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_one_fifty"
+                    android:layout_margin="@dimen/dimen_eight"
+                    android:layout_weight="1" />
+
+                <include
+                    android:id="@+id/expense_view"
+                    layout="@layout/expense_card_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/dimen_one_fifty"
+                    android:layout_margin="@dimen/dimen_eight"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/recent_transaction_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_thirty_two"
+                android:layout_marginStart="@dimen/dimen_sixteen"
+                android:fontFamily="@font/roboto"
+                android:text="@string/recent_transaction"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="@dimen/thirty_two_sp_text_size"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pie_chart" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_four"
+                android:layout_marginEnd="@dimen/dimen_four"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/recent_transaction_text"
+                tools:listitem="@layout/transaction_rv_item"
+                />
+
+
+            <include
+                android:id="@+id/pie_chart"
+                layout="@layout/chart_card_view"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dimen_three_hundred_dp"
+                android:layout_marginEnd="@dimen/dimen_sixteen"
+                android:layout_marginStart="@dimen/dimen_sixteen"
+                android:layout_marginTop="@dimen/dimen_sixteen"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/liner_layout_view" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <ViewStub
+        android:id="@+id/empty_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout="@layout/empty_home_scrren"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"  />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/dimen_thirty_two"
+        android:layout_marginEnd="@dimen/dimen_thirty_two"
+        android:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/add_transaction_for_income_or_expense"
+        android:src="@drawable/add_transaction_vectore"
+        app:borderWidth="0dp"
+        app:fabCustomSize="@dimen/dimen_one_hundred"
+        app:maxImageSize="@dimen/dimen_for_vector"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

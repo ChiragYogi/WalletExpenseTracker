@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/dimen_sixteen">
+
+
+    <Button
+        android:id="@+id/previousWeekAction"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_one_hundred"
+        android:layout_marginStart="@dimen/dimen_sixteen"
+        android:layout_marginTop="@dimen/dimen_sixteen"
+        android:contentDescription="@string/previousButton"
+        app:icon="@drawable/previous_vector"
+        app:iconGravity="start"
+        app:iconPadding="@dimen/dimen_eight"
+        app:iconTint="?attr/colorOnBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/nextWeekAction"
+        style="@style/Widget.MaterialComponents.Button.TextButton.Dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dimen_one_hundred"
+        android:layout_marginEnd="@dimen/dimen_sixteen"
+        android:layout_marginTop="@dimen/dimen_sixteen"
+        android:contentDescription="@string/nextButton"
+        android:textColor="?attr/colorOnBackground"
+        app:icon="@drawable/next_vector"
+        app:iconGravity="end"
+        app:iconPadding="@dimen/dimen_eight"
+        app:iconTint="?attr/colorOnBackground"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/date_txt_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="@dimen/thirty_two_sp_text_size"
+        app:layout_constraintBaseline_toBaselineOf="@+id/previousWeekAction"
+        app:layout_constraintEnd_toStartOf="@id/nextWeekAction"
+        app:layout_constraintStart_toEndOf="@id/previousWeekAction"
+        tools:text="03 Jan to 09 Jan" />
+
+
+    <TextView
+        android:id="@+id/noTransactionTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/noTransaction"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="@dimen/thirty_two_sp_text_size"
+        android:visibility="invisible"
+        android:layout_marginTop="@dimen/dimen_twenty_four"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/date_txt_view"
+        tools:visibility="visible" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/total_rv_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_sixteen"
+        android:layout_marginStart="@dimen/dimen_sixteen"
+        android:layout_marginTop="@dimen/dimen_sixteen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/total"
+        tools:listitem="@layout/transaction_rv_item"/>
+
+    <include
+        android:id="@+id/total"
+        layout="@layout/total_card_view_for_detail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dimen_twenty_four"
+        android:layout_marginStart="@dimen/dimen_twenty_four"
+        android:layout_marginTop="@dimen/dimen_twenty_four"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/previousWeekAction" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

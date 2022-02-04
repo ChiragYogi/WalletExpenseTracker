@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_horizontal|center_vertical"
     android:orientation="vertical">
 
 
@@ -51,13 +50,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_sixteen"
-        android:hint="@string/add_note_error">
+        android:hint="@string/add_a_note_to_self">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/transactionNoteEdt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="text" />
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,7 +75,7 @@
             android:id="@+id/date_edt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableEnd="@drawable/monthly_vector"
+            android:drawableEnd="@drawable/weekly_calender_vector"
             android:inputType="none"
             app:endIconMode="custom"
             tools:text="20 Jan, 2022" />

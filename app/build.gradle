@@ -5,6 +5,8 @@ plugins {
     id 'kotlin-parcelize'
     id  'androidx.navigation.safeargs.kotlin'
     id  'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -42,6 +44,10 @@ android {
 }
 
 dependencies {
+
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.2.7'
+    implementation 'com.google.firebase:firebase-analytics-ktx:20.0.2'
+
 
     //core
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.5")
@@ -88,6 +94,8 @@ dependencies {
 
     //unit test
     testImplementation "junit:junit:$testJunit"
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     //android test
     androidTestImplementation "androidx.test.ext:junit:$androidTestJuint"

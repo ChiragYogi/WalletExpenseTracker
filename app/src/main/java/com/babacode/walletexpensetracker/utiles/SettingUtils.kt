@@ -1,19 +1,8 @@
 package com.babacode.walletexpensetracker.utiles
 
 import android.content.Context
-import android.provider.Settings.Global.getString
-import android.util.AttributeSet
 import androidx.preference.PreferenceManager
 import com.babacode.walletexpensetracker.R
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import org.jetbrains.annotations.NotNull
-
-import androidx.annotation.NonNull
-
-import com.google.android.material.textfield.MaterialAutoCompleteTextView
-
-
 
 
 class SettingUtils constructor(private val mContext: Context) {
@@ -33,10 +22,8 @@ class SettingUtils constructor(private val mContext: Context) {
     }
 
     fun notificationForAlarm(): Boolean {
-        val notificationPreference =
-            mSharedPreferences.getBoolean(this.mContext.getString(R.string.notificationKey), true)
 
-        return notificationPreference
+        return mSharedPreferences.getBoolean(mContext.getString(R.string.notificationKey), true)
     }
 
 

@@ -79,7 +79,7 @@
                 android:textColor="?attr/colorOnBackground"
                 android:textSize="@dimen/eighteen_sp_text_size"
                 android:textStyle="bold"
-                tools:text="100000.00" />
+                android:text="@string/zero_for_no_transaction" />
         </LinearLayout>
 
     </LinearLayout>

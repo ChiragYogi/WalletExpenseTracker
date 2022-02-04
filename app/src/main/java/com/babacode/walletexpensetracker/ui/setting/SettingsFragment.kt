@@ -2,21 +2,22 @@ package com.babacode.walletexpensetracker.ui.setting
 
 
 import android.content.Intent
-
 import android.net.Uri
+
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+
 import androidx.core.content.edit
 import androidx.fragment.app.viewModels
-
 import androidx.preference.*
+
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
-
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -48,10 +49,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference<Preference>(getString(R.string.privacyPolicy))
     }
 
-    private val resetAllDatePreference by lazy {
-        findPreference<Preference>(getString(R.string.deleteAllData))
-    }
-    private val mViewModel: HomeViewModel by viewModels()
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
@@ -61,7 +58,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setNotificationPreferences()
         reportPreference()
         requestNewFeature()
-        deleteAllData()
         showPrivacyPolicyDialog()
 
 
@@ -234,49 +230,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     }
 
-    private fun deleteAllData() {
-        resetAllDatePreference?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
 
-            val dialog = AlertDialog.Builder(requireContext())
-                .setTitle(R.string.deleteAllTransactionTitle)
-                .setMessage(R.string.deleteAllTransactionText)
-                .setIcon(R.drawable.delete_vector)
-                .setNegativeButton(R.string.cancel) { dialog, _ ->
-                    dialog.dismiss()
-                    Toast.makeText(
-                        requireContext(),
-                        context?.getString(R.string.operation_cancel),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-                }
-                .setPositiveButton(R.string.yes) { _, _ ->
-                    try {
-                        mViewModel.onAllTransactionDeleted()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            e.toString(),
-                            Toast.LENGTH_LONG
-                        )
-                            .show()
-                    }
-
-                    Toast.makeText(
-                        requireContext(),
-                        context?.getString(R.string.deleteAllTransactionToastMsg),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
-
-                }
-            dialog.show()
-
-
-
-            true
-        }
-    }
 
 
 }

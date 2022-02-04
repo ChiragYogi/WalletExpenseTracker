@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="forAmount" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dimen_sixteen</item>
-        <item name="android:layout_marginStart">@dimen/dimen_eight</item>
-        <item name="android:layout_marginEnd">@dimen/dimen_eight</item>
-        <item name="android:textSize">14sp</item>
-        <item name="hintAnimationEnabled">true</item>
-        </style>
-
     <style name="PrimaryEditText" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="boxBackgroundColor">@color/background</item>
         <item name="hintAnimationEnabled">true</item>
@@ -18,49 +8,18 @@
         <item name="android:textColor">@color/black</item>
 
     </style>
-    <style name="forDate" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dimen_sixteen</item>
-        <item name="android:layout_marginStart">@dimen/dimen_eight</item>
-        <item name="android:layout_marginEnd">@dimen/dimen_eight</item>
-        <item name="android:textSize">14sp</item>
+
+    <style name="PrimaryEditTextForTablet" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="boxBackgroundColor">@color/background</item>
         <item name="hintAnimationEnabled">true</item>
-    </style>
-    <style name="txtInputDropdown" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dimen_sixteen</item>
-        <item name="android:layout_marginStart">@dimen/dimen_eight</item>
-        <item name="android:layout_marginEnd">@dimen/dimen_eight</item>
-        <item name="android:textSize">14sp</item>
-        <item name="hintAnimationEnabled">true</item>
-    </style>
-
-    <style name="txtNoteLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dimen_sixteen</item>
-        <item name="android:layout_marginStart">@dimen/dimen_eight</item>
-        <item name="android:layout_marginEnd">@dimen/dimen_eight</item>
-        <item name="android:textSize">14sp</item>
-        <item name="hintAnimationEnabled">true</item>
+        <item name="android:textSize">42sp</item>
+        <item name="android:textColor">@color/black</item>
 
     </style>
 
-    <style name="material_button" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">@dimen/dimen_twenty_four</item>
-        <item name="android:layout_marginStart">@dimen/dimen_eight</item>
-        <item name="android:layout_marginEnd">@dimen/dimen_eight</item>
-
-    </style>
     <style name="CustomActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Solid">
         <item name="background">@color/actionBarColor</item>
 
     </style>
 
-
-    <dimen name="dimen_twenty_four">24dp</dimen>
-</resources>
+ </resources>

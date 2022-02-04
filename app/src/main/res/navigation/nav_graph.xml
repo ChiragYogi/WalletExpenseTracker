@@ -19,12 +19,14 @@
     <fragment
         android:id="@+id/addTransactionFragment"
         android:name="com.babacode.walletexpensetracker.ui.addedit.AddTransactionFragment"
-        android:label="Add Transaction"
+        android:label="{title}"
         tools:layout="@layout/fragment_add_transaction" >
-        <argument
-            android:name="transactionArgsForAddTransction"
+        <argument android:name="editTransaction"
             app:argType="com.babacode.walletexpensetracker.data.model.Transaction"
             app:nullable="true" />
+        <argument
+            android:name="title"
+            app:argType="string" />
 
     </fragment>
     <fragment
@@ -60,13 +62,6 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
-        <action
-            android:id="@+id/action_homeFragment_to_editTransactionFragment"
-            app:destination="@id/editTransactionFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
     <fragment
@@ -75,8 +70,8 @@
         android:label="Detail View"
         tools:layout="@layout/fragment_transaction_type">
         <action
-            android:id="@+id/action_transactionTypeFragment_to_editTransactionFragment"
-            app:destination="@id/editTransactionFragment"
+            android:id="@+id/action_transactionTypeFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -97,20 +92,12 @@
         android:label="@string/calender"
         tools:layout="@layout/fragment_transaction_calender_view">
         <action
-            android:id="@+id/action_calenderViewFragment_to_editTransactionFragment"
-            app:destination="@id/editTransactionFragment"
+            android:id="@+id/action_calenderViewFragment_to_addTransactionFragment"
+            app:destination="@id/addTransactionFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
-    <fragment
-        android:id="@+id/editTransactionFragment"
-        android:name="com.babacode.walletexpensetracker.ui.addedit.EditTransactionFragment"
-        android:label="Edit Transaction"
-        tools:layout="@layout/fragment_edit_transaction">
-        <argument
-            android:name="transactionArgs"
-            app:argType="com.babacode.walletexpensetracker.data.model.Transaction" />
-    </fragment>
+
 </navigation>

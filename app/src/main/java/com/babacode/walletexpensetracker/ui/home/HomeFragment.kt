@@ -3,7 +3,6 @@ package com.babacode.walletexpensetracker.ui.home
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -19,7 +18,11 @@ import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.databinding.FragmentHomeBinding
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.utiles.Extra.REQUEST_KEY_FOR_ADD_EDIT
+import com.babacode.walletexpensetracker.utiles.Extra.getLocalDateStartEndDateMonth
 import com.babacode.walletexpensetracker.utiles.SettingUtils
+import com.babacode.walletexpensetracker.utiles.hide
+import com.babacode.walletexpensetracker.utiles.show
 import com.babacode.walletexpensetracker.utiles.showSnackBar
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
@@ -28,6 +31,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 
 @AndroidEntryPoint
@@ -45,17 +49,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
+
         mAdepter = HomeAdepter(this)
 
-        binding.apply {
-            expenseView.currencySymbol.text = currencyCode.getCurrencyCode()
-            incomeView.currencySymbol.text = currencyCode.getCurrencyCode()
-        }
-
-
-        initPieChart()
-        setUpCurrentMonthObserver()
         setUpRecyclerView()
+        setUpObserver()
 
         binding.incomeView.incomeViewClickId.setOnClickListener {
 
@@ -76,13 +74,14 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
         binding.addFab.setOnClickListener {
             val action =
                 HomeFragmentDirections.actionHomeFragmentToAddTransactionFragment(
-                    null
+                    null,
+                    getString(R.string.add_transaction_title)
                 )
             findNavController().navigate(action)
         }
 
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            when (bundle.getInt("add_edit_request")) {
+        setFragmentResultListener(REQUEST_KEY_FOR_ADD_EDIT) { _, bundle ->
+            when (bundle.getInt(REQUEST_KEY_FOR_ADD_EDIT)) {
                 ADD_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_added)
                 EDIT_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_update)
             }
@@ -94,46 +93,72 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
     }
 
 
-    private fun setUpCurrentMonthObserver() {
-
-
-        viewModel.currentMonthTransaction.observe(viewLifecycleOwner) { currentMonthTransaction ->
-
-            getTotalForIncomeAndExpense(currentMonthTransaction)
-
-        }
+    private fun setUpObserver() {
 
         viewModel.recentTransaction.observe(viewLifecycleOwner) { transactionList ->
-            mAdepter.submitList(transactionList)
-            Log.d("work", transactionList.toString())
+            if (transactionList.isNotEmpty()) {
+                showViewInHome(transactionList)
+                getMonth(transactionList)
+            } else {
+                hideViewInHome()
+
+            }
         }
 
     }
 
-    private fun getTotalForIncomeAndExpense(list: List<Transaction>?) {
 
-        var incomeTotal = 0.0
-        var expenseTotal = 0.0
+    private fun showViewInHome(transactionList: List<Transaction>) {
+        binding.apply {
+            mainLayoutView.show()
+            emptyState.hide()
+            getMonth(transactionList)
+            incomeView.currencySymbol.text = currencyCode.getCurrencyCode()
+            expenseView.currencySymbol.text = currencyCode.getCurrencyCode()
+            initPieChart()
+            mAdepter.submitList(transactionList)
+        }
 
-        if (list != null) {
-            val (income, expense) = list.partition { transaction ->
-                transaction.transactionType.toString() == TransactionType.INCOME.toString()
-            }
+    }
 
-            incomeTotal = income.sumOf { incomeTransaction ->
+    private fun getMonth(list: List<Transaction>) {
+
+        val date = LocalDate.now()
+        val monthDate = getLocalDateStartEndDateMonth(date)
+
+
+        val monthList: List<Transaction> = list.filter { type ->
+            type.date >= monthDate.startDate && type.date <= monthDate.endDate
+        }
+
+        val (totalExpense, totalIncome) = monthList.partition {
+            it.transactionType == TransactionType.EXPENSE
+        }
+
+        if (monthList.isNotEmpty()) {
+            val incomeTotal = totalIncome.sumOf { incomeTransaction ->
                 incomeTransaction.amount
             }
-
-            expenseTotal = expense.sumOf { expenseTransaction ->
+            val expenseTotal = totalExpense.sumOf { expenseTransaction ->
                 expenseTransaction.amount
             }
+            setDataToPieChart(incomeTotal, expenseTotal)
 
+            binding.incomeView.incomeTotal.text = incomeTotal.toString()
+            binding.expenseView.expenseTotal.text = expenseTotal.toString()
+        } else {
+            binding.incomeView.incomeTotal.text = "0.0"
+            binding.expenseView.expenseTotal.text = "0.0"
         }
-        setDataToPieChart(incomeTotal, expenseTotal)
 
-        binding.incomeView.incomeTotal.text = incomeTotal.toString()
-        binding.expenseView.expenseTotal.text = expenseTotal.toString()
 
+    }
+
+    private fun hideViewInHome() {
+        binding.apply {
+            mainLayoutView.hide()
+            emptyState.show()
+        }
 
     }
 
@@ -230,20 +255,24 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
 
 
     override fun onDestroyView() {
-        binding.rvView.adapter = null
+        binding.rvView.adapter= null
         super.onDestroyView()
         _binding = null
 
     }
 
-    override fun OnTransactionClick(transaction: Transaction) {
+    override fun onTransactionClick(transaction: Transaction) {
         val action =
-            HomeFragmentDirections.actionHomeFragmentToEditTransactionFragment(transaction)
+            HomeFragmentDirections.actionHomeFragmentToAddTransactionFragment(
+                transaction, getString(
+                    R.string.edit_transaction_title
+                )
+            )
         findNavController().navigate(action)
 
     }
 
-    override fun OnLongPress(transaction: Transaction) {
+    override fun onLongPress(transaction: Transaction) {
         val action =
             HomeFragmentDirections.actionGlobalDeleteTransaction(transaction)
         findNavController().navigate(action)

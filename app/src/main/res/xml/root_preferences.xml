@@ -59,14 +59,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory app:title="@string/resetData">
 
-        <Preference
-            app:key="@string/deleteAllData"
-            app:icon="@drawable/delete_vector"
-            app:title="Reset All Transaction" />
-
-    </PreferenceCategory>
 
 
 </androidx.preference.PreferenceScreen>

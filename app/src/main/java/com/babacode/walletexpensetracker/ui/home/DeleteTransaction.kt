@@ -24,12 +24,12 @@ class DeleteTransaction : DialogFragment() {
             .setTitle(R.string.delete_this_transaction)
             .setMessage(R.string.delete_this_transaction_msg)
             .setIcon(R.drawable.delete_vector)
-            .setNegativeButton("Cancel") { dialog, _ ->
+            .setNegativeButton(getString(R.string.cancle_button)) { dialog, _ ->
                 dialog.dismiss()
                 Toast.makeText(requireContext(), R.string.operation_cancel, Toast.LENGTH_LONG)
                     .show()
             }
-            .setPositiveButton("Yes") { _, _ ->
+            .setPositiveButton(getString(R.string.yes_button)) { _, _ ->
                 viewModel.deleteSingleTransaction(deleteArgs.transactionDelete)
                 Toast.makeText(requireContext(), R.string.delete_transaction, Toast.LENGTH_LONG)
                     .show()

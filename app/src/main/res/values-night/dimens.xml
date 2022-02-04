@@ -8,6 +8,8 @@
     <dimen name="dimen_one">1dp</dimen>
     <dimen name="dimen_sixteen">16dp</dimen>
 
+    <dimen name="dimen_thirty_two">32dp</dimen>
+
 
     //for textview
     <dimen name="eighteen_sp_text_size">18sp</dimen>
@@ -17,7 +19,15 @@
     <dimen name="fourteen_sp_text_size">14sp</dimen>
     <dimen name="dimen_two_hundred">200dp</dimen>
     <dimen name="dimen_seventy_five">75dp</dimen>
-    <dimen name="dimen_three_hunddred_dp">300dp</dimen>
+    <dimen name="dimen_three_hundred_dp">300dp</dimen>
+    <dimen name="dimen_twenty_four">24dp</dimen>
+    <dimen name="dimen_one_fifty">150dp</dimen>
+    <dimen name="dimen_zero_dp">0dp</dimen>
+    <dimen name="dimen_four_hundred">400dp</dimen>
+    <dimen name="dimen_three_hundred_fifty">350dp</dimen>
+    <dimen name="dimen_one_hundred">100dp</dimen>
+    <dimen name="noTransactionTvSize">@dimen/sixteen_sp_text_size</dimen>
+    <dimen name="noTransactionSecondTvSize">@dimen/sixteen_sp_text_size</dimen>
 
 
 </resources>

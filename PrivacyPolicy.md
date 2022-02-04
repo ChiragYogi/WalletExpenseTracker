@@ -1,4 +1,4 @@
-## Wallet Expense Tracker -  Privacy policy
+## Wallet Expense Tracker - Privacy Policy
 
 
 Welcome to Wallet Expense Tracker app for Android

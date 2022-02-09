@@ -49,7 +49,7 @@ A Simple App to Mange Daily Expense and Income .
 
 Clone or fork this project
 
-Create firabase project for Crashlytics
+Create firebase project for Crashlytics
 
     
 ## License

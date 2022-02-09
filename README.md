@@ -7,7 +7,7 @@ A Simple App to Mange Daily Expense and Income .
 
 ![MINIMUM SDK VERSION](https://img.shields.io/badge/minimum%20sdk%20version-Oreo%20(API%2026)-brightgreen)
 
-![Target SDK VERSION](https://img.shields.io/badge/target%20sdk%20version-Q%20(API%2030)-brightgreen)
+![Target SDK VERSION](https://img.shields.io/badge/target%20sdk%20version-R%20(API%2030)-brightgreen)
 
 <a href='https://play.google.com/store/apps/details?id=com.babacode.walletexpensetracker'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=200/></a>
 

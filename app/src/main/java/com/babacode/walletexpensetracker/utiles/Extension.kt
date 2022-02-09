@@ -5,15 +5,11 @@ import android.content.Context
 import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
-
 import java.text.SimpleDateFormat
-
 import java.util.*
-import kotlin.Exception
+
 
 
 fun View.show() {
@@ -75,11 +71,7 @@ fun TextInputEditText.transformDatePicker(
     }
 }
 
-fun AutoCompleteTextView.selectItem(text: String, position: Int = 0) {
-    setText(text)
-    listSelection = position
-    performCompletion()
-}
+
 
 
 

@@ -1,6 +1,6 @@
 package com.babacode.walletexpensetracker.ui.detail
 
-import android.util.Log
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -43,8 +43,7 @@ class DetailViewViewModel @Inject constructor(
     // for week,month,year
     fun getTheQueryDate(queryData: QueryForTransaction){
         queryDataForDB.value = queryData
-        Log.d("weekly",queryDataForDB.value.toString())
-    }
+           }
 
     //for daily
     fun getDailyDateForQuery(queryForTransaction: DailyQueryForTransaction){

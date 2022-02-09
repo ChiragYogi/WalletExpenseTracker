@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.databinding.ActivityMainBinding

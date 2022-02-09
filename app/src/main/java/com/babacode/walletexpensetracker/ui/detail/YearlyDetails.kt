@@ -2,7 +2,6 @@ package com.babacode.walletexpensetracker.ui.detail
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController

@@ -22,6 +22,7 @@ object Extra {
     const val MONTHLY_TAB_NAME = "Monthly"
     const val YEARLY_TAB_NAME = "Yearly"
     const val REQUEST_KEY_FOR_ADD_EDIT = "add_edit_request"
+    const val privacy_policy_url = "https://github.com/ChiragYogi/WalletExpenseTracker/blob/master/PrivacyPolicy.md"
 
 
     fun transactionType(type: String): TransactionType {

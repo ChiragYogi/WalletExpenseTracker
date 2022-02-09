@@ -61,7 +61,7 @@ class TransactionAddEditViewModel @Inject constructor(
             )
             || transactionAmount.contains("-") || transactionAmount.contains("*") || transactionAmount.contains(
                 "."
-            )
+            ) || transactionAmount == "0"
         ) {
             showInvalidAmountMessage("Please Enter Valid Amount")
             return

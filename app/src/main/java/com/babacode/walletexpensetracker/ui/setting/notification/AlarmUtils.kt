@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import java.util.*
 
 class AlarmUtils constructor(context: Context) {
@@ -56,19 +55,11 @@ class AlarmUtils constructor(context: Context) {
 
 
     private fun setAlarmOnTime(time: Long) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmMgr?.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                time,
-                alarmIntent
-            )
-        } else {
-            alarmMgr?.setExact(
-                AlarmManager.RTC_WAKEUP,
-                time,
-                alarmIntent
-            )
-        }
+        alarmMgr?.setAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            time,
+            alarmIntent
+        )
 
     }
 

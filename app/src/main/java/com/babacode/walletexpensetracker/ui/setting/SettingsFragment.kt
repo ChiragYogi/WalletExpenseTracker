@@ -3,19 +3,13 @@ package com.babacode.walletexpensetracker.ui.setting
 
 import android.content.Intent
 import android.net.Uri
-
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
-
 import androidx.core.content.edit
-import androidx.fragment.app.viewModels
 import androidx.preference.*
-
 import com.babacode.walletexpensetracker.R
-import com.babacode.walletexpensetracker.ui.home.HomeViewModel
+import com.babacode.walletexpensetracker.utiles.Extra.privacy_policy_url
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -68,18 +62,17 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val subject = context?.getString(R.string.foundABugInApp)
             val email = context?.getString(R.string.emailForQuery)
 
-            val selecterIntent = Intent().apply {
+            val selectIntent = Intent().apply {
                 action = Intent.ACTION_SENDTO
                 data = Uri.parse("mailto:")
             }
             val emailIntent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
                 putExtra(Intent.EXTRA_SUBJECT, subject)
-                this.selector = selecterIntent
+                this.selector = selectIntent
             }
 
             try {
-                Log.d("intent", emailIntent.data.toString())
                 startActivity(Intent.createChooser(emailIntent, "send mail using..."))
             } catch (e: Exception) {
                 Toast.makeText(
@@ -101,19 +94,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val subject = context?.getString(R.string.requestFromUser)
             val email = context?.getString(R.string.emailForQuery)
 
-            val selecterIntent = Intent().apply {
+            val selectedIntent = Intent().apply {
                 action = Intent.ACTION_SENDTO
                 data = Uri.parse("mailto:")
             }
             val emailIntent = Intent(Intent.ACTION_SEND).apply {
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
                 putExtra(Intent.EXTRA_SUBJECT, subject)
-                this.selector = selecterIntent
+                this.selector = selectedIntent
             }
 
             try {
-                Log.d("intent", emailIntent.data.toString())
-                startActivity(Intent.createChooser(emailIntent, "send mail using..."))
+              startActivity(Intent.createChooser(emailIntent, "send mail using..."))
             } catch (e: Exception) {
                 Toast.makeText(
                     context,
@@ -142,8 +134,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         }
                     } catch (e: Exception) {
                         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
-                        e.printStackTrace()
-                    }
+                       }
 
 
                 }
@@ -170,8 +161,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
                     } catch (e: Exception) {
                         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
-                        e.printStackTrace()
-                    }
+                     }
 
 
                 }
@@ -191,8 +181,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         AppCompatDelegate.setDefaultNightMode(theme)
                     } catch (e: Exception) {
                         Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
-                        e.printStackTrace()
-                    }
+                     }
 
                 }
 
@@ -213,16 +202,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Preference.OnPreferenceClickListener {
 
                 try {
-                    val dialog = AlertDialog.Builder(requireContext())
-                        .setTitle(R.string.deleteAllTransactionTitle)
-                        .setMessage(R.string.deleteAllTransactionText)
-                        .setPositiveButton("OK") { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                    dialog.show()
+
+                    val intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
+                    intent.data = Uri.parse(privacy_policy_url)
+                    startActivity(intent)
                 } catch (e: Exception) {
                     Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show()
-                    e.printStackTrace()
                 }
                 true
             }

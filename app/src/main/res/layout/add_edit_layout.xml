@@ -22,8 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
+            android:labelFor="@id/typeEdt"
             android:saveEnabled="false"
-            android:labelFor="@id/typeEdt" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,6 +58,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:maxLength="40"
             android:imeOptions="actionDone"/>
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -97,8 +99,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
+            android:labelFor="@id/tagEdt"
             android:saveEnabled="false"
-            android:labelFor="@id/tagEdt" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -116,8 +119,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
+            android:labelFor="@id/paymentEdt"
             android:saveEnabled="false"
-            android:labelFor="@id/paymentEdt"/>
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

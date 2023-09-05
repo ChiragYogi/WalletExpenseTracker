@@ -14,7 +14,7 @@ class AlarmUtils constructor(context: Context) {
 
 
     private val alarmIntent = Intent(mContext, AlarmReceiver::class.java).let { mIntent ->
-        PendingIntent.getBroadcast(mContext, 100, mIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getBroadcast(mContext, 100, mIntent,  PendingIntent.FLAG_IMMUTABLE)
     }
 
 

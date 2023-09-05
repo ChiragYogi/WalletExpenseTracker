@@ -126,6 +126,8 @@
     <string name="no_transaction_yet">No Transaction Yet!</string>
     <string name="add_a_new_transaction_to_get_started">Add a new transaction to get started</string>
     <string name="zero_for_no_transaction">0.0</string>
+    <string name="open">Open</string>
+    <string name="notification_permission_text">Please allow notification permission from setting</string>
 
 
 </resources>

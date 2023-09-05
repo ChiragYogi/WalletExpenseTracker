@@ -15,7 +15,7 @@ object Extra {
 
 
     const val AMOUNT_CHECK_FOR_ADD = 7
-    const val NOTE_LENGTH_VALIDATE = 20
+    const val NOTE_LENGTH_VALIDATE = 40
     const val TRANSACTION_TYPE_KEY = "transactionType"
     const val WEEKLY_TAB_NAME = "Weekly"
     const val DAILY_TAB_NAME = "Daily"

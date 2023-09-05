@@ -73,7 +73,7 @@ class TransactionAddEditViewModel @Inject constructor(
         }
 
         if (transactionNote.length >= NOTE_LENGTH_VALIDATE) {
-            showInvalidNoteMessage("Note character must Be less than 20")
+            showInvalidNoteMessage("Note character must Be less than 40")
             return
         }
 

@@ -10,12 +10,12 @@ buildscript {
     ext {
         kotlinVersion = "1.6.10"
         nav_version = "2.5.0-alpha01"
-        hiltGradlePlugin = "2.38.1"
+        hiltGradlePlugin = '2.40.1'
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltGradlePlugin"
         classpath 'com.google.gms:google-services:4.3.10'
@@ -34,8 +34,8 @@ task clean(type: Delete) {
 ext {
 
     minSdkVersion = 26
-    targetSdkVersion = 30
-    compileSdkVersion = 31
+    targetSdkVersion = 33
+    compileSdkVersion = 33
     kotlinVersion = "1.6.0"
     androidXCore = "1.7.0"
     appcompat = "1.4.1"

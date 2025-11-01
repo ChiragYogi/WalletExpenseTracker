@@ -4,9 +4,13 @@ package com.babacode.walletexpensetracker.ui.setting
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.edit
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.*
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.utiles.Extra.privacy_policy_url
@@ -41,6 +45,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private val showPrivacyPolicyPreference by lazy {
         findPreference<Preference>(getString(R.string.privacyPolicy))
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = systemBars.top, bottom = systemBars.bottom)
+            insets
+        }
     }
 
 

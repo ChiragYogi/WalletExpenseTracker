@@ -2,6 +2,9 @@ package com.babacode.walletexpensetracker.ui.detail
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -40,6 +43,11 @@ class WeeklyDetails : Fragment(R.layout.fragment_weekly_details), HomeAdepter.On
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentWeeklyDetailsBinding.bind(view)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = systemBars.top, bottom = systemBars.bottom)
+            insets
+        }
         transactionType = arguments?.getParcelable(TRANSACTION_TYPE_KEY)
 
         mAdepter = HomeAdepter(this)

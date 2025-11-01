@@ -8,18 +8,19 @@ buildscript {
     }
 
     ext {
-        kotlinVersion = "1.6.10"
-        nav_version = "2.5.0-alpha01"
-        hiltGradlePlugin = '2.40.1'
+        kotlinVersion = "2.1.0"
+        nav_version = "2.9.3"
+        hiltGradlePlugin = '2.57.1'
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
+        classpath 'com.android.tools.build:gradle:8.13.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0'
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.1.0-1.0.29"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$hiltGradlePlugin"
-        classpath 'com.google.gms:google-services:4.3.10'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
+        classpath 'com.google.gms:google-services:4.4.3'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.6'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -27,16 +28,14 @@ buildscript {
 }
 
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+
 
 ext {
 
     minSdkVersion = 26
-    targetSdkVersion = 33
-    compileSdkVersion = 33
-    kotlinVersion = "1.6.0"
+    targetSdkVersion = 35
+    compileSdkVersion = 35
+    kotlinVersion = "2.1.0"
     androidXCore = "1.7.0"
     appcompat = "1.4.1"
     materialDesign = "1.5.0"

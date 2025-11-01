@@ -1,17 +1,87 @@
+# =========================================
+# Android & Gradle
+# =========================================
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-/google-services.json
-/app/google-services.json
-.externalNativeBuild
-.cxx
+.gradle/
+build/
 local.properties
+gradle-app.setting
+gradlew
+gradlew.bat
+
+# Build outputs
+buildSrc/.gradle/
+buildSrc/build/
+captures/
+output.json
+.externalNativeBuild/
+.cxx/
+navigation.json
+
+# =========================================
+# IntelliJ / Android Studio
+# =========================================
+.idea/
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/misc.xml
+
+# =========================================
+# macOS System Files
+# =========================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+ehthumbs.db
+Thumbs.db
+
+# =========================================
+# Firebase / Google Services
+# =========================================
+app/google-services.json
+
+# =========================================
+# NDK / CMake builds
+# =========================================
+obj/
+*.o
+*.so
+
+# =========================================
+# Kotlin / Java Build Cache
+# =========================================
+.kotlinc/
+*.log
+*.lock
+*.tmp
+*.temp
+*.orig
+
+# =========================================
+# Keystore & Security Files
+# =========================================
+# Ignore all keystores and private keys
+*.jks
+*.keystore
+*.pem
+*.key
+
+# If your keystore folder is named "keystore" or "keys", ignore it completely:
+keystore/
+keys/
+
+# =========================================
+# APK / AAB Outputs
+# =========================================
+*.apk
+*.ap_
+*.aab

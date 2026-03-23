@@ -2,9 +2,6 @@ package com.babacode.walletexpensetracker.ui.detail
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.fragment.navArgs
@@ -17,6 +14,7 @@ import com.babacode.walletexpensetracker.utiles.Extra.MONTHLY_TAB_NAME
 import com.babacode.walletexpensetracker.utiles.Extra.TRANSACTION_TYPE_KEY
 import com.babacode.walletexpensetracker.utiles.Extra.WEEKLY_TAB_NAME
 import com.babacode.walletexpensetracker.utiles.Extra.YEARLY_TAB_NAME
+import com.babacode.walletexpensetracker.utiles.applyEdgeToEdgeInsetsPadding
 import com.babacode.walletexpensetracker.utiles.showSnackBar
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,11 +33,7 @@ class TransactionTypeFragment : Fragment(R.layout.fragment_transaction_type) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTransactionTypeBinding.bind(view)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top, bottom = systemBars.bottom)
-            insets
-        }
+        binding.root.applyEdgeToEdgeInsetsPadding()
 
         //get transaction Type
         val transactionTypeValue = transactionTypeArgs.transactionType

@@ -7,9 +7,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -24,6 +21,7 @@ import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.utiles.Extra.REQUEST_KEY_FOR_ADD_EDIT
 import com.babacode.walletexpensetracker.utiles.Extra.getLocalDateStartEndDateMonth
 import com.babacode.walletexpensetracker.utiles.SettingUtils
+import com.babacode.walletexpensetracker.utiles.applyEdgeToEdgeInsetsAtBottomLeftRight
 import com.babacode.walletexpensetracker.utiles.hide
 import com.babacode.walletexpensetracker.utiles.show
 import com.babacode.walletexpensetracker.utiles.showSnackBar
@@ -53,11 +51,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), HomeAdepter.OnItemClick {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top, bottom = systemBars.bottom)
-            insets
-        }
+        binding.addFab.applyEdgeToEdgeInsetsAtBottomLeftRight()
 
         mAdepter = HomeAdepter(this)
 

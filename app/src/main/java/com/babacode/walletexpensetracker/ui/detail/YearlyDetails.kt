@@ -35,6 +35,8 @@ class YearlyDetails : Fragment(R.layout.fragment_yearly_details), HomeAdepter.On
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentYearlyDetailsBinding.bind(view)
 
+        binding.root.applyEdgeToEdgeInsetsPadding()
+
         transactionType = arguments?.getParcelable(TRANSACTION_TYPE_KEY)
 
 

@@ -11,9 +11,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
@@ -22,6 +19,7 @@ import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.databinding.ActivityMainBinding
 import com.babacode.walletexpensetracker.ui.setting.notification.AlarmUtils
 import com.babacode.walletexpensetracker.utiles.SettingUtils
+import com.babacode.walletexpensetracker.utiles.applyEdgeToEdgeInsetsPadding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -48,11 +46,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top, bottom = systemBars.bottom)
-            insets
-        }
+        binding.root.applyEdgeToEdgeInsetsPadding()
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_container) as NavHostFragment

@@ -2,9 +2,6 @@ package com.babacode.walletexpensetracker.ui.calender
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -18,6 +15,7 @@ import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.home.HomeAdepter
 import com.babacode.walletexpensetracker.utiles.Extra.REQUEST_KEY_FOR_ADD_EDIT
 import com.babacode.walletexpensetracker.utiles.Extra.convertCalenderDateToLong
+import com.babacode.walletexpensetracker.utiles.applyEdgeToEdgeInsetsPadding
 import com.babacode.walletexpensetracker.utiles.hide
 import com.babacode.walletexpensetracker.utiles.show
 import com.babacode.walletexpensetracker.utiles.showSnackBar
@@ -40,11 +38,7 @@ class TransactionCalenderViewFragment : Fragment(R.layout.fragment_transaction_c
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentTransactionCalenderViewBinding.bind(view)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = systemBars.top, bottom = systemBars.bottom)
-            insets
-        }
+        binding.root.applyEdgeToEdgeInsetsPadding()
 
         mAdepter = HomeAdepter(this)
         setUpRecyclerView()

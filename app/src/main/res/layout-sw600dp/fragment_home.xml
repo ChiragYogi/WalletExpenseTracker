@@ -72,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dimen_four"
                 android:layout_marginEnd="@dimen/dimen_four"
+
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recent_transaction_text"

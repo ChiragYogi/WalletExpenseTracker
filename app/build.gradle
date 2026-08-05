@@ -18,8 +18,8 @@ android {
         applicationId "com.babacode.walletexpensetracker"
         minSdk rootProject.minSdkVersion
         targetSdk  rootProject.targetSdkVersion
-        versionCode 5
-        versionName "1.5"
+        versionCode 6
+        versionName "1.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

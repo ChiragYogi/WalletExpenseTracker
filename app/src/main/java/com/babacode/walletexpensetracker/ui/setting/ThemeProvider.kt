@@ -5,9 +5,11 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.preference.PreferenceManager
 import com.babacode.walletexpensetracker.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.security.InvalidParameterException
+import javax.inject.Inject
 
-class ThemeProvider constructor(private val context: Context) {
+class ThemeProvider @Inject constructor(@ApplicationContext private val context: Context) {
 
 
     fun getThemeFromPreferences(): Int {

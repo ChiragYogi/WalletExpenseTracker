@@ -1,78 +1,83 @@
 package com.babacode.walletexpensetracker.ui.detail
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.babacode.walletexpensetracker.R
-import com.babacode.walletexpensetracker.databinding.FragmentTransactionTypeBinding
-import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
-import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
-import com.babacode.walletexpensetracker.utiles.Extra.DAILY_TAB_NAME
-import com.babacode.walletexpensetracker.utiles.Extra.MONTHLY_TAB_NAME
-import com.babacode.walletexpensetracker.utiles.Extra.TRANSACTION_TYPE_KEY
-import com.babacode.walletexpensetracker.utiles.Extra.WEEKLY_TAB_NAME
-import com.babacode.walletexpensetracker.utiles.Extra.YEARLY_TAB_NAME
+import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.ui.detail.compose.DetailPeriod
+import com.babacode.walletexpensetracker.ui.detail.compose.TransactionTypeRoute
+import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
+import com.babacode.walletexpensetracker.utiles.Extra.REQUEST_KEY_FOR_ADD_EDIT
+import com.babacode.walletexpensetracker.utiles.SettingUtils
 import com.babacode.walletexpensetracker.utiles.applyEdgeToEdgeInsetsPadding
-import com.babacode.walletexpensetracker.utiles.showSnackBar
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class TransactionTypeFragment : Fragment(R.layout.fragment_transaction_type) {
+class TransactionTypeFragment : Fragment() {
 
-
-    private var _binding: FragmentTransactionTypeBinding? = null
-    private val binding get() = _binding!!
     private val transactionTypeArgs: TransactionTypeFragmentArgs by navArgs()
 
+    private var resultEvent by mutableStateOf<Int?>(null)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentTransactionTypeBinding.bind(view)
+    // Each tab keeps its own DetailViewViewModel instance (matching the previous
+    // one-Fragment-per-tab behaviour) so switching tabs doesn't reset another tab's date position.
+    private val periodViewModels: Map<DetailPeriod, DetailViewViewModel> by lazy {
+        DetailPeriod.entries.associateWith { period ->
+            ViewModelProvider(this, defaultViewModelProviderFactory)[period.name, DetailViewViewModel::class.java]
+        }
+    }
 
-        binding.root.applyEdgeToEdgeInsetsPadding()
-
-        //get transaction Type
-        val transactionTypeValue = transactionTypeArgs.transactionType
-
-        //put transaction Type in bundle
-        val transactionBundle = Bundle().apply {
-            putParcelable(TRANSACTION_TYPE_KEY, transactionTypeValue)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        setFragmentResultListener(REQUEST_KEY_FOR_ADD_EDIT) { _, bundle ->
+            resultEvent = bundle.getInt(REQUEST_KEY_FOR_ADD_EDIT)
         }
 
-        //attach viewpager and pass the bundle in constructor
-        val viewPager = binding.doppelgangerViewPager
-        val viewPagerAdepter = ViewPagerAdepter(childFragmentManager, lifecycle, transactionBundle)
-        viewPager.adapter = viewPagerAdepter
-        val tabLayout = binding.tabLayout
-        val tabName = arrayOf(
-            DAILY_TAB_NAME,
-            WEEKLY_TAB_NAME,
-            MONTHLY_TAB_NAME,
-            YEARLY_TAB_NAME
-        )
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tabName[position]
-
-        }.attach()
-
-
-        setFragmentResultListener("add_edit_request") { _, bundle ->
-            when (bundle.getInt("add_edit_request")) {
-                ADD_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_added)
-                EDIT_TRANSACTION_RESULT_OK -> binding.root.showSnackBar(R.string.transaction_update)
+        return ComposeView(requireContext()).apply {
+            applyEdgeToEdgeInsetsPadding()
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                WalletExpenseTheme {
+                    TransactionTypeRoute(
+                        transactionType = transactionTypeArgs.transactionType,
+                        currencyCode = SettingUtils(requireContext()).getCurrencyCode(),
+                        viewModelFor = { period -> periodViewModels.getValue(period) },
+                        resultEvent = resultEvent,
+                        onResultEventConsumed = { resultEvent = null },
+                        onTransactionClick = ::navigateToEdit,
+                        onLongPress = ::navigateToDelete
+                    )
+                }
             }
         }
     }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-
+    private fun navigateToEdit(transaction: Transaction) {
+        val action = TransactionTypeFragmentDirections
+            .actionTransactionTypeFragmentToAddTransactionFragment(
+                transaction,
+                getString(R.string.edit_transaction_title)
+            )
+        findNavController().navigate(action)
     }
 
+    private fun navigateToDelete(transaction: Transaction) {
+        val action = TransactionTypeFragmentDirections.actionGlobalDeleteTransaction(transaction)
+        findNavController().navigate(action)
+    }
 }

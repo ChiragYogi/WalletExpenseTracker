@@ -67,8 +67,7 @@
     <fragment
         android:id="@+id/transactionTypeFragment"
         android:name="com.babacode.walletexpensetracker.ui.detail.TransactionTypeFragment"
-        android:label="Detail View"
-        tools:layout="@layout/fragment_transaction_type">
+        android:label="Detail View">
         <action
             android:id="@+id/action_transactionTypeFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment"

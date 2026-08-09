@@ -88,8 +88,7 @@
     <fragment
         android:id="@+id/calenderViewFragment"
         android:name="com.babacode.walletexpensetracker.ui.calender.TransactionCalenderViewFragment"
-        android:label="@string/calender"
-        tools:layout="@layout/fragment_transaction_calender_view">
+        android:label="@string/calender">
         <action
             android:id="@+id/action_calenderViewFragment_to_addTransactionFragment"
             app:destination="@id/addTransactionFragment"

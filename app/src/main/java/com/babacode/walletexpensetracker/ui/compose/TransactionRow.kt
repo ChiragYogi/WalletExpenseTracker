@@ -1,4 +1,4 @@
-package com.babacode.walletexpensetracker.ui.detail.compose
+package com.babacode.walletexpensetracker.ui.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable

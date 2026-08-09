@@ -2,13 +2,15 @@ package com.babacode.walletexpensetracker.ui.setting.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.navigation.NavDeepLinkBuilder
 import com.babacode.walletexpensetracker.R
+import com.babacode.walletexpensetracker.ui.MainActivity
 
 
 class NotificationUtils(context: Context) {
@@ -31,10 +33,15 @@ class NotificationUtils(context: Context) {
 
 
         //Intent For Add Transaction Screen
-        val pendingIntent = NavDeepLinkBuilder(mContext)
-            .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.homeFragment)
-            .createPendingIntent()
+        val intent = Intent(mContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            mContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         //Create Notification With Notification Builder
         notificationBuilder = NotificationCompat.Builder(mContext, MY_CHANNEL_ID)

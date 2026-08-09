@@ -4,9 +4,11 @@ import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import java.text.DateFormat
 
 
+@Serializable
 @Parcelize
 @Entity(tableName = "transaction_table")
 data class Transaction(

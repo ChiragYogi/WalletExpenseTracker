@@ -17,9 +17,4 @@
 
     </style>
 
-    <style name="CustomActionBarStyle" parent="Widget.MaterialComponents.ActionBar.Solid">
-        <item name="background">@color/actionBarColor</item>
-
-    </style>
-
  </resources>

@@ -9,6 +9,7 @@
     <string name="expense_vector_image">Expence Vectore Arrow Image</string>
     <string name="thisMonthTxt">(this month)</string>
     <string name="recent_transaction">Recent Transaction</string>
+    <string name="no_chart_data_available">No chart data available.</string>
     <string name="see_more">see more </string>
     <string name="add_transaction_for_income_or_expense">add Transaction for income or expense</string>
     <string name="date">Date</string>

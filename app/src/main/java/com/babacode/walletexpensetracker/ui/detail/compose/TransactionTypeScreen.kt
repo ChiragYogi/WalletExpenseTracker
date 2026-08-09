@@ -21,6 +21,7 @@ import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.ui.detail.DetailPeriod
 import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
 import kotlinx.coroutines.launch
 
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 fun TransactionTypeRoute(
     transactionType: TransactionType?,
     currencyCode: String,
-    viewModelFor: (DetailPeriod) -> DetailViewViewModel,
+    viewModel: DetailViewViewModel,
     resultEvent: Int?,
     onResultEventConsumed: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
@@ -58,7 +59,7 @@ fun TransactionTypeRoute(
             modifier = Modifier.padding(innerPadding),
             transactionType = transactionType,
             currencyCode = currencyCode,
-            viewModelFor = viewModelFor,
+            viewModel = viewModel,
             onTransactionClick = onTransactionClick,
             onLongPress = onLongPress
         )
@@ -69,7 +70,7 @@ fun TransactionTypeRoute(
 fun TransactionTypeScreen(
     transactionType: TransactionType?,
     currencyCode: String,
-    viewModelFor: (DetailPeriod) -> DetailViewViewModel,
+    viewModel: DetailViewViewModel,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
     modifier: Modifier = Modifier
@@ -97,7 +98,7 @@ fun TransactionTypeScreen(
                 period = period,
                 transactionType = transactionType,
                 currencyCode = currencyCode,
-                viewModel = viewModelFor(period),
+                viewModel = viewModel,
                 onTransactionClick = onTransactionClick,
                 onLongPress = onLongPress
             )

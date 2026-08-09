@@ -16,12 +16,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,21 +27,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
-import com.babacode.walletexpensetracker.data.model.DailyQueryForTransaction
 import com.babacode.walletexpensetracker.data.model.PaymentType
-import com.babacode.walletexpensetracker.data.model.QueryForTransaction
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
+import com.babacode.walletexpensetracker.ui.detail.DetailPeriod
 import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.utiles.Extra
-import java.time.LocalDate
-
-private val LocalDateSaver = Saver<LocalDate, Long>(
-    save = { it.toEpochDay() },
-    restore = { LocalDate.ofEpochDay(it) }
-)
 
 @Composable
 fun PeriodDetailRoute(
@@ -58,36 +46,16 @@ fun PeriodDetailRoute(
     onLongPress: (Transaction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var currentDate by rememberSaveable(stateSaver = LocalDateSaver) {
-        mutableStateOf(LocalDate.now())
-    }
-
-    LaunchedEffect(period, currentDate, transactionType) {
-        if (period == DetailPeriod.DAILY) {
-            viewModel.getDailyDateForQuery(
-                DailyQueryForTransaction(transactionType, Extra.convertLocalDateToLong(currentDate))
-            )
-        } else {
-            val range = when (period) {
-                DetailPeriod.WEEKLY -> Extra.getLocalDateStartEndDateWeek(currentDate)
-                DetailPeriod.MONTHLY -> Extra.getLocalDateStartEndDateMonth(currentDate)
-                DetailPeriod.YEARLY -> Extra.getLocalDateStartEndDateYear(currentDate)
-                DetailPeriod.DAILY -> return@LaunchedEffect
-            }
-            viewModel.getTheQueryDate(QueryForTransaction(transactionType, range.startDate, range.endDate))
-        }
-    }
-
-    val transactionsFlow = if (period == DetailPeriod.DAILY) viewModel.dailyData else viewModel.allDataBetweenStartAndEndDate
-    val transactions by transactionsFlow.collectAsStateWithLifecycle()
+    val currentDate by viewModel.currentDate(period).collectAsStateWithLifecycle()
+    val transactions by viewModel.transactions(period).collectAsStateWithLifecycle()
 
     PeriodDetailScreen(
         dateLabel = period.dateLabel(currentDate),
         transactionTypeLabel = transactionType?.toString() ?: stringResource(period.fallbackTitleRes),
         currencyCode = currencyCode,
         transactions = transactions,
-        onPrevious = { currentDate = period.step(currentDate, -1) },
-        onNext = { currentDate = period.step(currentDate, 1) },
+        onPrevious = { viewModel.onPrevious(period) },
+        onNext = { viewModel.onNext(period) },
         onTransactionClick = onTransactionClick,
         onLongPress = onLongPress,
         modifier = modifier

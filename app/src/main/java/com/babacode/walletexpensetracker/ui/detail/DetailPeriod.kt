@@ -1,4 +1,4 @@
-package com.babacode.walletexpensetracker.ui.detail.compose
+package com.babacode.walletexpensetracker.ui.detail
 
 import androidx.annotation.StringRes
 import com.babacode.walletexpensetracker.R

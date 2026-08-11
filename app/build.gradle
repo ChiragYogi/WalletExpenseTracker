@@ -59,7 +59,6 @@ dependencies {
     implementation "androidx.core:core-ktx:1.16.0"
     implementation "androidx.appcompat:appcompat:1.7.0"
     implementation "com.google.android.material:material:1.12.0"
-    implementation "androidx.constraintlayout:constraintlayout:2.2.1"
 
     // Navigation 3
     implementation "androidx.navigation3:navigation3-runtime:1.1.5"
@@ -70,7 +69,6 @@ dependencies {
 
     //Dagger - Hilt
     implementation "com.google.dagger:hilt-android:2.57.1"
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     ksp "com.google.dagger:hilt-android-compiler:2.57.1"
 
     // Room
@@ -78,9 +76,8 @@ dependencies {
     ksp "androidx.room:room-compiler:2.6.1"
     implementation "androidx.room:room-ktx:2.6.1"
 
-    // Lifecycle + ViewModel & LiveData
+    // Lifecycle + ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.3"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.9.3"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.9.3"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.9.3"
     implementation "androidx.lifecycle:lifecycle-common-java8:2.9.3"
@@ -104,7 +101,6 @@ dependencies {
     //ktx
     implementation "androidx.activity:activity-ktx:1.13.0"
     implementation "androidx.activity:activity-compose:1.13.0"
-    implementation "androidx.fragment:fragment-ktx:1.8.9"
 
     //unit test
     testImplementation "junit:junit:$testJunit"

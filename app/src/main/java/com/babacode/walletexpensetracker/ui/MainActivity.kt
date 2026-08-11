@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
@@ -61,7 +63,9 @@ import com.babacode.walletexpensetracker.ui.navigation.DeleteTransactionRoute
 import com.babacode.walletexpensetracker.ui.navigation.Home
 import com.babacode.walletexpensetracker.ui.navigation.AppSettings
 import com.babacode.walletexpensetracker.ui.navigation.TransactionTypeDetail
+import com.babacode.walletexpensetracker.repository.SettingsRepository
 import com.babacode.walletexpensetracker.ui.setting.SettingsViewModel
+import com.babacode.walletexpensetracker.ui.setting.ThemeProvider
 import com.babacode.walletexpensetracker.ui.setting.compose.SettingsRoute
 import com.babacode.walletexpensetracker.ui.setting.notification.AlarmUtils
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
@@ -71,9 +75,13 @@ import com.babacode.walletexpensetracker.utiles.SettingUtils
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import java.util.Calendar
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject lateinit var settingsRepository: SettingsRepository
+    @Inject lateinit var themeProvider: ThemeProvider
 
     private val settingUtilsForNotification by lazy {
         SettingUtils(this)
@@ -106,7 +114,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides this) {
-                WalletExpenseTheme {
+                val themePreference by settingsRepository.theme.collectAsStateWithLifecycle(
+                    initialValue = remember { themeProvider.getInitialThemePreference() }
+                )
+                val darkThemeValue = stringResource(R.string.dark_theme_preference_value)
+                val lightThemeValue = stringResource(R.string.light_theme_preference_value)
+                val darkTheme = when (themePreference) {
+                    darkThemeValue -> true
+                    lightThemeValue -> false
+                    else -> isSystemInDarkTheme()
+                }
+                WalletExpenseTheme(darkTheme = darkTheme) {
                     MainNavigation(
                         showNotificationSnackbar = showNotificationSnackbar,
                         onNotificationSnackbarShown = { showNotificationSnackbar = false },

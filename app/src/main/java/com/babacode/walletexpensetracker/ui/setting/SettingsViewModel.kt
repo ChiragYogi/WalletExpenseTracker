@@ -1,6 +1,5 @@
 package com.babacode.walletexpensetracker.ui.setting
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.babacode.walletexpensetracker.repository.SettingsRepository
@@ -34,7 +33,6 @@ class SettingsViewModel @Inject constructor(
 
     fun onThemeSelected(value: String) {
         viewModelScope.launch { settingsRepository.setTheme(value) }
-        AppCompatDelegate.setDefaultNightMode(themeProvider.getTheme(value))
     }
 
     fun onCurrencySelected(value: String) {

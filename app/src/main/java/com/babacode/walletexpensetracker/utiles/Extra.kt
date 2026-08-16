@@ -4,6 +4,7 @@ import com.babacode.walletexpensetracker.data.model.DateForQuery
 import com.babacode.walletexpensetracker.data.model.PaymentType
 import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -120,7 +121,13 @@ object Extra {
     fun convertStringDateToLong(date: String): Long {
 
         val df = SimpleDateFormat("dd MMM, yyyy", Locale.US)
-        return df.parse(date)!!.time
+        val parsed = try {
+            df.parse(date)
+        } catch (e: ParseException) {
+            null
+        }
+        return parsed?.time
+            ?: throw IllegalArgumentException("Unable to parse date '$date' with pattern 'dd MMM, yyyy'")
     }
 
     fun convertLongDateToStringDate(time: Long): String {

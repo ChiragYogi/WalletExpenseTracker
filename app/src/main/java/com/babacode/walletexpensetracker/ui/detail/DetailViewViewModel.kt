@@ -7,6 +7,7 @@ import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.utiles.Extra
+import com.babacode.walletexpensetracker.utiles.recoverWithDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class DetailViewViewModel @Inject constructor(
         DetailPeriod.entries.associateWith { period ->
             combine(currentDates.getValue(period), transactionType) { date, type -> date to type }
                 .flatMapLatest { (date, type) -> queryFlow(period, date, type) }
+                .recoverWithDefault(emptyList())
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
         }
 

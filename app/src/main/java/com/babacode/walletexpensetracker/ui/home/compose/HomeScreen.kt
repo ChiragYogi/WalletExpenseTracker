@@ -233,7 +233,7 @@ private fun SummaryCard(
 }
 
 @Composable
-private fun ExpenseIncomePieChart(
+    private fun ExpenseIncomePieChart(
     incomeTotal: Double,
     expenseTotal: Double,
     modifier: Modifier = Modifier

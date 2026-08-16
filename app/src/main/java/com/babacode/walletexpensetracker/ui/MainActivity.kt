@@ -32,6 +32,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -71,9 +72,9 @@ import com.babacode.walletexpensetracker.ui.setting.notification.AlarmUtils
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.utiles.Extra.privacy_policy_url
-import com.babacode.walletexpensetracker.utiles.SettingUtils
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -83,9 +84,6 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var settingsRepository: SettingsRepository
     @Inject lateinit var themeProvider: ThemeProvider
 
-    private val settingUtilsForNotification by lazy {
-        SettingUtils(this)
-    }
     private val alarmUtils by lazy {
         AlarmUtils(applicationContext)
     }
@@ -103,17 +101,21 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        val toSetAlarm = settingUtilsForNotification.notificationForAlarm()
-        if (toSetAlarm) {
-            alarmUtils.initAlarmForNotification(Calendar.getInstance())
-        } else {
-            alarmUtils.cancelNotificationAlarm()
-        }
-
         checkForNotificationPermission()
 
         setContent {
             CompositionLocalProvider(LocalNavigationEventDispatcherOwner provides this) {
+                val notificationsEnabled by settingsRepository.notificationsEnabled.collectAsStateWithLifecycle(
+                    initialValue = true
+                )
+                LaunchedEffect(notificationsEnabled) {
+                    if (notificationsEnabled) {
+                        alarmUtils.initAlarmForNotification(Calendar.getInstance())
+                    } else {
+                        alarmUtils.cancelNotificationAlarm()
+                    }
+                }
+
                 val themePreference by settingsRepository.theme.collectAsStateWithLifecycle(
                     initialValue = remember { themeProvider.getInitialThemePreference() }
                 )
@@ -124,8 +126,12 @@ class MainActivity : ComponentActivity() {
                     lightThemeValue -> false
                     else -> isSystemInDarkTheme()
                 }
+                val currencyCode by settingsRepository.currency.collectAsStateWithLifecycle(
+                    initialValue = stringResource(R.string.usDollarCurrencyCodeValue)
+                )
                 WalletExpenseTheme(darkTheme = darkTheme) {
                     MainNavigation(
+                        currencyCode = currencyCode,
                         showNotificationSnackbar = showNotificationSnackbar,
                         onNotificationSnackbarShown = { showNotificationSnackbar = false },
                         onOpenNotificationSettings = ::openNotificationSettings,
@@ -178,7 +184,7 @@ class MainActivity : ComponentActivity() {
         }
 
         try {
-            startActivity(Intent.createChooser(emailIntent, "send mail using..."))
+            startActivity(Intent.createChooser(emailIntent, getString(R.string.send_mail_chooser_title)))
         } catch (e: Exception) {
             Toast.makeText(this, getString(R.string.emailError), Toast.LENGTH_LONG).show()
             e.printStackTrace()
@@ -199,6 +205,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainNavigation(
+    currencyCode: String,
     showNotificationSnackbar: Boolean,
     onNotificationSnackbarShown: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
@@ -266,7 +273,7 @@ private fun MainNavigation(
                 entry<Home> {
                     val viewModel = hiltViewModel<HomeViewModel>()
                     HomeRoute(
-                        currencyCode = SettingUtils(context).getCurrencyCode(),
+                        currencyCode = currencyCode,
                         viewModel = viewModel,
                         resultEvent = resultEvent,
                         onResultEventConsumed = { resultEvent = null },
@@ -282,7 +289,7 @@ private fun MainNavigation(
                     AddTransactionRoute(
                         viewModel = viewModel,
                         editTransaction = key.editTransaction,
-                        currencyCode = SettingUtils(context).getCurrencyCode(),
+                        currencyCode = currencyCode,
                         onNavigateBackWithResult = { result ->
                             resultEvent = result
                             backStack.removeLastOrNull()
@@ -296,7 +303,7 @@ private fun MainNavigation(
                     }
                     TransactionTypeRoute(
                         transactionType = key.transactionType,
-                        currencyCode = SettingUtils(context).getCurrencyCode(),
+                        currencyCode = currencyCode,
                         viewModel = viewModel,
                         resultEvent = resultEvent,
                         onResultEventConsumed = { resultEvent = null },
@@ -316,7 +323,7 @@ private fun MainNavigation(
                 entry<CalenderView> {
                     val viewModel = hiltViewModel<CalenderViewViewModel>()
                     CalenderRoute(
-                        currencyCode = SettingUtils(context).getCurrencyCode(),
+                        currencyCode = currencyCode,
                         viewModel = viewModel,
                         resultEvent = resultEvent,
                         onResultEventConsumed = { resultEvent = null },
@@ -326,6 +333,7 @@ private fun MainNavigation(
                 }
                 entry<DeleteTransactionRoute>(metadata = DialogSceneStrategy.dialog()) { key ->
                     val viewModel = hiltViewModel<HomeViewModel>()
+                    val deleteScope = rememberCoroutineScope()
                     DeleteTransactionDialog(
                         onDismissRequest = { backStack.removeLastOrNull() },
                         onCancelClick = {
@@ -333,9 +341,13 @@ private fun MainNavigation(
                             backStack.removeLastOrNull()
                         },
                         onConfirmClick = {
-                            viewModel.deleteSingleTransaction(key.transaction)
-                            Toast.makeText(context, R.string.delete_transaction, Toast.LENGTH_LONG).show()
-                            backStack.removeLastOrNull()
+                            deleteScope.launch {
+                                val result = viewModel.deleteSingleTransaction(key.transaction)
+                                val messageRes =
+                                    if (result.isSuccess) R.string.delete_transaction else R.string.database_error
+                                Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
+                                backStack.removeLastOrNull()
+                            }
                         }
                     )
                 }
@@ -354,9 +366,9 @@ private fun AppTopBar(
     onOpenSettings: () -> Unit
 ) {
     val title = when (currentRoute) {
-        is Home -> "Home"
+        is Home -> stringResource(R.string.home_title)
         is AddTransaction -> currentRoute.title
-        is TransactionTypeDetail -> "Detail View"
+        is TransactionTypeDetail -> stringResource(R.string.detail_view_title)
         is AppSettings -> stringResource(R.string.setting)
         is CalenderView -> stringResource(R.string.calender)
         else -> ""
@@ -366,7 +378,10 @@ private fun AppTopBar(
         navigationIcon = {
             if (currentRoute != Home) {
                 IconButton(onClick = onBack) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.navigate_back)
+                    )
                 }
             }
         },

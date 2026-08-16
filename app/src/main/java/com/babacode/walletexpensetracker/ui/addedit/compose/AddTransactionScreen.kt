@@ -81,6 +81,10 @@ fun AddTransactionRoute(
                     noteError = event.msg
                     snackbarHostState.showSnackbar(event.msg)
                 }
+                is AddEditTransactionEvent.ShowInvalidDate ->
+                    snackbarHostState.showSnackbar(event.msg)
+                is AddEditTransactionEvent.ShowSaveError ->
+                    snackbarHostState.showSnackbar(event.msg)
                 is AddEditTransactionEvent.ShowSelectTransactionType ->
                     snackbarHostState.showSnackbar(event.msg)
                 is AddEditTransactionEvent.ShowSelectTransactionTag ->

@@ -1,8 +1,10 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
@@ -14,7 +16,9 @@ import com.babacode.walletexpensetracker.utiles.Extra.parseDouble
 import com.babacode.walletexpensetracker.utiles.Extra.paymentMode
 import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
 import com.babacode.walletexpensetracker.utiles.Extra.transactionType
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -24,6 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionAddEditViewModel @Inject constructor(
     private val repository: TransactionRepository,
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
 
@@ -44,16 +49,16 @@ class TransactionAddEditViewModel @Inject constructor(
 
 
         if (transactionType.isBlank()) {
-            showSelectTransactionTypeMessage("Please Select Type Of Transaction")
+            showSelectTransactionTypeMessage(context.getString(R.string.error_select_transaction_type))
             return
         }
 
         if (transactionAmount.isBlank()) {
-            showInvalidAmountMessage("Please Enter Amount")
+            showInvalidAmountMessage(context.getString(R.string.error_enter_amount))
             return
         }
         if (transactionAmount.length > AMOUNT_CHECK_FOR_ADD) {
-            showInvalidAmountMessage("Amount Must Be less than  1000000")
+            showInvalidAmountMessage(context.getString(R.string.error_amount_too_large))
             return
         }
         if (transactionAmount.contains("#") || transactionAmount.contains("/") || transactionAmount.contains(
@@ -63,35 +68,41 @@ class TransactionAddEditViewModel @Inject constructor(
                 "."
             ) || transactionAmount == "0"
         ) {
-            showInvalidAmountMessage("Please Enter Valid Amount")
+            showInvalidAmountMessage(context.getString(R.string.error_invalid_amount))
             return
         }
 
         if (transactionNote.isBlank()) {
-            showInvalidNoteMessage("Please Add Note With Transaction")
+            showInvalidNoteMessage(context.getString(R.string.error_enter_note))
             return
         }
 
         if (transactionNote.length >= NOTE_LENGTH_VALIDATE) {
-            showInvalidNoteMessage("Note character must Be less than 40")
+            showInvalidNoteMessage(context.getString(R.string.error_note_too_long))
             return
         }
 
         if (transactionTag.isBlank()) {
-            showSelectTransactionTagMessage("Please Select Type Of Tag")
+            showSelectTransactionTagMessage(context.getString(R.string.error_select_tag))
             return
         }
 
         if (transactionPaymentType.isBlank()) {
-            showSelectTransactionPaymentModeMessage("Please Select Type Of Payment")
+            showSelectTransactionPaymentModeMessage(context.getString(R.string.error_select_payment_mode))
             return
         }
 
 
+        val addDate = try {
+            convertStringDateToLong(transactionDate)
+        } catch (e: IllegalArgumentException) {
+            showInvalidDateMessage(context.getString(R.string.error_invalid_date))
+            return
+        }
+
         val addAmount = parseDouble(transactionAmount)
         val addType = transactionType(transactionType)
         val addTag = transactionTag(transactionTag)
-        val addDate = convertStringDateToLong(transactionDate)
         val addPaymentMode = paymentMode(transactionPaymentType)
 
 
@@ -124,20 +135,29 @@ class TransactionAddEditViewModel @Inject constructor(
 
 
     private fun createTransaction(transaction: Transaction) = viewModelScope.launch {
-        repository.insertNewTransaction(transaction)
-        addEditTransactionChannel.send(
-            AddEditTransactionEvent.NavigateBackWithResult(
-                ADD_TRANSACTION_RESULT_OK
-            )
-        )
+        runCatching { repository.insertNewTransaction(transaction) }
+            .onSuccess {
+                addEditTransactionChannel.send(
+                    AddEditTransactionEvent.NavigateBackWithResult(ADD_TRANSACTION_RESULT_OK)
+                )
+            }
+            .onFailure { exception -> showSaveErrorMessage(exception) }
     }
 
     private fun updateTransaction(transaction: Transaction) = viewModelScope.launch {
-        repository.updateTransaction(transaction)
+        runCatching { repository.updateTransaction(transaction) }
+            .onSuccess {
+                addEditTransactionChannel.send(
+                    AddEditTransactionEvent.NavigateBackWithResult(EDIT_TRANSACTION_RESULT_OK)
+                )
+            }
+            .onFailure { exception -> showSaveErrorMessage(exception) }
+    }
+
+    private suspend fun showSaveErrorMessage(exception: Throwable) {
+        FirebaseCrashlytics.getInstance().recordException(exception)
         addEditTransactionChannel.send(
-            AddEditTransactionEvent.NavigateBackWithResult(
-                EDIT_TRANSACTION_RESULT_OK
-            )
+            AddEditTransactionEvent.ShowSaveError(context.getString(R.string.database_error))
         )
     }
 
@@ -166,10 +186,16 @@ class TransactionAddEditViewModel @Inject constructor(
         addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidAmount(amountMsg))
     }
 
+    private fun showInvalidDateMessage(dateMsg: String) = viewModelScope.launch {
+        addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidDate(dateMsg))
+    }
+
 
     sealed class AddEditTransactionEvent {
         data class ShowInvalidNote(val msg: String) : AddEditTransactionEvent()
         data class ShowInvalidAmount(val msg: String) : AddEditTransactionEvent()
+        data class ShowInvalidDate(val msg: String) : AddEditTransactionEvent()
+        data class ShowSaveError(val msg: String) : AddEditTransactionEvent()
         data class ShowSelectTransactionType(val msg: String) : AddEditTransactionEvent()
         data class ShowSelectTransactionTag(val msg: String) : AddEditTransactionEvent()
         data class ShowSelectTransactionPaymentMode(val msg: String) : AddEditTransactionEvent()

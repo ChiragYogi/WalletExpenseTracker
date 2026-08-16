@@ -1,12 +1,11 @@
 package com.babacode.walletexpensetracker.ui.detail.compose
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -15,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
@@ -38,25 +38,23 @@ fun TransactionTypeRoute(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val resultMessage = when (resultEvent) {
-        ADD_TRANSACTION_RESULT_OK -> stringResource(R.string.transaction_added)
-        EDIT_TRANSACTION_RESULT_OK -> stringResource(R.string.transaction_update)
-        else -> null
-    }
+    val context = LocalContext.current
 
     LaunchedEffect(resultEvent) {
-        if (resultMessage != null) {
-            snackbarHostState.showSnackbar(resultMessage)
+        val messageRes = when (resultEvent) {
+            ADD_TRANSACTION_RESULT_OK -> R.string.transaction_added
+            EDIT_TRANSACTION_RESULT_OK -> R.string.transaction_update
+            else -> null
+        }
+        if (messageRes != null) {
+            Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
             onResultEventConsumed()
         }
     }
 
     Scaffold(
         modifier = modifier,
-        topBar = { WalletTopAppBar(title = stringResource(R.string.detail_view_title), onBack = onBack) },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        topBar = { WalletTopAppBar(title = stringResource(R.string.detail_view_title), onBack = onBack) }
     ) { innerPadding ->
         TransactionTypeScreen(
             modifier = Modifier.padding(innerPadding),

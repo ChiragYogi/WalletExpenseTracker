@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.calender.compose
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,8 +11,6 @@ import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -19,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -55,17 +55,16 @@ fun CalenderRoute(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
-
-    val resultMessage = when (resultEvent) {
-        ADD_TRANSACTION_RESULT_OK -> stringResource(R.string.transaction_added)
-        EDIT_TRANSACTION_RESULT_OK -> stringResource(R.string.transaction_update)
-        else -> null
-    }
+    val context = LocalContext.current
 
     LaunchedEffect(resultEvent) {
-        if (resultMessage != null) {
-            snackbarHostState.showSnackbar(resultMessage)
+        val messageRes = when (resultEvent) {
+            ADD_TRANSACTION_RESULT_OK -> R.string.transaction_added
+            EDIT_TRANSACTION_RESULT_OK -> R.string.transaction_update
+            else -> null
+        }
+        if (messageRes != null) {
+            Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
             onResultEventConsumed()
         }
     }
@@ -82,8 +81,7 @@ fun CalenderRoute(
 
     Scaffold(
         modifier = modifier,
-        topBar = { WalletTopAppBar(title = stringResource(R.string.calender), onBack = onBack) },
-        snackbarHost = { SnackbarHost(snackbarHostState) }
+        topBar = { WalletTopAppBar(title = stringResource(R.string.calender), onBack = onBack) }
     ) { innerPadding ->
         CalenderScreen(
             modifier = Modifier.padding(innerPadding),

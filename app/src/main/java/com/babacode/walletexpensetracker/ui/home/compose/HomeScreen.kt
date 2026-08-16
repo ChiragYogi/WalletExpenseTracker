@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.home.compose
 
+import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -40,6 +41,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -88,16 +90,16 @@ fun HomeRoute(
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-
-    val resultMessage = when (resultEvent) {
-        ADD_TRANSACTION_RESULT_OK -> stringResource(R.string.transaction_added)
-        EDIT_TRANSACTION_RESULT_OK -> stringResource(R.string.transaction_update)
-        else -> null
-    }
+    val context = LocalContext.current
 
     LaunchedEffect(resultEvent) {
-        if (resultMessage != null) {
-            snackbarHostState.showSnackbar(resultMessage)
+        val messageRes = when (resultEvent) {
+            ADD_TRANSACTION_RESULT_OK -> R.string.transaction_added
+            EDIT_TRANSACTION_RESULT_OK -> R.string.transaction_update
+            else -> null
+        }
+        if (messageRes != null) {
+            Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
             onResultEventConsumed()
         }
     }

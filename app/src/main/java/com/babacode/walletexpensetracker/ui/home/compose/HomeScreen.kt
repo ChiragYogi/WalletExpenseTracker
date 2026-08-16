@@ -21,6 +21,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -54,6 +55,7 @@ import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.utiles.Extra
@@ -75,6 +77,9 @@ fun HomeRoute(
     onExpenseClick: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
+    onOpenAnalysisClick: () -> Unit,
+    onOpenCalenderClick: () -> Unit,
+    onOpenSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -96,6 +101,31 @@ fun HomeRoute(
 
     Scaffold(
         modifier = modifier,
+        topBar = {
+            WalletTopAppBar(
+                title = stringResource(R.string.home_title),
+                actions = {
+                    IconButton(onClick = onOpenAnalysisClick) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_baseline_bar_chart_24),
+                            contentDescription = stringResource(R.string.calender)
+                        )
+                    }
+                    IconButton(onClick = onOpenCalenderClick) {
+                        Icon(
+                            painter = painterResource(R.drawable.yearly_calender),
+                            contentDescription = stringResource(R.string.calender)
+                        )
+                    }
+                    IconButton(onClick = onOpenSettingsClick) {
+                        Icon(
+                            painter = painterResource(R.drawable.setting_vector),
+                            contentDescription = stringResource(R.string.setting_icon)
+                        )
+                    }
+                }
+            )
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(
@@ -376,6 +406,21 @@ private fun HomeScreenPreview() {
                     id = 2
                 )
             ),
+            onIncomeClick = {},
+            onExpenseClick = {},
+            onTransactionClick = {},
+            onLongPress = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenEmptyPreview() {
+    WalletExpenseTheme {
+        HomeScreen(
+            currencyCode = "$",
+            transactions = emptyList(),
             onIncomeClick = {},
             onExpenseClick = {},
             onTransactionClick = {},

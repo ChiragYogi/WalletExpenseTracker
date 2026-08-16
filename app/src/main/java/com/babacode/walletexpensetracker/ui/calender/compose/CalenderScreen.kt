@@ -34,6 +34,7 @@ import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.calender.CalenderViewViewModel
 import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.utiles.Extra
 import java.time.Instant
@@ -51,6 +52,7 @@ fun CalenderRoute(
     onResultEventConsumed: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -80,6 +82,7 @@ fun CalenderRoute(
 
     Scaffold(
         modifier = modifier,
+        topBar = { WalletTopAppBar(title = stringResource(R.string.calender), onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         CalenderScreen(

@@ -13,19 +13,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -34,9 +27,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -202,7 +195,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MainNavigation(
     currencyCode: String,
@@ -246,24 +238,10 @@ private fun MainNavigation(
         backStack.add(DeleteTransactionRoute(transaction))
     }
 
-    val currentRoute = backStack.lastOrNull { it !is DeleteTransactionRoute } ?: Home
-
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            AppTopBar(
-                currentRoute = currentRoute,
-                onBack = { backStack.removeLastOrNull() },
-                onOpenAnalysis = { backStack.add(TransactionTypeDetail(null)) },
-                onOpenCalender = { backStack.add(CalenderView) },
-                onOpenSettings = { backStack.add(AppSettings) }
-            )
-        }
-    ) { innerPadding ->
+    Box(modifier = Modifier.fillMaxSize()) {
         NavDisplay(
             backStack = backStack,
             onBack = { backStack.removeLastOrNull() },
-            modifier = Modifier.padding(innerPadding),
             sceneStrategies = listOf(dialogSceneStrategy),
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
@@ -281,7 +259,10 @@ private fun MainNavigation(
                         onIncomeClick = { backStack.add(TransactionTypeDetail(TransactionType.INCOME)) },
                         onExpenseClick = { backStack.add(TransactionTypeDetail(TransactionType.EXPENSE)) },
                         onTransactionClick = onNavigateToEdit,
-                        onLongPress = onNavigateToDelete
+                        onLongPress = onNavigateToDelete,
+                        onOpenAnalysisClick = { backStack.add(TransactionTypeDetail(null)) },
+                        onOpenCalenderClick = { backStack.add(CalenderView) },
+                        onOpenSettingsClick = { backStack.add(AppSettings) }
                     )
                 }
                 entry<AddTransaction> { key ->
@@ -290,6 +271,8 @@ private fun MainNavigation(
                         viewModel = viewModel,
                         editTransaction = key.editTransaction,
                         currencyCode = currencyCode,
+                        title = key.title,
+                        onBack = { backStack.removeLastOrNull() },
                         onNavigateBackWithResult = { result ->
                             resultEvent = result
                             backStack.removeLastOrNull()
@@ -308,13 +291,15 @@ private fun MainNavigation(
                         resultEvent = resultEvent,
                         onResultEventConsumed = { resultEvent = null },
                         onTransactionClick = onNavigateToEdit,
-                        onLongPress = onNavigateToDelete
+                        onLongPress = onNavigateToDelete,
+                        onBack = { backStack.removeLastOrNull() }
                     )
                 }
                 entry<AppSettings> {
                     val viewModel = hiltViewModel<SettingsViewModel>()
                     SettingsRoute(
                         viewModel = viewModel,
+                        onBack = { backStack.removeLastOrNull() },
                         onPrivacyPolicyClick = onPrivacyPolicyClick,
                         onContactSupportClick = onRequestFeatureClick,
                         onReportBugClick = onReportBugClick
@@ -328,7 +313,8 @@ private fun MainNavigation(
                         resultEvent = resultEvent,
                         onResultEventConsumed = { resultEvent = null },
                         onTransactionClick = onNavigateToEdit,
-                        onLongPress = onNavigateToDelete
+                        onLongPress = onNavigateToDelete,
+                        onBack = { backStack.removeLastOrNull() }
                     )
                 }
                 entry<DeleteTransactionRoute>(metadata = DialogSceneStrategy.dialog()) { key ->
@@ -353,61 +339,11 @@ private fun MainNavigation(
                 }
             }
         )
+        SnackbarHost(
+            hostState = snackbarHostState,
+            modifier = Modifier.align(Alignment.BottomCenter)
+        )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun AppTopBar(
-    currentRoute: NavKey,
-    onBack: () -> Unit,
-    onOpenAnalysis: () -> Unit,
-    onOpenCalender: () -> Unit,
-    onOpenSettings: () -> Unit
-) {
-    val title = when (currentRoute) {
-        is Home -> stringResource(R.string.home_title)
-        is AddTransaction -> currentRoute.title
-        is TransactionTypeDetail -> stringResource(R.string.detail_view_title)
-        is AppSettings -> stringResource(R.string.setting)
-        is CalenderView -> stringResource(R.string.calender)
-        else -> ""
-    }
-    TopAppBar(
-        title = { Text(title) },
-        navigationIcon = {
-            if (currentRoute != Home) {
-                IconButton(onClick = onBack) {
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.navigate_back)
-                    )
-                }
-            }
-        },
-        actions = {
-            if (currentRoute == Home) {
-                IconButton(onClick = onOpenAnalysis) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_baseline_bar_chart_24),
-                        contentDescription = stringResource(R.string.calender)
-                    )
-                }
-                IconButton(onClick = onOpenCalender) {
-                    Icon(
-                        painter = painterResource(R.drawable.yearly_calender),
-                        contentDescription = stringResource(R.string.calender)
-                    )
-                }
-                IconButton(onClick = onOpenSettings) {
-                    Icon(
-                        painter = painterResource(R.drawable.setting_vector),
-                        contentDescription = stringResource(R.string.setting_icon)
-                    )
-                }
-            }
-        }
-    )
 }
 
 const val ADD_TRANSACTION_RESULT_OK = Activity.RESULT_FIRST_USER

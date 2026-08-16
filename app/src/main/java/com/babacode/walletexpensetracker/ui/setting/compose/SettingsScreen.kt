@@ -2,8 +2,10 @@ package com.babacode.walletexpensetracker.ui.setting.compose
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,28 +20,35 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
+import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.setting.SettingsViewModel
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 
 @Composable
 fun SettingsRoute(
     viewModel: SettingsViewModel,
+    onBack: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
     onReportBugClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    SettingsScreen(
-        uiState = uiState,
-        onThemeSelected = viewModel::onThemeSelected,
-        onCurrencySelected = viewModel::onCurrencySelected,
-        onNotificationToggle = viewModel::onNotificationToggle,
-        onPrivacyPolicyClick = onPrivacyPolicyClick,
-        onContactSupportClick = onContactSupportClick,
-        onReportBugClick = onReportBugClick,
-        modifier = modifier
-    )
+    Scaffold(
+        modifier = modifier,
+        topBar = { WalletTopAppBar(title = stringResource(R.string.setting), onBack = onBack) }
+    ) { innerPadding ->
+        SettingsScreen(
+            uiState = uiState,
+            onThemeSelected = viewModel::onThemeSelected,
+            onCurrencySelected = viewModel::onCurrencySelected,
+            onNotificationToggle = viewModel::onNotificationToggle,
+            onPrivacyPolicyClick = onPrivacyPolicyClick,
+            onContactSupportClick = onContactSupportClick,
+            onReportBugClick = onReportBugClick,
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
 }
 
 @Composable

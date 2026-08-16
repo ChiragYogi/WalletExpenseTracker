@@ -21,6 +21,7 @@ import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.detail.DetailPeriod
 import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ fun TransactionTypeRoute(
     onResultEventConsumed: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -53,6 +55,7 @@ fun TransactionTypeRoute(
 
     Scaffold(
         modifier = modifier,
+        topBar = { WalletTopAppBar(title = stringResource(R.string.detail_view_title), onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         TransactionTypeScreen(

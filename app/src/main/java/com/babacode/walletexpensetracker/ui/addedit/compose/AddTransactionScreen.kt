@@ -37,6 +37,7 @@ import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.addedit.TransactionAddEditViewModel
 import com.babacode.walletexpensetracker.ui.addedit.TransactionAddEditViewModel.AddEditTransactionEvent
+import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.utiles.Extra.convertLongDateToStringDate
 import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
@@ -46,6 +47,8 @@ fun AddTransactionRoute(
     viewModel: TransactionAddEditViewModel,
     editTransaction: Transaction?,
     currencyCode: String,
+    title: String,
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
     onNavigateBackWithResult: (Int) -> Unit
 ) {
@@ -99,6 +102,7 @@ fun AddTransactionRoute(
 
     Scaffold(
         modifier = modifier,
+        topBar = { WalletTopAppBar(title = title, onBack = onBack) },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         AddTransactionScreen(

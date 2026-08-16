@@ -24,8 +24,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -80,6 +82,9 @@ fun HomeRoute(
     onOpenAnalysisClick: () -> Unit,
     onOpenCalenderClick: () -> Unit,
     onOpenSettingsClick: () -> Unit,
+    showNotificationPermissionSnackbar: Boolean,
+    onNotificationPermissionSnackbarShown: () -> Unit,
+    onOpenNotificationSettings: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -94,6 +99,22 @@ fun HomeRoute(
         if (resultMessage != null) {
             snackbarHostState.showSnackbar(resultMessage)
             onResultEventConsumed()
+        }
+    }
+
+    val notificationPermissionMessage = stringResource(R.string.notification_permission_text)
+    val notificationPermissionActionLabel = stringResource(R.string.open)
+    LaunchedEffect(showNotificationPermissionSnackbar) {
+        if (showNotificationPermissionSnackbar) {
+            val result = snackbarHostState.showSnackbar(
+                message = notificationPermissionMessage,
+                actionLabel = notificationPermissionActionLabel,
+                duration = SnackbarDuration.Long
+            )
+            if (result == SnackbarResult.ActionPerformed) {
+                onOpenNotificationSettings()
+            }
+            onNotificationPermissionSnackbarShown()
         }
     }
 

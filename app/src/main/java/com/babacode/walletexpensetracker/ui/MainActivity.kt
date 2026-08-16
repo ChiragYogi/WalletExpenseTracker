@@ -13,12 +13,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -27,8 +21,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -208,25 +200,8 @@ private fun MainNavigation(
     val context = LocalContext.current
     val backStack = rememberNavBackStack(Home)
     val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
-    val snackbarHostState = remember { SnackbarHostState() }
 
     var resultEvent by remember { mutableStateOf<Int?>(null) }
-
-    val notificationPermissionMessage = stringResource(R.string.notification_permission_text)
-    val notificationPermissionActionLabel = stringResource(R.string.open)
-    LaunchedEffect(showNotificationSnackbar) {
-        if (showNotificationSnackbar) {
-            val result = snackbarHostState.showSnackbar(
-                message = notificationPermissionMessage,
-                actionLabel = notificationPermissionActionLabel,
-                duration = SnackbarDuration.Long
-            )
-            if (result == SnackbarResult.ActionPerformed) {
-                onOpenNotificationSettings()
-            }
-            onNotificationSnackbarShown()
-        }
-    }
 
     val addTransactionTitle = stringResource(R.string.add_transaction_title)
     val editTransactionTitle = stringResource(R.string.edit_transaction_title)
@@ -238,112 +213,109 @@ private fun MainNavigation(
         backStack.add(DeleteTransactionRoute(transaction))
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        NavDisplay(
-            backStack = backStack,
-            onBack = { backStack.removeLastOrNull() },
-            sceneStrategies = listOf(dialogSceneStrategy),
-            entryDecorators = listOf(
-                rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator()
-            ),
-            entryProvider = entryProvider {
-                entry<Home> {
-                    val viewModel = hiltViewModel<HomeViewModel>()
-                    HomeRoute(
-                        currencyCode = currencyCode,
-                        viewModel = viewModel,
-                        resultEvent = resultEvent,
-                        onResultEventConsumed = { resultEvent = null },
-                        onAddClick = { backStack.add(AddTransaction(null, addTransactionTitle)) },
-                        onIncomeClick = { backStack.add(TransactionTypeDetail(TransactionType.INCOME)) },
-                        onExpenseClick = { backStack.add(TransactionTypeDetail(TransactionType.EXPENSE)) },
-                        onTransactionClick = onNavigateToEdit,
-                        onLongPress = onNavigateToDelete,
-                        onOpenAnalysisClick = { backStack.add(TransactionTypeDetail(null)) },
-                        onOpenCalenderClick = { backStack.add(CalenderView) },
-                        onOpenSettingsClick = { backStack.add(AppSettings) }
-                    )
-                }
-                entry<AddTransaction> { key ->
-                    val viewModel = hiltViewModel<TransactionAddEditViewModel>()
-                    AddTransactionRoute(
-                        viewModel = viewModel,
-                        editTransaction = key.editTransaction,
-                        currencyCode = currencyCode,
-                        title = key.title,
-                        onBack = { backStack.removeLastOrNull() },
-                        onNavigateBackWithResult = { result ->
-                            resultEvent = result
-                            backStack.removeLastOrNull()
-                        }
-                    )
-                }
-                entry<TransactionTypeDetail> { key ->
-                    val viewModel = hiltViewModel<DetailViewViewModel>()
-                    LaunchedEffect(key.transactionType) {
-                        viewModel.setTransactionType(key.transactionType)
-                    }
-                    TransactionTypeRoute(
-                        transactionType = key.transactionType,
-                        currencyCode = currencyCode,
-                        viewModel = viewModel,
-                        resultEvent = resultEvent,
-                        onResultEventConsumed = { resultEvent = null },
-                        onTransactionClick = onNavigateToEdit,
-                        onLongPress = onNavigateToDelete,
-                        onBack = { backStack.removeLastOrNull() }
-                    )
-                }
-                entry<AppSettings> {
-                    val viewModel = hiltViewModel<SettingsViewModel>()
-                    SettingsRoute(
-                        viewModel = viewModel,
-                        onBack = { backStack.removeLastOrNull() },
-                        onPrivacyPolicyClick = onPrivacyPolicyClick,
-                        onContactSupportClick = onRequestFeatureClick,
-                        onReportBugClick = onReportBugClick
-                    )
-                }
-                entry<CalenderView> {
-                    val viewModel = hiltViewModel<CalenderViewViewModel>()
-                    CalenderRoute(
-                        currencyCode = currencyCode,
-                        viewModel = viewModel,
-                        resultEvent = resultEvent,
-                        onResultEventConsumed = { resultEvent = null },
-                        onTransactionClick = onNavigateToEdit,
-                        onLongPress = onNavigateToDelete,
-                        onBack = { backStack.removeLastOrNull() }
-                    )
-                }
-                entry<DeleteTransactionRoute>(metadata = DialogSceneStrategy.dialog()) { key ->
-                    val viewModel = hiltViewModel<HomeViewModel>()
-                    val deleteScope = rememberCoroutineScope()
-                    DeleteTransactionDialog(
-                        onDismissRequest = { backStack.removeLastOrNull() },
-                        onCancelClick = {
-                            Toast.makeText(context, R.string.operation_cancel, Toast.LENGTH_LONG).show()
-                            backStack.removeLastOrNull()
-                        },
-                        onConfirmClick = {
-                            deleteScope.launch {
-                                val result = viewModel.deleteSingleTransaction(key.transaction)
-                                val messageRes =
-                                    if (result.isSuccess) R.string.delete_transaction else R.string.database_error
-                                Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
-                                backStack.removeLastOrNull()
-                            }
-                        }
-                    )
-                }
+    NavDisplay(
+        backStack = backStack,
+        onBack = { backStack.removeLastOrNull() },
+        sceneStrategies = listOf(dialogSceneStrategy),
+        entryDecorators = listOf(
+            rememberSaveableStateHolderNavEntryDecorator(),
+            rememberViewModelStoreNavEntryDecorator()
+        ),
+        entryProvider = entryProvider {
+            entry<Home> {
+                val viewModel = hiltViewModel<HomeViewModel>()
+                HomeRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    resultEvent = resultEvent,
+                    onResultEventConsumed = { resultEvent = null },
+                    onAddClick = { backStack.add(AddTransaction(null, addTransactionTitle)) },
+                    onIncomeClick = { backStack.add(TransactionTypeDetail(TransactionType.INCOME)) },
+                    onExpenseClick = { backStack.add(TransactionTypeDetail(TransactionType.EXPENSE)) },
+                    onTransactionClick = onNavigateToEdit,
+                    onLongPress = onNavigateToDelete,
+                    onOpenAnalysisClick = { backStack.add(TransactionTypeDetail(null)) },
+                    onOpenCalenderClick = { backStack.add(CalenderView) },
+                    onOpenSettingsClick = { backStack.add(AppSettings) },
+                    showNotificationPermissionSnackbar = showNotificationSnackbar,
+                    onNotificationPermissionSnackbarShown = onNotificationSnackbarShown,
+                    onOpenNotificationSettings = onOpenNotificationSettings
+                )
             }
-        )
-        SnackbarHost(
-            hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
-        )
-    }
+            entry<AddTransaction> { key ->
+                val viewModel = hiltViewModel<TransactionAddEditViewModel>()
+                AddTransactionRoute(
+                    viewModel = viewModel,
+                    editTransaction = key.editTransaction,
+                    currencyCode = currencyCode,
+                    title = key.title,
+                    onBack = { backStack.removeLastOrNull() },
+                    onNavigateBackWithResult = { result ->
+                        resultEvent = result
+                        backStack.removeLastOrNull()
+                    }
+                )
+            }
+            entry<TransactionTypeDetail> { key ->
+                val viewModel = hiltViewModel<DetailViewViewModel>()
+                LaunchedEffect(key.transactionType) {
+                    viewModel.setTransactionType(key.transactionType)
+                }
+                TransactionTypeRoute(
+                    transactionType = key.transactionType,
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    resultEvent = resultEvent,
+                    onResultEventConsumed = { resultEvent = null },
+                    onTransactionClick = onNavigateToEdit,
+                    onLongPress = onNavigateToDelete,
+                    onBack = { backStack.removeLastOrNull() }
+                )
+            }
+            entry<AppSettings> {
+                val viewModel = hiltViewModel<SettingsViewModel>()
+                SettingsRoute(
+                    viewModel = viewModel,
+                    onBack = { backStack.removeLastOrNull() },
+                    onPrivacyPolicyClick = onPrivacyPolicyClick,
+                    onContactSupportClick = onRequestFeatureClick,
+                    onReportBugClick = onReportBugClick
+                )
+            }
+            entry<CalenderView> {
+                val viewModel = hiltViewModel<CalenderViewViewModel>()
+                CalenderRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    resultEvent = resultEvent,
+                    onResultEventConsumed = { resultEvent = null },
+                    onTransactionClick = onNavigateToEdit,
+                    onLongPress = onNavigateToDelete,
+                    onBack = { backStack.removeLastOrNull() }
+                )
+            }
+            entry<DeleteTransactionRoute>(metadata = DialogSceneStrategy.dialog()) { key ->
+                val viewModel = hiltViewModel<HomeViewModel>()
+                val deleteScope = rememberCoroutineScope()
+                DeleteTransactionDialog(
+                    onDismissRequest = { backStack.removeLastOrNull() },
+                    onCancelClick = {
+                        Toast.makeText(context, R.string.operation_cancel, Toast.LENGTH_LONG).show()
+                        backStack.removeLastOrNull()
+                    },
+                    onConfirmClick = {
+                        deleteScope.launch {
+                            val result = viewModel.deleteSingleTransaction(key.transaction)
+                            val messageRes =
+                                if (result.isSuccess) R.string.delete_transaction else R.string.database_error
+                            Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
+                            backStack.removeLastOrNull()
+                        }
+                    }
+                )
+            }
+        }
+    )
 }
 
 const val ADD_TRANSACTION_RESULT_OK = Activity.RESULT_FIRST_USER

@@ -41,7 +41,7 @@ class HomeViewModelTest {
         backgroundScope.launch { viewModel.recentTransaction.collect {} }
         advanceUntilIdle()
 
-        assertEquals(1, viewModel.recentTransaction.value.size)
+        assertEquals(1, viewModel.recentTransaction.value?.size)
     }
 
     @Test
@@ -52,12 +52,12 @@ class HomeViewModelTest {
 
         backgroundScope.launch { viewModel.recentTransaction.collect {} }
         advanceUntilIdle()
-        assertEquals(1, viewModel.recentTransaction.value.size)
+        assertEquals(1, viewModel.recentTransaction.value?.size)
 
         val result = viewModel.deleteSingleTransaction(sampleTransaction(id = 1))
         advanceUntilIdle()
 
         assertTrue(result.isSuccess)
-        assertEquals(0, viewModel.recentTransaction.value.size)
+        assertEquals(0, viewModel.recentTransaction.value?.size)
     }
 }

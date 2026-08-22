@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -177,13 +178,18 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     currencyCode: String,
-    transactions: List<Transaction>,
+    transactions: List<Transaction>?,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    if (transactions == null) {
+        LoadingHomeState(modifier = modifier.fillMaxSize())
+        return
+    }
+
     if (transactions.isEmpty()) {
         EmptyHomeState(modifier = modifier.fillMaxSize())
         return
@@ -375,6 +381,13 @@ private fun PieLegendEntry(color: Color, label: String) {
 }
 
 @Composable
+private fun LoadingHomeState(modifier: Modifier = Modifier) {
+    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
 private fun EmptyHomeState(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
@@ -444,6 +457,21 @@ private fun HomeScreenEmptyPreview() {
         HomeScreen(
             currencyCode = "$",
             transactions = emptyList(),
+            onIncomeClick = {},
+            onExpenseClick = {},
+            onTransactionClick = {},
+            onLongPress = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun HomeScreenLoadingPreview() {
+    WalletExpenseTheme {
+        HomeScreen(
+            currencyCode = "$",
+            transactions = null,
             onIncomeClick = {},
             onExpenseClick = {},
             onTransactionClick = {},

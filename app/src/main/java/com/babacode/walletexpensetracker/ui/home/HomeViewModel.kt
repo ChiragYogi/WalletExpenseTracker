@@ -17,9 +17,9 @@ class HomeViewModel @Inject constructor(
     private val repository: TransactionRepository
 ) : ViewModel() {
 
-    val recentTransaction: StateFlow<List<Transaction>> = repository.getAllTransaction()
+    val recentTransaction: StateFlow<List<Transaction>?> = repository.getAllTransaction()
         .recoverWithDefault(emptyList())
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
 
     suspend fun deleteSingleTransaction(transaction: Transaction): Result<Unit> =
         runCatching { repository.deleteSingleTransaction(transaction) }

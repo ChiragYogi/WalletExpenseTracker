@@ -32,7 +32,6 @@ fun TransactionTypeRoute(
     onResultEventConsumed: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
-    onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -51,12 +50,7 @@ fun TransactionTypeRoute(
 
     Scaffold(
         modifier = modifier,
-        topBar = {
-            WalletTopAppBar(
-                title = stringResource(R.string.detail_view_title),
-                onBack = if (transactionType != null) onBack else null
-            )
-        }
+        topBar = { WalletTopAppBar(title = stringResource(R.string.detail_view_title)) }
     ) { innerPadding ->
         TransactionTypeScreen(
             modifier = Modifier.padding(innerPadding),

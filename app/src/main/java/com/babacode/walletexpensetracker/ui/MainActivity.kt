@@ -306,8 +306,7 @@ private fun MainNavigation(
                     resultEvent = resultEvent,
                     onResultEventConsumed = { resultEvent = null },
                     onTransactionClick = onNavigateToEdit,
-                    onLongPress = onNavigateToDelete,
-                    onBack = { backStack.removeLastOrNull() }
+                    onLongPress = onNavigateToDelete
                 )
             }
             entry<AppSettings> {

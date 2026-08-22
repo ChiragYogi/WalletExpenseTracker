@@ -15,7 +15,9 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.Color
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -90,6 +92,19 @@ private class CutoutBarShape(
     }
 }
 
+// Matches the reference design's tab styling (refrence/src/components/app/BottomNav.tsx):
+// selected tabs just turn primary-colored, no M3-style indicator pill behind the icon —
+// the default indicator/selected colors, derived from our theme's secondary/surface
+// tokens, render as a near-invisible label against the bar's background.
+@Composable
+private fun navItemColors() = NavigationBarItemDefaults.colors(
+    selectedIconColor = MaterialTheme.colorScheme.primary,
+    selectedTextColor = MaterialTheme.colorScheme.primary,
+    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    indicatorColor = Color.Transparent
+)
+
 @Composable
 fun BottomNav(
     currentRoute: NavKey?,
@@ -133,13 +148,15 @@ fun BottomNav(
                     selected = currentRoute is Home,
                     onClick = { onNavigate(Home) },
                     icon = { Icon(painterResource(R.drawable.home_vector), contentDescription = null) },
-                    label = { Text(stringResource(R.string.nav_home)) }
+                    label = { Text(stringResource(R.string.nav_home)) },
+                    colors = navItemColors()
                 )
                 NavigationBarItem(
                     selected = currentRoute is TransactionTypeDetail,
                     onClick = { onNavigate(TransactionTypeDetail(null)) },
                     icon = { Icon(painterResource(R.drawable.bar_chart_vector), contentDescription = null) },
-                    label = { Text(stringResource(R.string.nav_detail)) }
+                    label = { Text(stringResource(R.string.nav_detail)) },
+                    colors = navItemColors()
                 )
             }
             Spacer(modifier = Modifier.width(FabDiameter + FabCutoutMargin * 2))
@@ -148,13 +165,15 @@ fun BottomNav(
                     selected = currentRoute is Insights,
                     onClick = { onNavigate(Insights) },
                     icon = { Icon(painterResource(R.drawable.pie_chart_vector), contentDescription = null) },
-                    label = { Text(stringResource(R.string.nav_insights)) }
+                    label = { Text(stringResource(R.string.nav_insights)) },
+                    colors = navItemColors()
                 )
                 NavigationBarItem(
                     selected = currentRoute is Budgets,
                     onClick = { onNavigate(Budgets) },
                     icon = { Icon(painterResource(R.drawable.wallet_vector), contentDescription = null) },
-                    label = { Text(stringResource(R.string.nav_budgets)) }
+                    label = { Text(stringResource(R.string.nav_budgets)) },
+                    colors = navItemColors()
                 )
             }
         }

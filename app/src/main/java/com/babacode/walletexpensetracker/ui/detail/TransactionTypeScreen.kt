@@ -51,7 +51,12 @@ fun TransactionTypeRoute(
 
     Scaffold(
         modifier = modifier,
-        topBar = { WalletTopAppBar(title = stringResource(R.string.detail_view_title), onBack = onBack) }
+        topBar = {
+            WalletTopAppBar(
+                title = stringResource(R.string.detail_view_title),
+                onBack = if (transactionType != null) onBack else null
+            )
+        }
     ) { innerPadding ->
         TransactionTypeScreen(
             modifier = Modifier.padding(innerPadding),

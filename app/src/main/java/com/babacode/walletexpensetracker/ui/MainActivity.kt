@@ -242,10 +242,13 @@ private fun MainNavigation(
         showBottomNav = showBottomNav,
         currentRoute = currentRoute,
         onNavigate = onBottomNavigate,
+
         onAddClick = { backStack.add(AddTransaction(null, addTransactionTitle)) }
     ) { innerPadding ->
     NavDisplay(
-        modifier = Modifier.padding(innerPadding),
+        modifier = Modifier
+            .padding(innerPadding)
+            .consumeWindowInsets(innerPadding),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         sceneStrategies = listOf(dialogSceneStrategy),

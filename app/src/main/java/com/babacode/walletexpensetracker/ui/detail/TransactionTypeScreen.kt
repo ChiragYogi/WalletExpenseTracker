@@ -1,4 +1,4 @@
-package com.babacode.walletexpensetracker.ui.detail.compose
+package com.babacode.walletexpensetracker.ui.detail
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -11,19 +11,18 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
-import com.babacode.walletexpensetracker.ui.detail.DetailPeriod
-import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -95,11 +94,16 @@ fun TransactionTypeScreen(
 
         HorizontalPager(state = pagerState) { page ->
             val period = periods[page]
-            PeriodDetailRoute(
-                period = period,
-                transactionType = transactionType,
+            val currentDate by viewModel.currentDate(period).collectAsStateWithLifecycle()
+            val transactions by viewModel.transactions(period).collectAsStateWithLifecycle()
+
+            PeriodDetailScreen(
+                dateLabel = period.dateLabel(currentDate),
+                transactionTypeLabel = transactionType?.toString() ?: stringResource(period.fallbackTitleRes),
                 currencyCode = currencyCode,
-                viewModel = viewModel,
+                transactions = transactions,
+                onPrevious = { viewModel.onPrevious(period) },
+                onNext = { viewModel.onNext(period) },
                 onTransactionClick = onTransactionClick,
                 onLongPress = onLongPress
             )

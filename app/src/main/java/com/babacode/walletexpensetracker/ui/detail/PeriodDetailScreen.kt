@@ -1,4 +1,4 @@
-package com.babacode.walletexpensetracker.ui.detail.compose
+package com.babacode.walletexpensetracker.ui.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -25,43 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.PaymentType
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.compose.TransactionRow
-import com.babacode.walletexpensetracker.ui.detail.DetailPeriod
-import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.utiles.Extra
-
-@Composable
-fun PeriodDetailRoute(
-    period: DetailPeriod,
-    transactionType: TransactionType?,
-    currencyCode: String,
-    viewModel: DetailViewViewModel,
-    onTransactionClick: (Transaction) -> Unit,
-    onLongPress: (Transaction) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val currentDate by viewModel.currentDate(period).collectAsStateWithLifecycle()
-    val transactions by viewModel.transactions(period).collectAsStateWithLifecycle()
-
-    PeriodDetailScreen(
-        dateLabel = period.dateLabel(currentDate),
-        transactionTypeLabel = transactionType?.toString() ?: stringResource(period.fallbackTitleRes),
-        currencyCode = currencyCode,
-        transactions = transactions,
-        onPrevious = { viewModel.onPrevious(period) },
-        onNext = { viewModel.onNext(period) },
-        onTransactionClick = onTransactionClick,
-        onLongPress = onLongPress,
-        modifier = modifier
-    )
-}
 
 @Composable
 fun PeriodDetailScreen(

@@ -343,7 +343,7 @@ private fun SpendingDonutCard(currencyCode: String, income: Double, expense: Dou
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         Column(
-            modifier = Modifier.padding(WalletTheme.spacing.large),
+            modifier = Modifier.padding(WalletTheme.spacing.large).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             DonutChart(

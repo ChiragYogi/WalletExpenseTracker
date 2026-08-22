@@ -29,7 +29,7 @@ data class DonutSlice(val value: Float, val color: Color)
 fun DonutChart(
     slices: List<DonutSlice>,
     modifier: Modifier = Modifier,
-    strokeWidthFraction: Float = 0.28f,
+    strokeWidthFraction: Float = 0.2f,
     emptyStateColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     centerContent: @Composable BoxScope.() -> Unit = {}
 ) {

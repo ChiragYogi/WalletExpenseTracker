@@ -33,6 +33,11 @@ fun buildTrendBuckets(
     fun weekdayLabel(day: LocalDate): String =
         day.dayOfWeek.getDisplayName(TextStyle.NARROW, Locale.US)
 
+    fun weekRangeLabel(start: LocalDate, end: LocalDate): String {
+        val month = start.format(monthLabelFormatter)
+        return if (start == end) "${start.dayOfMonth} $month" else "${start.dayOfMonth}-${end.dayOfMonth} $month"
+    }
+
     return when (period) {
         DetailPeriod.YEARLY -> (1..12).map { month ->
             val monthDate = LocalDate.of(cursor.year, month, 1)
@@ -43,10 +48,15 @@ fun buildTrendBuckets(
 
         DetailPeriod.MONTHLY -> {
             val monthStart = cursor.withDayOfMonth(1)
-            (0 until cursor.lengthOfMonth()).map { offset ->
-                val day = monthStart.plusDays(offset.toLong())
-                DetailBucket(label = day.dayOfMonth.toString(), amount = sumForDay(day))
-            }
+            (0 until cursor.lengthOfMonth())
+                .map { offset -> monthStart.plusDays(offset.toLong()) }
+                .chunked(7)
+                .map { week ->
+                    DetailBucket(
+                        label = weekRangeLabel(week.first(), week.last()),
+                        amount = week.sumOf { day -> sumForDay(day) }
+                    )
+                }
         }
 
         DetailPeriod.WEEKLY -> {

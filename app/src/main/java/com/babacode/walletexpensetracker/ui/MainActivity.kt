@@ -16,7 +16,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -74,7 +74,6 @@ import com.babacode.walletexpensetracker.ui.search.compose.SearchRoute
 import com.babacode.walletexpensetracker.ui.navigation.TransactionTypeDetail
 import com.babacode.walletexpensetracker.repository.SettingsRepository
 import com.babacode.walletexpensetracker.ui.setting.SettingsViewModel
-import com.babacode.walletexpensetracker.ui.setting.ThemeProvider
 import com.babacode.walletexpensetracker.ui.setting.compose.SettingsRoute
 import com.babacode.walletexpensetracker.ui.setting.notification.AlarmUtils
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
@@ -91,7 +90,6 @@ import androidx.core.net.toUri
 class MainActivity : ComponentActivity() {
 
     @Inject lateinit var settingsRepository: SettingsRepository
-    @Inject lateinit var themeProvider: ThemeProvider
 
     private val alarmUtils by lazy {
         AlarmUtils(applicationContext)
@@ -125,18 +123,8 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                val themePreference by settingsRepository.theme.collectAsStateWithLifecycle(
-                    initialValue = remember { themeProvider.getInitialThemePreference() }
-                )
-                val darkThemeValue = stringResource(R.string.dark_theme_preference_value)
-                val lightThemeValue = stringResource(R.string.light_theme_preference_value)
-                val darkTheme = when (themePreference) {
-                    darkThemeValue -> true
-                    lightThemeValue -> false
-                    else -> isSystemInDarkTheme()
-                }
                 val currencyCode by settingsRepository.currency.collectAsStateWithLifecycle(initialValue = stringResource(R.string.usDollarCurrencyCodeValue))
-                WalletExpenseTheme(darkTheme = darkTheme) {
+                WalletExpenseTheme {
                     MainNavigation(
                         currencyCode = currencyCode,
                         showNotificationSnackbar = showNotificationSnackbar,

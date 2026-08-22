@@ -69,20 +69,9 @@
     <string name="noTransaction">No Transaction To Show</string>
     <string name="currency_code_header">Select Currency</string>
     <string name="currency">Set Your Currency</string>
-    <string name="theme">Theme</string>
     <string name="currencyKey">currencyCodeKey</string>
     <string name="defultValueCurrency">RUP</string>
 
-    <string name="dark_theme_preference_value">2</string>
-    <string name="light_theme_preference_value">1</string>
-    <string name="system_theme_preference_value">-1</string>
-
-    <string name="dark_theme_description">Dark mode</string>
-    <string name="light_theme_description">Light mode</string>
-    <string name="system_theme_description">System default</string>
-
-
-    <string name="themeKey">theme</string>
     <string name="notifications">Notifications</string>
     <string name="notificationKey">notificationKey</string>
     <string name="notificationTitle">Notification For New Day</string>

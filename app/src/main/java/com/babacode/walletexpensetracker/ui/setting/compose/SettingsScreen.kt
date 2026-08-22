@@ -16,10 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -50,7 +46,6 @@ fun SettingsRoute(
     ) { innerPadding ->
         SettingsScreen(
             uiState = uiState,
-            onThemeSelected = viewModel::onThemeSelected,
             onCurrencySelected = viewModel::onCurrencySelected,
             onNotificationToggle = viewModel::onNotificationToggle,
             onPrivacyPolicyClick = onPrivacyPolicyClick,
@@ -64,7 +59,6 @@ fun SettingsRoute(
 @Composable
 fun SettingsScreen(
     uiState: SettingsUiState,
-    onThemeSelected: (String) -> Unit,
     onCurrencySelected: (String) -> Unit,
     onNotificationToggle: (Boolean) -> Unit,
     onPrivacyPolicyClick: () -> Unit,
@@ -72,18 +66,8 @@ fun SettingsScreen(
     onReportBugClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val themeEntries = stringArrayResource(R.array.themes_entries)
-    val themeValues = stringArrayResource(R.array.themes_values)
     val currencyEntries = stringArrayResource(R.array.currency_entries)
     val currencyValues = stringArrayResource(R.array.currency_values)
-
-    var showThemeDialog by rememberSaveable { mutableStateOf(false) }
-    var showCurrencyDialog by rememberSaveable { mutableStateOf(false) }
-
-    val currencySummary = remember(uiState.currencyValue, currencyEntries, currencyValues) {
-        val index = currencyValues.indexOf(uiState.currencyValue)
-        if (index >= 0) currencyEntries[index] else uiState.currencyValue
-    }
 
     val spacing = WalletTheme.spacing
 
@@ -95,21 +79,13 @@ fun SettingsScreen(
             item { SectionHeader(stringResource(R.string.general)) }
             item {
                 SettingsCard {
-                    SettingsListItem(
-                        icon = painterResource(R.drawable.theme_vector),
-                        title = stringResource(R.string.theme),
-                        summary = uiState.themeDescription,
-                        onClick = { showThemeDialog = true }
-                    )
-                }
-            }
-            item {
-                SettingsCard {
-                    SettingsListItem(
+                    SettingsDropdownCard(
                         icon = painterResource(R.drawable.currency_code_vector),
                         title = stringResource(R.string.currency),
-                        summary = currencySummary,
-                        onClick = { showCurrencyDialog = true }
+                        options = currencyEntries.toList(),
+                        optionValues = currencyValues.toList(),
+                        selectedValue = uiState.currencyValue,
+                        onOptionSelected = onCurrencySelected
                     )
                 }
             }
@@ -117,11 +93,23 @@ fun SettingsScreen(
             item { SectionHeader(stringResource(R.string.notifications)) }
             item {
                 SettingsCard {
-                    SettingsSwitchRow(
+                    SettingsCheckboxRow(
                         icon = painterResource(R.drawable.notifications_vector),
                         title = stringResource(R.string.notificationTitle),
                         checked = uiState.notificationsEnabled,
                         onCheckedChange = onNotificationToggle
+                    )
+                }
+            }
+
+            item { SectionHeader(stringResource(R.string.sync)) }
+            item {
+                SettingsCard {
+                    SettingsInfoRow(
+                        icon = painterResource(R.drawable.cloud_sync_vector),
+                        title = stringResource(R.string.claude_sync_title),
+                        subtitle = stringResource(R.string.claude_sync_subtitle),
+                        badge = stringResource(R.string.soon_badge)
                     )
                 }
             }
@@ -155,28 +143,6 @@ fun SettingsScreen(
             }
         }
     }
-
-    if (showThemeDialog) {
-        RadioListDialog(
-            title = stringResource(R.string.theme),
-            options = themeEntries.toList(),
-            optionValues = themeValues.toList(),
-            selectedValue = uiState.themeValue,
-            onOptionSelected = onThemeSelected,
-            onDismissRequest = { showThemeDialog = false }
-        )
-    }
-
-    if (showCurrencyDialog) {
-        RadioListDialog(
-            title = stringResource(R.string.currency),
-            options = currencyEntries.toList(),
-            optionValues = currencyValues.toList(),
-            selectedValue = uiState.currencyValue,
-            onOptionSelected = onCurrencySelected,
-            onDismissRequest = { showCurrencyDialog = false }
-        )
-    }
 }
 
 @Composable
@@ -197,12 +163,9 @@ private fun SettingsScreenPreview() {
     WalletExpenseTheme {
         SettingsScreen(
             uiState = SettingsUiState(
-                themeValue = "-1",
-                themeDescription = "System default",
                 currencyValue = "$",
                 notificationsEnabled = true
             ),
-            onThemeSelected = {},
             onCurrencySelected = {},
             onNotificationToggle = {},
             onPrivacyPolicyClick = {},

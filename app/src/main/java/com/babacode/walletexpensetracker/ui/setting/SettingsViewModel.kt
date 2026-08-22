@@ -14,26 +14,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-    private val themeProvider: ThemeProvider
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     val uiState: StateFlow<SettingsUiState> = combine(
-        settingsRepository.theme,
         settingsRepository.currency,
         settingsRepository.notificationsEnabled
-    ) { theme, currency, notifications ->
+    ) { currency, notifications ->
         SettingsUiState(
-            themeValue = theme,
-            themeDescription = themeProvider.getThemeDescriptionFromPreference(theme),
             currencyValue = currency,
             notificationsEnabled = notifications
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), SettingsUiState.Default)
-
-    fun onThemeSelected(value: String) {
-        viewModelScope.launch { settingsRepository.setTheme(value) }
-    }
 
     fun onCurrencySelected(value: String) {
         viewModelScope.launch { settingsRepository.setCurrency(value) }

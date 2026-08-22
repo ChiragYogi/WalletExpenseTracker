@@ -20,24 +20,17 @@ class SettingsRepository @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
 
-    private val themeKey = stringPreferencesKey(context.getString(R.string.themeKey))
     private val currencyKey = stringPreferencesKey(context.getString(R.string.currencyKey))
     private val notificationKey = booleanPreferencesKey(context.getString(R.string.notificationKey))
 
-    private val defaultTheme = context.getString(R.string.system_theme_preference_value)
     private val defaultCurrency = context.getString(R.string.usDollarCurrencyCodeValue)
 
     private val safeData: Flow<Preferences> = dataStore.data.catch { exception ->
         if (exception is IOException) emit(emptyPreferences()) else throw exception
     }
 
-    val theme: Flow<String> = safeData.map { it[themeKey] ?: defaultTheme }
     val currency: Flow<String> = safeData.map { it[currencyKey] ?: defaultCurrency }
     val notificationsEnabled: Flow<Boolean> = safeData.map { it[notificationKey] ?: true }
-
-    suspend fun setTheme(value: String) {
-        dataStore.edit { it[themeKey] = value }
-    }
 
     suspend fun setCurrency(value: String) {
         dataStore.edit { it[currencyKey] = value }

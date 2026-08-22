@@ -17,18 +17,4 @@
         <item>@string/japaneseYenCurrencyCodeValue</item>
     </string-array>
 
-
-    <string-array name="themes_entries">
-        <item>Light</item>
-        <item>Dark</item>
-        <item>System default</item>
-    </string-array>
-
-    <string-array name="themes_values">
-        <item>@string/light_theme_preference_value</item>
-        <item>@string/dark_theme_preference_value</item>
-        <item>@string/system_theme_preference_value</item>
-    </string-array>
-
-
 </resources>

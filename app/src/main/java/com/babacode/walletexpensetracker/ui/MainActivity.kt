@@ -12,12 +12,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -43,41 +36,33 @@ import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.ui.addedit.TransactionAddEditViewModel
 import com.babacode.walletexpensetracker.ui.addedit.compose.AddTransactionRoute
 import com.babacode.walletexpensetracker.ui.calender.CalenderViewViewModel
-import com.babacode.walletexpensetracker.ui.budgets.BudgetsViewModel
-import com.babacode.walletexpensetracker.ui.budgets.compose.BudgetsRoute
 import com.babacode.walletexpensetracker.ui.calender.compose.CalenderRoute
-import com.babacode.walletexpensetracker.ui.compose.AppScaffold
-import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
-import com.babacode.walletexpensetracker.ui.detail.TransactionTypeRoute
+import com.babacode.walletexpensetracker.ui.compose.MainTabsScaffold
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
 import com.babacode.walletexpensetracker.ui.home.compose.DeleteTransactionDialog
-import com.babacode.walletexpensetracker.ui.home.compose.HomeRoute
 import com.babacode.walletexpensetracker.ui.insights.InsightsDetailViewModel
-import com.babacode.walletexpensetracker.ui.insights.InsightsViewModel
 import com.babacode.walletexpensetracker.ui.insights.compose.InsightsDetailRoute
-import com.babacode.walletexpensetracker.ui.insights.compose.InsightsRoute
 import com.babacode.walletexpensetracker.ui.navigation.AddTransaction
-import com.babacode.walletexpensetracker.ui.navigation.Budgets
 import com.babacode.walletexpensetracker.ui.navigation.CalenderView
 import com.babacode.walletexpensetracker.ui.navigation.DeleteTransactionRoute
-import com.babacode.walletexpensetracker.ui.navigation.Home
+import com.babacode.walletexpensetracker.ui.navigation.MainTabs
 import com.babacode.walletexpensetracker.ui.navigation.AppSettings
-import com.babacode.walletexpensetracker.ui.navigation.Insights
-import com.babacode.walletexpensetracker.ui.navigation.InsightKind
 import com.babacode.walletexpensetracker.ui.navigation.InsightsDetail
 import com.babacode.walletexpensetracker.ui.navigation.Recurring
+import com.babacode.walletexpensetracker.ui.navigation.TabActions
+import com.babacode.walletexpensetracker.ui.navigation.navBackTransitionSpec
+import com.babacode.walletexpensetracker.ui.navigation.navForwardTransitionSpec
+import com.babacode.walletexpensetracker.ui.navigation.navPredictiveBackTransitionSpec
 import com.babacode.walletexpensetracker.ui.recurring.RecurringViewModel
 import com.babacode.walletexpensetracker.ui.recurring.compose.RecurringRoute
 import com.babacode.walletexpensetracker.ui.navigation.Search
 import com.babacode.walletexpensetracker.ui.search.SearchViewModel
 import com.babacode.walletexpensetracker.ui.search.compose.SearchRoute
-import com.babacode.walletexpensetracker.ui.navigation.TransactionTypeDetail
 import com.babacode.walletexpensetracker.repository.SettingsRepository
 import com.babacode.walletexpensetracker.ui.setting.SettingsViewModel
 import com.babacode.walletexpensetracker.ui.setting.compose.SettingsRoute
 import com.babacode.walletexpensetracker.ui.setting.notification.AlarmUtils
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
-import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.utiles.Extra.privacy_policy_url
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
@@ -211,7 +196,7 @@ private fun MainNavigation(
     onPrivacyPolicyClick: () -> Unit
 ) {
     val context = LocalContext.current
-    val backStack = rememberNavBackStack(Home)
+    val backStack = rememberNavBackStack(MainTabs)
     val dialogSceneStrategy = remember { DialogSceneStrategy<NavKey>() }
 
     var resultEvent by remember { mutableStateOf<Int?>(null) }
@@ -226,29 +211,18 @@ private fun MainNavigation(
         backStack.add(DeleteTransactionRoute(transaction))
     }
 
-    val currentRoute = backStack.lastOrNull()
-    val showBottomNav = currentRoute is Home ||
-        currentRoute is TransactionTypeDetail ||
-        currentRoute is Insights ||
-        currentRoute is Budgets
-    val onBottomNavigate: (NavKey) -> Unit = { route ->
-        if (backStack.lastOrNull() != route) {
-            backStack.clear()
-            backStack.add(route)
-        }
-    }
+    val tabActions = TabActions(
+        onAddTransactionClick = { backStack.add(AddTransaction(null, addTransactionTitle)) },
+        onEditTransaction = onNavigateToEdit,
+        onDeleteTransaction = onNavigateToDelete,
+        onOpenCalendar = { backStack.add(CalenderView) },
+        onOpenSettings = { backStack.add(AppSettings) },
+        onOpenSearch = { backStack.add(Search) },
+        onOpenRecurring = { backStack.add(Recurring) },
+        onOpenInsightsDetail = { detail -> backStack.add(detail) }
+    )
 
-    AppScaffold(
-        showBottomNav = showBottomNav,
-        currentRoute = currentRoute,
-        onNavigate = onBottomNavigate,
-
-        onAddClick = { backStack.add(AddTransaction(null, addTransactionTitle)) }
-    ) { innerPadding ->
     NavDisplay(
-        modifier = Modifier
-            .padding(innerPadding)
-            .consumeWindowInsets(innerPadding),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         sceneStrategies = listOf(dialogSceneStrategy),
@@ -257,26 +231,15 @@ private fun MainNavigation(
             rememberViewModelStoreNavEntryDecorator()
         ),
         entryProvider = entryProvider {
-            entry<Home> {
-                val viewModel = hiltViewModel<HomeViewModel>()
-                HomeRoute(
+            entry<MainTabs> {
+                MainTabsScaffold(
                     currencyCode = currencyCode,
-                    viewModel = viewModel,
                     resultEvent = resultEvent,
                     onResultEventConsumed = { resultEvent = null },
-                    onIncomeClick = { backStack.add(TransactionTypeDetail(TransactionType.INCOME)) },
-                    onExpenseClick = { backStack.add(TransactionTypeDetail(TransactionType.EXPENSE)) },
-                    onTransactionClick = onNavigateToEdit,
-                    onLongPress = onNavigateToDelete,
-                    onOpenCalenderClick = { backStack.add(CalenderView) },
-                    onOpenSettingsClick = { backStack.add(AppSettings) },
-                    onOpenSearchClick = { backStack.add(Search) },
-                    onOpenRecurringClick = { backStack.add(Recurring) },
-                    onManageBudgetsClick = { onBottomNavigate(Budgets) },
-                    onSeeAllTransactionsClick = { backStack.add(Search) },
                     showNotificationPermissionSnackbar = showNotificationSnackbar,
                     onNotificationPermissionSnackbarShown = onNotificationSnackbarShown,
-                    onOpenNotificationSettings = onOpenNotificationSettings
+                    onOpenNotificationSettings = onOpenNotificationSettings,
+                    actions = tabActions
                 )
             }
             entry<AddTransaction> { key ->
@@ -292,21 +255,6 @@ private fun MainNavigation(
                         resultEvent = result
                         backStack.removeLastOrNull()
                     }
-                )
-            }
-            entry<TransactionTypeDetail> { key ->
-                val viewModel = hiltViewModel<DetailViewViewModel>()
-                LaunchedEffect(key.transactionType) {
-                    viewModel.setTransactionType(key.transactionType)
-                }
-                TransactionTypeRoute(
-                    transactionType = key.transactionType,
-                    currencyCode = currencyCode,
-                    viewModel = viewModel,
-                    resultEvent = resultEvent,
-                    onResultEventConsumed = { resultEvent = null },
-                    onTransactionClick = onNavigateToEdit,
-                    onLongPress = onNavigateToDelete
                 )
             }
             entry<AppSettings> {
@@ -357,18 +305,6 @@ private fun MainNavigation(
                     }
                 )
             }
-            entry<Insights> {
-                val viewModel = hiltViewModel<InsightsViewModel>()
-                InsightsRoute(
-                    currencyCode = currencyCode,
-                    viewModel = viewModel,
-                    onCategoryClick = { tag -> backStack.add(InsightsDetail(kind = InsightKind.TAG, value = tag)) },
-                    onModeClick = { mode -> backStack.add(InsightsDetail(kind = InsightKind.MODE, value = mode)) },
-                    onMonthClick = { offset -> backStack.add(InsightsDetail(kind = InsightKind.MONTH, offset = offset)) },
-                    onSeeAllTopSpendsClick = { backStack.add(InsightsDetail(kind = InsightKind.TOP)) },
-                    onTransactionClick = onNavigateToEdit
-                )
-            }
             entry<InsightsDetail> { key ->
                 val viewModel = hiltViewModel<InsightsDetailViewModel>()
                 LaunchedEffect(key) {
@@ -381,13 +317,6 @@ private fun MainNavigation(
                     onTransactionClick = onNavigateToEdit,
                     onLongPress = onNavigateToDelete,
                     onSearchAllClick = { backStack.add(Search) }
-                )
-            }
-            entry<Budgets> {
-                val viewModel = hiltViewModel<BudgetsViewModel>()
-                BudgetsRoute(
-                    currencyCode = currencyCode,
-                    viewModel = viewModel
                 )
             }
             entry<Recurring> {
@@ -409,35 +338,10 @@ private fun MainNavigation(
                 )
             }
         },
-        transitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = { it },
-                animationSpec = tween(300)
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = { -it },
-                animationSpec = tween(300)
-            )
-        },
-        popTransitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = { -it },
-                animationSpec = tween(300)
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(300)
-            )
-        },
-        predictivePopTransitionSpec = {
-            slideInHorizontally(
-                initialOffsetX = { -it },
-                animationSpec = tween(300)
-            ) togetherWith slideOutHorizontally(
-                targetOffsetX = { it },
-                animationSpec = tween(300)
-            )
-        }
+        transitionSpec = navForwardTransitionSpec<NavKey>(),
+        popTransitionSpec = navBackTransitionSpec<NavKey>(),
+        predictivePopTransitionSpec = navPredictiveBackTransitionSpec<NavKey>()
     )
-    }
 }
 
 const val ADD_TRANSACTION_RESULT_OK = Activity.RESULT_FIRST_USER

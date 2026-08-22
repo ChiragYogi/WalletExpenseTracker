@@ -41,11 +41,11 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.navigation3.runtime.NavKey
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.ui.navigation.Budgets
 import com.babacode.walletexpensetracker.ui.navigation.Home
 import com.babacode.walletexpensetracker.ui.navigation.Insights
+import com.babacode.walletexpensetracker.ui.navigation.TabRoute
 import com.babacode.walletexpensetracker.ui.navigation.TransactionTypeDetail
 import com.babacode.walletexpensetracker.ui.theme.RadiusTwoExtraLarge
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
@@ -107,8 +107,8 @@ private fun navItemColors() = NavigationBarItemDefaults.colors(
 
 @Composable
 fun BottomNav(
-    currentRoute: NavKey?,
-    onNavigate: (NavKey) -> Unit,
+    currentRoute: TabRoute?,
+    onNavigate: (TabRoute) -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {

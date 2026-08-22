@@ -1,26 +1,30 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.ui.addedit.compose.TransactionAddEditUiState
 import com.babacode.walletexpensetracker.utiles.Extra.AMOUNT_CHECK_FOR_ADD
 import com.babacode.walletexpensetracker.utiles.Extra.NOTE_LENGTH_VALIDATE
+import com.babacode.walletexpensetracker.utiles.Extra.convertLongDateToStringDate
 import com.babacode.walletexpensetracker.utiles.Extra.convertStringDateToLong
+import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
 import com.babacode.walletexpensetracker.utiles.Extra.parseDouble
 import com.babacode.walletexpensetracker.utiles.Extra.paymentMode
 import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
 import com.babacode.walletexpensetracker.utiles.Extra.transactionType
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,109 +32,126 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionAddEditViewModel @Inject constructor(
     private val repository: TransactionRepository,
-    @ApplicationContext private val context: Context,
 ) : ViewModel() {
 
+    private var hasInitialized = false
+
+    private val _uiState = MutableStateFlow(TransactionAddEditUiState.Default)
+    val uiState: StateFlow<TransactionAddEditUiState> = _uiState.asStateFlow()
 
     private val addEditTransactionChannel = Channel<AddEditTransactionEvent>()
     val addEditTransactionEvent = addEditTransactionChannel.receiveAsFlow()
 
-
-
-    fun validateAndInsertOrUpdate(
-        transactionType: String,
-        transactionAmount: String,
-        transactionNote: String,
-        transactionDate: String,
-        transactionTag: String,
-        transactionPaymentType: String,
-        transactionID: Int
-    ) {
-
-
-        if (transactionType.isBlank()) {
-            showSelectTransactionTypeMessage(context.getString(R.string.error_select_transaction_type))
-            return
-        }
-
-        if (transactionAmount.isBlank()) {
-            showInvalidAmountMessage(context.getString(R.string.error_enter_amount))
-            return
-        }
-        if (transactionAmount.length > AMOUNT_CHECK_FOR_ADD) {
-            showInvalidAmountMessage(context.getString(R.string.error_amount_too_large))
-            return
-        }
-        if (transactionAmount.contains("#") || transactionAmount.contains("/") || transactionAmount.contains(
-                "+"
+    fun initialize(editTransaction: Transaction?) {
+        if (hasInitialized) return
+        hasInitialized = true
+        _uiState.update {
+            it.copy(
+                transactionId = editTransaction?.id ?: 0,
+                type = editTransaction?.transactionType?.toString().orEmpty(),
+                amount = editTransaction?.amount?.toInt()?.toString().orEmpty(),
+                note = editTransaction?.note.orEmpty(),
+                date = editTransaction?.let { transaction -> convertLongDateToStringDate(transaction.date) }
+                    ?: convertLongDateToStringDate(currentDayDate()),
+                tag = editTransaction?.tag?.toString().orEmpty(),
+                paymentMode = editTransaction?.paymentType?.toString().orEmpty(),
             )
-            || transactionAmount.contains("-") || transactionAmount.contains("*") || transactionAmount.contains(
-                "."
-            ) || transactionAmount == "0"
+        }
+    }
+
+    fun onTypeChanged(value: String) = _uiState.update { it.copy(type = value) }
+
+    fun onAmountChanged(value: String) = _uiState.update { it.copy(amount = value) }
+
+    fun onNoteChanged(value: String) {
+        if (value.length <= NOTE_LENGTH_VALIDATE) _uiState.update { it.copy(note = value) }
+    }
+
+    fun onDateChanged(value: String) = _uiState.update { it.copy(date = value) }
+
+    fun onTagChanged(value: String) = _uiState.update { it.copy(tag = value) }
+
+    fun onPaymentModeChanged(value: String) = _uiState.update { it.copy(paymentMode = value) }
+
+    fun onSaveClicked() {
+        val state = _uiState.value
+
+        if (state.type.isBlank()) {
+            showSelectTransactionTypeError()
+            return
+        }
+
+        if (state.amount.isBlank()) {
+            showInvalidAmountError(TransactionValidationError.ENTER_AMOUNT)
+            return
+        }
+        if (state.amount.length > AMOUNT_CHECK_FOR_ADD) {
+            showInvalidAmountError(TransactionValidationError.AMOUNT_TOO_LARGE)
+            return
+        }
+        if (state.amount.contains("#") || state.amount.contains("/") || state.amount.contains("+")
+            || state.amount.contains("-") || state.amount.contains("*") || state.amount.contains(".")
+            || state.amount == "0"
         ) {
-            showInvalidAmountMessage(context.getString(R.string.error_invalid_amount))
+            showInvalidAmountError(TransactionValidationError.INVALID_AMOUNT)
             return
         }
 
-        if (transactionNote.isBlank()) {
-            showInvalidNoteMessage(context.getString(R.string.error_enter_note))
+        if (state.note.isBlank()) {
+            showInvalidNoteError(TransactionValidationError.ENTER_NOTE)
             return
         }
 
-        if (transactionNote.length >= NOTE_LENGTH_VALIDATE) {
-            showInvalidNoteMessage(context.getString(R.string.error_note_too_long))
+        if (state.note.length >= NOTE_LENGTH_VALIDATE) {
+            showInvalidNoteError(TransactionValidationError.NOTE_TOO_LONG)
             return
         }
 
-        if (transactionTag.isBlank()) {
-            showSelectTransactionTagMessage(context.getString(R.string.error_select_tag))
+        if (state.tag.isBlank()) {
+            showSelectTransactionTagError()
             return
         }
 
-        if (transactionPaymentType.isBlank()) {
-            showSelectTransactionPaymentModeMessage(context.getString(R.string.error_select_payment_mode))
+        if (state.paymentMode.isBlank()) {
+            showSelectTransactionPaymentModeError()
             return
         }
-
 
         val addDate = try {
-            convertStringDateToLong(transactionDate)
+            convertStringDateToLong(state.date)
         } catch (e: IllegalArgumentException) {
-            showInvalidDateMessage(context.getString(R.string.error_invalid_date))
+            showInvalidDateError()
             return
         }
 
-        val addAmount = parseDouble(transactionAmount)
-        val addType = transactionType(transactionType)
-        val addTag = transactionTag(transactionTag)
-        val addPaymentMode = paymentMode(transactionPaymentType)
+        val addAmount = parseDouble(state.amount)
+        val addType = transactionType(state.type)
+        val addTag = transactionTag(state.tag)
+        val addPaymentMode = paymentMode(state.paymentMode)
 
-
-        if (transactionID == 0) {
-
+        if (state.transactionId == 0) {
             val addNewTransaction = Transaction(
-                transactionNote,
+                state.note,
                 addDate,
                 addType,
                 addAmount,
                 addTag,
                 addPaymentMode,
-                transactionID
+                state.transactionId
             )
             createTransaction(addNewTransaction)
         } else {
             val updateCurrentTransaction = Transaction(
-                transactionNote,
+                state.note,
                 addDate,
                 addType,
                 addAmount,
                 addTag,
                 addPaymentMode,
-                transactionID
+                state.transactionId
             )
             updateTransaction(updateCurrentTransaction)
         }
-
     }
 
 
@@ -157,60 +178,53 @@ class TransactionAddEditViewModel @Inject constructor(
     private suspend fun showSaveErrorMessage(exception: Throwable) {
         FirebaseCrashlytics.getInstance().recordException(exception)
         addEditTransactionChannel.send(
-            AddEditTransactionEvent.ShowSaveError(context.getString(R.string.database_error))
+            AddEditTransactionEvent.ShowSaveError(TransactionValidationError.SAVE_ERROR)
         )
     }
 
-    private fun showInvalidNoteMessage(noteMsg: String) = viewModelScope.launch {
-        addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidNote(noteMsg))
+    private fun showInvalidNoteError(error: TransactionValidationError) = viewModelScope.launch {
+        addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidNote(error))
     }
 
-    private fun showSelectTransactionTypeMessage(typeMsg: String) = viewModelScope.launch {
-        addEditTransactionChannel.send(AddEditTransactionEvent.ShowSelectTransactionType(typeMsg))
+    private fun showSelectTransactionTypeError() = viewModelScope.launch {
+        addEditTransactionChannel.send(
+            AddEditTransactionEvent.ShowSelectTransactionType(TransactionValidationError.SELECT_TRANSACTION_TYPE)
+        )
     }
 
-    private fun showSelectTransactionTagMessage(tagMsg: String) = viewModelScope.launch {
-        addEditTransactionChannel.send(AddEditTransactionEvent.ShowSelectTransactionTag(tagMsg))
+    private fun showSelectTransactionTagError() = viewModelScope.launch {
+        addEditTransactionChannel.send(
+            AddEditTransactionEvent.ShowSelectTransactionTag(TransactionValidationError.SELECT_TAG)
+        )
     }
 
-    private fun showSelectTransactionPaymentModeMessage(paymentMsg: String) =
-        viewModelScope.launch {
-            addEditTransactionChannel.send(
-                AddEditTransactionEvent.ShowSelectTransactionPaymentMode(
-                    paymentMsg
-                )
-            )
-        }
-
-    private fun showInvalidAmountMessage(amountMsg: String) = viewModelScope.launch {
-        addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidAmount(amountMsg))
+    private fun showSelectTransactionPaymentModeError() = viewModelScope.launch {
+        addEditTransactionChannel.send(
+            AddEditTransactionEvent.ShowSelectTransactionPaymentMode(TransactionValidationError.SELECT_PAYMENT_MODE)
+        )
     }
 
-    private fun showInvalidDateMessage(dateMsg: String) = viewModelScope.launch {
-        addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidDate(dateMsg))
+    private fun showInvalidAmountError(error: TransactionValidationError) = viewModelScope.launch {
+        addEditTransactionChannel.send(AddEditTransactionEvent.ShowInvalidAmount(error))
+    }
+
+    private fun showInvalidDateError() = viewModelScope.launch {
+        addEditTransactionChannel.send(
+            AddEditTransactionEvent.ShowInvalidDate(TransactionValidationError.INVALID_DATE)
+        )
     }
 
 
     sealed class AddEditTransactionEvent {
-        data class ShowInvalidNote(val msg: String) : AddEditTransactionEvent()
-        data class ShowInvalidAmount(val msg: String) : AddEditTransactionEvent()
-        data class ShowInvalidDate(val msg: String) : AddEditTransactionEvent()
-        data class ShowSaveError(val msg: String) : AddEditTransactionEvent()
-        data class ShowSelectTransactionType(val msg: String) : AddEditTransactionEvent()
-        data class ShowSelectTransactionTag(val msg: String) : AddEditTransactionEvent()
-        data class ShowSelectTransactionPaymentMode(val msg: String) : AddEditTransactionEvent()
+        data class ShowInvalidNote(val error: TransactionValidationError) : AddEditTransactionEvent()
+        data class ShowInvalidAmount(val error: TransactionValidationError) : AddEditTransactionEvent()
+        data class ShowInvalidDate(val error: TransactionValidationError) : AddEditTransactionEvent()
+        data class ShowSaveError(val error: TransactionValidationError) : AddEditTransactionEvent()
+        data class ShowSelectTransactionType(val error: TransactionValidationError) : AddEditTransactionEvent()
+        data class ShowSelectTransactionTag(val error: TransactionValidationError) : AddEditTransactionEvent()
+        data class ShowSelectTransactionPaymentMode(val error: TransactionValidationError) : AddEditTransactionEvent()
         data class NavigateBackWithResult(val result: Int) : AddEditTransactionEvent()
     }
 
 
 }
-
-
-
-
-
-
-
-
-
-

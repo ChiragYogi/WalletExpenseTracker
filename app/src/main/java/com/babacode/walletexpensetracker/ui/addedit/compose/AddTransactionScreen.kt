@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.addedit.compose
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,16 +21,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.PaymentType
 import com.babacode.walletexpensetracker.data.model.Transaction
@@ -37,10 +37,22 @@ import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.addedit.TransactionAddEditViewModel
 import com.babacode.walletexpensetracker.ui.addedit.TransactionAddEditViewModel.AddEditTransactionEvent
+import com.babacode.walletexpensetracker.ui.addedit.TransactionValidationError
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
-import com.babacode.walletexpensetracker.utiles.Extra.convertLongDateToStringDate
-import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
+
+private fun Context.messageFor(error: TransactionValidationError): String = when (error) {
+    TransactionValidationError.SELECT_TRANSACTION_TYPE -> getString(R.string.error_select_transaction_type)
+    TransactionValidationError.ENTER_AMOUNT -> getString(R.string.error_enter_amount)
+    TransactionValidationError.AMOUNT_TOO_LARGE -> getString(R.string.error_amount_too_large)
+    TransactionValidationError.INVALID_AMOUNT -> getString(R.string.error_invalid_amount)
+    TransactionValidationError.ENTER_NOTE -> getString(R.string.error_enter_note)
+    TransactionValidationError.NOTE_TOO_LONG -> getString(R.string.error_note_too_long)
+    TransactionValidationError.SELECT_TAG -> getString(R.string.error_select_tag)
+    TransactionValidationError.SELECT_PAYMENT_MODE -> getString(R.string.error_select_payment_mode)
+    TransactionValidationError.INVALID_DATE -> getString(R.string.error_invalid_date)
+    TransactionValidationError.SAVE_ERROR -> getString(R.string.database_error)
+}
 
 @Composable
 fun AddTransactionRoute(
@@ -53,47 +65,32 @@ fun AddTransactionRoute(
     onNavigateBackWithResult: (Int) -> Unit
 ) {
     val dateFormatPattern = stringResource(R.string.date_formate)
-
-    var type by rememberSaveable { mutableStateOf(editTransaction?.transactionType?.toString().orEmpty()) }
-    var amount by rememberSaveable {
-        mutableStateOf(editTransaction?.amount?.toInt()?.toString().orEmpty())
-    }
-    var note by rememberSaveable { mutableStateOf(editTransaction?.note.orEmpty()) }
-    var date by rememberSaveable {
-        mutableStateOf(
-            editTransaction?.let { convertLongDateToStringDate(it.date) }
-                ?: convertLongDateToStringDate(currentDayDate())
-        )
-    }
-    var tag by rememberSaveable { mutableStateOf(editTransaction?.tag?.toString().orEmpty()) }
-    var paymentMode by rememberSaveable { mutableStateOf(editTransaction?.paymentType?.toString().orEmpty()) }
-
-    var amountError by rememberSaveable { mutableStateOf<String?>(null) }
-    var noteError by rememberSaveable { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
+        viewModel.initialize(editTransaction)
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.addEditTransactionEvent.collect { event ->
             when (event) {
-                is AddEditTransactionEvent.ShowInvalidAmount -> {
-                    amountError = event.msg
-                    snackbarHostState.showSnackbar(event.msg)
-                }
-                is AddEditTransactionEvent.ShowInvalidNote -> {
-                    noteError = event.msg
-                    snackbarHostState.showSnackbar(event.msg)
-                }
+                is AddEditTransactionEvent.ShowInvalidAmount ->
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
+                is AddEditTransactionEvent.ShowInvalidNote ->
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
                 is AddEditTransactionEvent.ShowInvalidDate ->
-                    snackbarHostState.showSnackbar(event.msg)
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
                 is AddEditTransactionEvent.ShowSaveError ->
-                    snackbarHostState.showSnackbar(event.msg)
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
                 is AddEditTransactionEvent.ShowSelectTransactionType ->
-                    snackbarHostState.showSnackbar(event.msg)
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
                 is AddEditTransactionEvent.ShowSelectTransactionTag ->
-                    snackbarHostState.showSnackbar(event.msg)
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
                 is AddEditTransactionEvent.ShowSelectTransactionPaymentMode ->
-                    snackbarHostState.showSnackbar(event.msg)
+                    snackbarHostState.showSnackbar(context.messageFor(event.error))
                 is AddEditTransactionEvent.NavigateBackWithResult ->
                     onNavigateBackWithResult(event.result)
             }
@@ -109,24 +106,14 @@ fun AddTransactionRoute(
             modifier = Modifier.padding(innerPadding),
             currencyCode = currencyCode,
             dateFormatPattern = dateFormatPattern,
-            type = type,
-            onTypeSelected = { type = it },
-            amount = amount,
-            onAmountChange = { amount = it },
-            amountError = amountError,
-            note = note,
-            onNoteChange = { if (it.length <= 40) note = it },
-            noteError = noteError,
-            date = date,
-            onDateSelected = { date = it },
-            tag = tag,
-            onTagSelected = { tag = it },
-            paymentMode = paymentMode,
-            onPaymentModeSelected = { paymentMode = it },
-            onSaveClick = {
-                val editId = editTransaction?.id ?: 0
-                viewModel.validateAndInsertOrUpdate(type, amount, note, date, tag, paymentMode, editId)
-            }
+            uiState = uiState,
+            onTypeSelected = viewModel::onTypeChanged,
+            onAmountChange = viewModel::onAmountChanged,
+            onNoteChange = viewModel::onNoteChanged,
+            onDateSelected = viewModel::onDateChanged,
+            onTagSelected = viewModel::onTagChanged,
+            onPaymentModeSelected = viewModel::onPaymentModeChanged,
+            onSaveClick = viewModel::onSaveClicked
         )
     }
 }
@@ -135,19 +122,12 @@ fun AddTransactionRoute(
 fun AddTransactionScreen(
     currencyCode: String,
     dateFormatPattern: String,
-    type: String,
+    uiState: TransactionAddEditUiState,
     onTypeSelected: (String) -> Unit,
-    amount: String,
     onAmountChange: (String) -> Unit,
-    amountError: String?,
-    note: String,
     onNoteChange: (String) -> Unit,
-    noteError: String?,
-    date: String,
     onDateSelected: (String) -> Unit,
-    tag: String,
     onTagSelected: (String) -> Unit,
-    paymentMode: String,
     onPaymentModeSelected: (String) -> Unit,
     onSaveClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -160,18 +140,16 @@ fun AddTransactionScreen(
         DropdownField(
             label = stringResource(R.string.transaction_type),
             options = TransactionType.entries.map { it.toString() },
-            selected = type,
+            selected = uiState.type,
             onOptionSelected = onTypeSelected,
             modifier = Modifier.padding(16.dp)
         )
 
         TextField(
-            value = amount,
+            value = uiState.amount,
             onValueChange = onAmountChange,
             label = { Text(stringResource(R.string.amount)) },
             prefix = { Text(currencyCode) },
-            isError = amountError != null,
-            supportingText = amountError?.let { { Text(it) } },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = formFieldColors(),
             modifier = Modifier
@@ -180,11 +158,9 @@ fun AddTransactionScreen(
         )
 
         TextField(
-            value = note,
+            value = uiState.note,
             onValueChange = onNoteChange,
             label = { Text(stringResource(R.string.add_a_note_to_self)) },
-            isError = noteError != null,
-            supportingText = noteError?.let { { Text(it) } },
             singleLine = true,
             colors = formFieldColors(),
             modifier = Modifier
@@ -194,7 +170,7 @@ fun AddTransactionScreen(
 
         DateField(
             label = stringResource(R.string.date),
-            value = date,
+            value = uiState.date,
             dateFormatPattern = dateFormatPattern,
             onDateSelected = onDateSelected,
             modifier = Modifier.padding(16.dp)
@@ -203,7 +179,7 @@ fun AddTransactionScreen(
         DropdownField(
             label = stringResource(R.string.transaction_type_tag),
             options = TransactionTag.entries.map { it.toString() },
-            selected = tag,
+            selected = uiState.tag,
             onOptionSelected = onTagSelected,
             modifier = Modifier.padding(16.dp)
         )
@@ -211,7 +187,7 @@ fun AddTransactionScreen(
         DropdownField(
             label = stringResource(R.string.payment_mode),
             options = PaymentType.entries.map { it.toString() },
-            selected = paymentMode,
+            selected = uiState.paymentMode,
             onOptionSelected = onPaymentModeSelected,
             modifier = Modifier.padding(16.dp)
         )
@@ -242,19 +218,19 @@ private fun AddTransactionScreenPreview() {
         AddTransactionScreen(
             currencyCode = "$",
             dateFormatPattern = "dd MMM, yyyy",
-            type = "Expense",
+            uiState = TransactionAddEditUiState(
+                type = "Expense",
+                amount = "",
+                note = "",
+                date = "08 Aug, 2026",
+                tag = "",
+                paymentMode = ""
+            ),
             onTypeSelected = {},
-            amount = "",
             onAmountChange = {},
-            amountError = null,
-            note = "",
             onNoteChange = {},
-            noteError = null,
-            date = "08 Aug, 2026",
             onDateSelected = {},
-            tag = "",
             onTagSelected = {},
-            paymentMode = "",
             onPaymentModeSelected = {},
             onSaveClick = {}
         )

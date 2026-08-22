@@ -8,7 +8,6 @@ import com.babacode.walletexpensetracker.data.model.PaymentType
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
-import com.babacode.walletexpensetracker.ui.detail.compose.PeriodDetailScreen
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import org.junit.Rule
 import org.junit.Test

@@ -4,7 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
@@ -43,7 +43,7 @@ import com.babacode.walletexpensetracker.ui.addedit.compose.AddTransactionRoute
 import com.babacode.walletexpensetracker.ui.calender.CalenderViewViewModel
 import com.babacode.walletexpensetracker.ui.calender.compose.CalenderRoute
 import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
-import com.babacode.walletexpensetracker.ui.detail.compose.TransactionTypeRoute
+import com.babacode.walletexpensetracker.ui.detail.TransactionTypeRoute
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
 import com.babacode.walletexpensetracker.ui.home.compose.DeleteTransactionDialog
 import com.babacode.walletexpensetracker.ui.home.compose.HomeRoute
@@ -66,6 +66,7 @@ import androidx.navigationevent.compose.LocalNavigationEventDispatcherOwner
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -115,9 +116,7 @@ class MainActivity : ComponentActivity() {
                     lightThemeValue -> false
                     else -> isSystemInDarkTheme()
                 }
-                val currencyCode by settingsRepository.currency.collectAsStateWithLifecycle(
-                    initialValue = stringResource(R.string.usDollarCurrencyCodeValue)
-                )
+                val currencyCode by settingsRepository.currency.collectAsStateWithLifecycle(initialValue = stringResource(R.string.usDollarCurrencyCodeValue))
                 WalletExpenseTheme(darkTheme = darkTheme) {
                     MainNavigation(
                         currencyCode = currencyCode,
@@ -134,18 +133,21 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkForNotificationPermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_DENIED
+            ) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
+
     }
 
     private fun openNotificationSettings() {
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        intent.data = Uri.parse("package:$packageName")
+        intent.data = "package:$packageName".toUri()
         startActivity(intent)
     }
 
@@ -164,7 +166,7 @@ class MainActivity : ComponentActivity() {
     private fun sendSupportEmail(subject: String, email: String) {
         val selectIntent = Intent().apply {
             action = Intent.ACTION_SENDTO
-            data = Uri.parse("mailto:")
+            data = "mailto:".toUri()
         }
         val emailIntent = Intent(Intent.ACTION_SEND).apply {
             putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
@@ -183,7 +185,7 @@ class MainActivity : ComponentActivity() {
     private fun openPrivacyPolicy() {
         try {
             val intent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER)
-            intent.data = Uri.parse(privacy_policy_url)
+            intent.data = privacy_policy_url.toUri()
             startActivity(intent)
         } catch (e: Exception) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()

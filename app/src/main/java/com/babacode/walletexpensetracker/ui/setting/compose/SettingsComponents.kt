@@ -22,7 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.babacode.walletexpensetracker.R
+import com.babacode.walletexpensetracker.ui.theme.WalletTheme
+import java.util.Locale
 
 @Composable
 fun SettingsListItem(
@@ -78,12 +81,15 @@ fun SettingsSwitchRow(
 
 @Composable
 fun SectionHeader(title: String, modifier: Modifier = Modifier) {
-    // Indent matches SettingsListItem/SettingsSwitchRow's title start (16dp row padding + 24dp icon + 24dp spacer).
     Text(
-        text = title,
-        style = MaterialTheme.typography.labelLarge,
+        text = title.uppercase(Locale.getDefault()),
+        style = MaterialTheme.typography.labelSmall.copy(letterSpacing = 0.8.sp),
         color = MaterialTheme.colorScheme.primary,
-        modifier = modifier.padding(start = 64.dp, top = 16.dp, bottom = 4.dp)
+        modifier = modifier.padding(
+            start = WalletTheme.spacing.small,
+            top = WalletTheme.spacing.small,
+            bottom = WalletTheme.spacing.extraSmall
+        )
     )
 }
 

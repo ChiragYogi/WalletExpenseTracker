@@ -1,10 +1,10 @@
 package com.babacode.walletexpensetracker.ui.addedit
 
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.babacode.walletexpensetracker.ui.addedit.compose.AddTransactionScreen
+import com.babacode.walletexpensetracker.ui.addedit.compose.TransactionAddEditUiState
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import org.junit.Rule
 import org.junit.Test
@@ -24,19 +24,19 @@ class AddTransactionScreenTest {
                 AddTransactionScreen(
                     currencyCode = "$",
                     dateFormatPattern = "dd MMM, yyyy",
-                    type = type,
+                    uiState = TransactionAddEditUiState(
+                        type = type,
+                        amount = "",
+                        note = "",
+                        date = "08 Aug, 2026",
+                        tag = "",
+                        paymentMode = ""
+                    ),
                     onTypeSelected = onTypeSelected,
-                    amount = "",
                     onAmountChange = {},
-                    amountError = null,
-                    note = "",
                     onNoteChange = {},
-                    noteError = null,
-                    date = "08 Aug, 2026",
                     onDateSelected = {},
-                    tag = "",
                     onTagSelected = {},
-                    paymentMode = "",
                     onPaymentModeSelected = {},
                     onSaveClick = onSaveClick
                 )
@@ -45,11 +45,10 @@ class AddTransactionScreenTest {
     }
 
     @Test
-    fun typeDropdown_selectingOption_invokesCallback() {
+    fun typeToggle_selectingOption_invokesCallback() {
         var selectedType: String? = null
         setScreen(onTypeSelected = { selectedType = it })
 
-        composeTestRule.onNodeWithText("Transaction Type").performClick()
         composeTestRule.onNodeWithText("Expense").performClick()
 
         assert(selectedType == "Expense")
@@ -67,7 +66,7 @@ class AddTransactionScreenTest {
         var saved = false
         setScreen(onSaveClick = { saved = true })
 
-        composeTestRule.onNodeWithContentDescription("save transaction button").performClick()
+        composeTestRule.onNodeWithText("Save transaction").performClick()
 
         assert(saved)
     }

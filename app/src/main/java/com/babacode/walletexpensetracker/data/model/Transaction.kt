@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
-import java.text.DateFormat
 
 
 @Serializable
@@ -16,8 +15,8 @@ data class Transaction(
     val date: Long,
     val transactionType: TransactionType,
     val amount: Double,
-    val tag: TransactionTag,
-    val paymentType: PaymentType,
+    val tag: String,
+    val paymentType: PaymentMode,
     @PrimaryKey(autoGenerate = true) val id: Int = 0
 ): Parcelable
 

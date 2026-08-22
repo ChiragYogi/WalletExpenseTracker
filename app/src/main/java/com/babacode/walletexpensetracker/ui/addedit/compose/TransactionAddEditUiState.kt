@@ -8,6 +8,7 @@ data class TransactionAddEditUiState(
     val date: String = "",
     val tag: String = "",
     val paymentMode: String = "",
+    val repeatMonthly: Boolean = false,
 ) {
     companion object {
         val Default = TransactionAddEditUiState()

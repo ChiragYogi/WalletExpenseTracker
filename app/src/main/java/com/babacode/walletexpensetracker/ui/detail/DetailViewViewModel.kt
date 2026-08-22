@@ -38,6 +38,17 @@ class DetailViewViewModel @Inject constructor(
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
         }
 
+    private val allTransactions: StateFlow<List<Transaction>> = repo.getAllTransaction()
+        .recoverWithDefault(emptyList())
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    private val trendBuckets: Map<DetailPeriod, StateFlow<List<DetailBucket>>> =
+        DetailPeriod.entries.associateWith { period ->
+            combine(currentDates.getValue(period), transactionType, allTransactions) { date, type, all ->
+                buildTrendBuckets(period, date, all, type ?: TransactionType.EXPENSE)
+            }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+        }
+
     fun setTransactionType(type: TransactionType?) {
         transactionType.value = type
     }
@@ -45,6 +56,8 @@ class DetailViewViewModel @Inject constructor(
     fun currentDate(period: DetailPeriod): StateFlow<LocalDate> = currentDates.getValue(period)
 
     fun transactions(period: DetailPeriod): StateFlow<List<Transaction>> = transactions.getValue(period)
+
+    fun trendBuckets(period: DetailPeriod): StateFlow<List<DetailBucket>> = trendBuckets.getValue(period)
 
     fun onPrevious(period: DetailPeriod) {
         currentDates.getValue(period).update { period.step(it, -1) }

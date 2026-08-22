@@ -1,10 +1,17 @@
 package com.babacode.walletexpensetracker.ui.setting.compose
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -18,11 +25,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.setting.SettingsViewModel
+import com.babacode.walletexpensetracker.ui.theme.ShapeTwoExtraLarge
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
+import com.babacode.walletexpensetracker.ui.theme.WalletTheme
 
 @Composable
 fun SettingsRoute(
@@ -75,60 +85,73 @@ fun SettingsScreen(
         if (index >= 0) currencyEntries[index] else uiState.currencyValue
     }
 
-    Surface(modifier = modifier.fillMaxSize()) {
-        LazyColumn {
+    val spacing = WalletTheme.spacing
+
+    Surface(modifier = modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        LazyColumn(
+            contentPadding = PaddingValues(spacing.default),
+            verticalArrangement = Arrangement.spacedBy(spacing.medium)
+        ) {
             item { SectionHeader(stringResource(R.string.general)) }
             item {
-                SettingsListItem(
-                    icon = painterResource(R.drawable.theme_vector),
-                    title = stringResource(R.string.theme),
-                    summary = uiState.themeDescription,
-                    onClick = { showThemeDialog = true }
-                )
+                SettingsCard {
+                    SettingsListItem(
+                        icon = painterResource(R.drawable.theme_vector),
+                        title = stringResource(R.string.theme),
+                        summary = uiState.themeDescription,
+                        onClick = { showThemeDialog = true }
+                    )
+                }
             }
             item {
-                SettingsListItem(
-                    icon = painterResource(R.drawable.currency_code_vector),
-                    title = stringResource(R.string.currency),
-                    summary = currencySummary,
-                    onClick = { showCurrencyDialog = true }
-                )
+                SettingsCard {
+                    SettingsListItem(
+                        icon = painterResource(R.drawable.currency_code_vector),
+                        title = stringResource(R.string.currency),
+                        summary = currencySummary,
+                        onClick = { showCurrencyDialog = true }
+                    )
+                }
             }
-            item { HorizontalDivider() }
+
             item { SectionHeader(stringResource(R.string.notifications)) }
             item {
-                SettingsSwitchRow(
-                    icon = painterResource(R.drawable.notifications_vector),
-                    title = stringResource(R.string.notificationTitle),
-                    checked = uiState.notificationsEnabled,
-                    onCheckedChange = onNotificationToggle
-                )
+                SettingsCard {
+                    SettingsSwitchRow(
+                        icon = painterResource(R.drawable.notifications_vector),
+                        title = stringResource(R.string.notificationTitle),
+                        checked = uiState.notificationsEnabled,
+                        onCheckedChange = onNotificationToggle
+                    )
+                }
             }
-            item { HorizontalDivider() }
+
             item { SectionHeader(stringResource(R.string.links)) }
             item {
-                SettingsListItem(
-                    icon = painterResource(R.drawable.bill_vector),
-                    title = stringResource(R.string.showPrivacyPolicy),
-                    summary = null,
-                    onClick = onPrivacyPolicyClick
-                )
-            }
-            item {
-                SettingsListItem(
-                    icon = painterResource(R.drawable.ic_baseline_chat_bubble_24),
-                    title = stringResource(R.string.contactSupportTitle),
-                    summary = stringResource(R.string.contactSummery),
-                    onClick = onContactSupportClick
-                )
-            }
-            item {
-                SettingsListItem(
-                    icon = painterResource(R.drawable.ic_baseline_bug_report_24),
-                    title = stringResource(R.string.raiseBugTitle),
-                    summary = stringResource(R.string.raiseBugKeySummery),
-                    onClick = onReportBugClick
-                )
+                SettingsCard {
+                    Column {
+                        SettingsListItem(
+                            icon = painterResource(R.drawable.bill_vector),
+                            title = stringResource(R.string.showPrivacyPolicy),
+                            summary = null,
+                            onClick = onPrivacyPolicyClick
+                        )
+                        HorizontalDivider()
+                        SettingsListItem(
+                            icon = painterResource(R.drawable.ic_baseline_chat_bubble_24),
+                            title = stringResource(R.string.contactSupportTitle),
+                            summary = stringResource(R.string.contactSummery),
+                            onClick = onContactSupportClick
+                        )
+                        HorizontalDivider()
+                        SettingsListItem(
+                            icon = painterResource(R.drawable.ic_baseline_bug_report_24),
+                            title = stringResource(R.string.raiseBugTitle),
+                            summary = stringResource(R.string.raiseBugKeySummery),
+                            onClick = onReportBugClick
+                        )
+                    }
+                }
             }
         }
     }
@@ -154,6 +177,17 @@ fun SettingsScreen(
             onDismissRequest = { showCurrencyDialog = false }
         )
     }
+}
+
+@Composable
+private fun SettingsCard(content: @Composable () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = ShapeTwoExtraLarge,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        content = { content() }
+    )
 }
 
 @Preview(showBackground = true)

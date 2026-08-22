@@ -1,8 +1,7 @@
 package com.babacode.walletexpensetracker.repository
 
-import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.Transaction
-import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.fake.FakeTransactionDao
 import kotlinx.coroutines.flow.first
@@ -18,8 +17,8 @@ class TransactionRepositoryTest {
         date = date,
         transactionType = TransactionType.EXPENSE,
         amount = 5.0,
-        tag = TransactionTag.FOOD,
-        paymentType = PaymentType.CASH,
+        tag = "Food",
+        paymentType = PaymentMode.CASH,
         id = id
     )
 

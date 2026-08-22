@@ -17,6 +17,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
@@ -41,17 +43,34 @@ import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.ui.addedit.TransactionAddEditViewModel
 import com.babacode.walletexpensetracker.ui.addedit.compose.AddTransactionRoute
 import com.babacode.walletexpensetracker.ui.calender.CalenderViewViewModel
+import com.babacode.walletexpensetracker.ui.budgets.BudgetsViewModel
+import com.babacode.walletexpensetracker.ui.budgets.compose.BudgetsRoute
 import com.babacode.walletexpensetracker.ui.calender.compose.CalenderRoute
+import com.babacode.walletexpensetracker.ui.compose.AppScaffold
 import com.babacode.walletexpensetracker.ui.detail.DetailViewViewModel
 import com.babacode.walletexpensetracker.ui.detail.TransactionTypeRoute
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
 import com.babacode.walletexpensetracker.ui.home.compose.DeleteTransactionDialog
 import com.babacode.walletexpensetracker.ui.home.compose.HomeRoute
+import com.babacode.walletexpensetracker.ui.insights.InsightsDetailViewModel
+import com.babacode.walletexpensetracker.ui.insights.InsightsViewModel
+import com.babacode.walletexpensetracker.ui.insights.compose.InsightsDetailRoute
+import com.babacode.walletexpensetracker.ui.insights.compose.InsightsRoute
 import com.babacode.walletexpensetracker.ui.navigation.AddTransaction
+import com.babacode.walletexpensetracker.ui.navigation.Budgets
 import com.babacode.walletexpensetracker.ui.navigation.CalenderView
 import com.babacode.walletexpensetracker.ui.navigation.DeleteTransactionRoute
 import com.babacode.walletexpensetracker.ui.navigation.Home
 import com.babacode.walletexpensetracker.ui.navigation.AppSettings
+import com.babacode.walletexpensetracker.ui.navigation.Insights
+import com.babacode.walletexpensetracker.ui.navigation.InsightKind
+import com.babacode.walletexpensetracker.ui.navigation.InsightsDetail
+import com.babacode.walletexpensetracker.ui.navigation.Recurring
+import com.babacode.walletexpensetracker.ui.recurring.RecurringViewModel
+import com.babacode.walletexpensetracker.ui.recurring.compose.RecurringRoute
+import com.babacode.walletexpensetracker.ui.navigation.Search
+import com.babacode.walletexpensetracker.ui.search.SearchViewModel
+import com.babacode.walletexpensetracker.ui.search.compose.SearchRoute
 import com.babacode.walletexpensetracker.ui.navigation.TransactionTypeDetail
 import com.babacode.walletexpensetracker.repository.SettingsRepository
 import com.babacode.walletexpensetracker.ui.setting.SettingsViewModel
@@ -219,7 +238,26 @@ private fun MainNavigation(
         backStack.add(DeleteTransactionRoute(transaction))
     }
 
+    val currentRoute = backStack.lastOrNull()
+    val showBottomNav = currentRoute is Home ||
+        currentRoute is TransactionTypeDetail ||
+        currentRoute is Insights ||
+        currentRoute is Budgets
+    val onBottomNavigate: (NavKey) -> Unit = { route ->
+        if (backStack.lastOrNull() != route) {
+            backStack.clear()
+            backStack.add(route)
+        }
+    }
+
+    AppScaffold(
+        showBottomNav = showBottomNav,
+        currentRoute = currentRoute,
+        onNavigate = onBottomNavigate,
+        onAddClick = { backStack.add(AddTransaction(null, addTransactionTitle)) }
+    ) { innerPadding ->
     NavDisplay(
+        modifier = Modifier.padding(innerPadding),
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
         sceneStrategies = listOf(dialogSceneStrategy),
@@ -235,14 +273,16 @@ private fun MainNavigation(
                     viewModel = viewModel,
                     resultEvent = resultEvent,
                     onResultEventConsumed = { resultEvent = null },
-                    onAddClick = { backStack.add(AddTransaction(null, addTransactionTitle)) },
                     onIncomeClick = { backStack.add(TransactionTypeDetail(TransactionType.INCOME)) },
                     onExpenseClick = { backStack.add(TransactionTypeDetail(TransactionType.EXPENSE)) },
                     onTransactionClick = onNavigateToEdit,
                     onLongPress = onNavigateToDelete,
-                    onOpenAnalysisClick = { backStack.add(TransactionTypeDetail(null)) },
                     onOpenCalenderClick = { backStack.add(CalenderView) },
                     onOpenSettingsClick = { backStack.add(AppSettings) },
+                    onOpenSearchClick = { backStack.add(Search) },
+                    onOpenRecurringClick = { backStack.add(Recurring) },
+                    onManageBudgetsClick = { onBottomNavigate(Budgets) },
+                    onSeeAllTransactionsClick = { backStack.add(Search) },
                     showNotificationPermissionSnackbar = showNotificationSnackbar,
                     onNotificationPermissionSnackbarShown = onNotificationSnackbarShown,
                     onOpenNotificationSettings = onOpenNotificationSettings
@@ -256,6 +296,7 @@ private fun MainNavigation(
                     currencyCode = currencyCode,
                     title = key.title,
                     onBack = { backStack.removeLastOrNull() },
+                    onDeleteClick = onNavigateToDelete,
                     onNavigateBackWithResult = { result ->
                         resultEvent = result
                         backStack.removeLastOrNull()
@@ -316,8 +357,65 @@ private fun MainNavigation(
                                 if (result.isSuccess) R.string.delete_transaction else R.string.database_error
                             Toast.makeText(context, messageRes, Toast.LENGTH_LONG).show()
                             backStack.removeLastOrNull()
+                            // Deleting from the edit screen (rather than a long-press) leaves a now-stale
+                            // AddTransaction screen exposed underneath the dialog — pop it too so the user
+                            // lands back on whatever was below it instead of an editor for a deleted row.
+                            if (result.isSuccess && backStack.lastOrNull() is AddTransaction) {
+                                backStack.removeLastOrNull()
+                            }
                         }
                     }
+                )
+            }
+            entry<Insights> {
+                val viewModel = hiltViewModel<InsightsViewModel>()
+                InsightsRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    onCategoryClick = { tag -> backStack.add(InsightsDetail(kind = InsightKind.TAG, value = tag)) },
+                    onModeClick = { mode -> backStack.add(InsightsDetail(kind = InsightKind.MODE, value = mode)) },
+                    onMonthClick = { offset -> backStack.add(InsightsDetail(kind = InsightKind.MONTH, offset = offset)) },
+                    onSeeAllTopSpendsClick = { backStack.add(InsightsDetail(kind = InsightKind.TOP)) },
+                    onTransactionClick = onNavigateToEdit
+                )
+            }
+            entry<InsightsDetail> { key ->
+                val viewModel = hiltViewModel<InsightsDetailViewModel>()
+                LaunchedEffect(key) {
+                    viewModel.setParams(key.kind, key.value, key.offset)
+                }
+                InsightsDetailRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    onBack = { backStack.removeLastOrNull() },
+                    onTransactionClick = onNavigateToEdit,
+                    onLongPress = onNavigateToDelete,
+                    onSearchAllClick = { backStack.add(Search) }
+                )
+            }
+            entry<Budgets> {
+                val viewModel = hiltViewModel<BudgetsViewModel>()
+                BudgetsRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel
+                )
+            }
+            entry<Recurring> {
+                val viewModel = hiltViewModel<RecurringViewModel>()
+                RecurringRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    onBack = { backStack.removeLastOrNull() }
+                )
+            }
+            entry<Search> {
+                val viewModel = hiltViewModel<SearchViewModel>()
+                SearchRoute(
+                    currencyCode = currencyCode,
+                    viewModel = viewModel,
+                    onBack = { backStack.removeLastOrNull() },
+                    onTransactionClick = onNavigateToEdit,
+                    onLongPress = onNavigateToDelete
                 )
             }
         },
@@ -349,6 +447,7 @@ private fun MainNavigation(
             )
         }
     )
+    }
 }
 
 const val ADD_TRANSACTION_RESULT_OK = Activity.RESULT_FIRST_USER

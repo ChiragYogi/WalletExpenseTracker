@@ -1,8 +1,7 @@
 package com.babacode.walletexpensetracker.utiles
 
 import com.babacode.walletexpensetracker.data.model.DateForQuery
-import com.babacode.walletexpensetracker.data.model.PaymentType
-import com.babacode.walletexpensetracker.data.model.TransactionTag
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -40,71 +39,8 @@ object Extra {
         }
     }
 
-    fun paymentMode(type: String): PaymentType {
-        return when (type) {
-            PaymentType.CASH.toString() -> {
-                PaymentType.CASH
-            }
-            PaymentType.CARD.toString() -> {
-                PaymentType.CARD
-            }
-            PaymentType.ONLINE.toString() -> {
-                PaymentType.ONLINE
-            }
-            PaymentType.GIFT.toString() -> {
-                PaymentType.GIFT
-            }
-
-            else -> PaymentType.CASH
-        }
-    }
-
-
-    fun transactionTag(tag: String): TransactionTag {
-        return when (tag) {
-            TransactionTag.OTHER.toString() -> {
-                TransactionTag.OTHER
-            }
-            TransactionTag.FOOD.toString() -> {
-                TransactionTag.FOOD
-            }
-            TransactionTag.SHOPPING.toString() -> {
-                TransactionTag.SHOPPING
-            }
-            TransactionTag.TRAVELLING.toString() -> {
-                TransactionTag.TRAVELLING
-            }
-            TransactionTag.ENTERTAINMENT.toString() -> {
-                TransactionTag.ENTERTAINMENT
-            }
-            TransactionTag.HEALTH.toString() -> {
-                TransactionTag.HEALTH
-            }
-            TransactionTag.EDUCATION.toString() -> {
-                TransactionTag.EDUCATION
-            }
-            TransactionTag.RENT.toString() -> {
-                TransactionTag.RENT
-            }
-            TransactionTag.GIFT.toString() -> {
-                TransactionTag.GIFT
-            }
-            TransactionTag.UTILS.toString() -> {
-                TransactionTag.UTILS
-            }
-            TransactionTag.SALARY.toString() -> {
-                TransactionTag.SALARY
-            }
-            TransactionTag.COUPONS.toString() -> {
-                TransactionTag.COUPONS
-            }
-            TransactionTag.CASHBACK.toString() -> {
-                TransactionTag.CASHBACK
-            }
-
-
-            else -> TransactionTag.OTHER
-        }
+    fun paymentMode(type: String): PaymentMode {
+        return PaymentMode.entries.firstOrNull { it.toString() == type } ?: PaymentMode.CASH
     }
 
     //pars double

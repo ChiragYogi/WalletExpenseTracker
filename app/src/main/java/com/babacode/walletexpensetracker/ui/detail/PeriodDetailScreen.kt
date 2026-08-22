@@ -1,145 +1,181 @@
 package com.babacode.walletexpensetracker.ui.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.babacode.walletexpensetracker.R
-import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.Transaction
-import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
+import com.babacode.walletexpensetracker.ui.compose.CursorHeader
+import com.babacode.walletexpensetracker.ui.compose.EmptyState
 import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.charts.BarChart
+import com.babacode.walletexpensetracker.ui.compose.charts.BarChartEntry
+import com.babacode.walletexpensetracker.ui.theme.ShapeThreeExtraLarge
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
+import com.babacode.walletexpensetracker.ui.theme.WalletTheme
 import com.babacode.walletexpensetracker.utiles.Extra
+import com.babacode.walletexpensetracker.utiles.FinanceCompute
+import com.babacode.walletexpensetracker.utiles.formatMoney
 
 @Composable
 fun PeriodDetailScreen(
+    period: DetailPeriod,
     dateLabel: String,
-    transactionTypeLabel: String,
     currencyCode: String,
     transactions: List<Transaction>,
+    trendBuckets: List<DetailBucket>,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            IconButton(onClick = onPrevious) {
-                Icon(
-                    painter = painterResource(R.drawable.previous_vector),
-                    contentDescription = stringResource(R.string.previousButton),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Text(
-                text = dateLabel,
-                modifier = Modifier.weight(1f),
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onBackground
+    val spacing = WalletTheme.spacing
+
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(spacing.default),
+        verticalArrangement = Arrangement.spacedBy(spacing.medium)
+    ) {
+        item {
+            CursorHeader(label = dateLabel, onPrevious = onPrevious, onNext = onNext)
+        }
+
+        item {
+            PeriodSummaryCard(
+                totalLabel = stringResource(period.totalLabelRes),
+                currencyCode = currencyCode,
+                totals = FinanceCompute.totals(transactions),
+                trendBuckets = trendBuckets
             )
-            IconButton(onClick = onNext) {
-                Icon(
-                    painter = painterResource(R.drawable.next_vector),
-                    contentDescription = stringResource(R.string.nextButton),
-                    tint = MaterialTheme.colorScheme.onBackground
-                )
-            }
         }
 
         if (transactions.isEmpty()) {
-            Box(modifier = Modifier.fillMaxWidth().padding(top = 12.dp), contentAlignment = Alignment.TopCenter) {
-                Text(
-                    text = stringResource(R.string.noTransaction),
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
+            item {
+                EmptyState(message = stringResource(R.string.nothing_recorded_this_period))
             }
         } else {
-            TotalSummaryCard(
-                transactionTypeLabel = transactionTypeLabel,
-                currencyCode = currencyCode,
-                total = transactions.sumOf { it.amount },
-                modifier = Modifier.padding(12.dp)
-            )
-            LazyColumn(modifier = Modifier.padding(horizontal = 8.dp)) {
-                items(transactions, key = { it.id }) { transaction ->
-                    TransactionRow(
-                        transaction = transaction,
-                        currencyCode = currencyCode,
-                        onClick = onTransactionClick,
-                        onLongPress = onLongPress
-                    )
-                }
+            items(transactions, key = { it.id }) { transaction ->
+                TransactionRow(
+                    transaction = transaction,
+                    currencyCode = currencyCode,
+                    onClick = onTransactionClick,
+                    onLongPress = onLongPress
+                )
             }
         }
     }
 }
 
 @Composable
-private fun TotalSummaryCard(
-    transactionTypeLabel: String,
+private fun PeriodSummaryCard(
+    totalLabel: String,
     currencyCode: String,
-    total: Double,
+    totals: FinanceCompute.Totals,
+    trendBuckets: List<DetailBucket>
+) {
+    val extendedColors = WalletTheme.extendedColors
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = ShapeThreeExtraLarge,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(WalletTheme.spacing.large),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = totalLabel,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = formatMoney(totals.net, currencyCode),
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.padding(top = WalletTheme.spacing.extraSmall)
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = WalletTheme.spacing.medium),
+                horizontalArrangement = Arrangement.spacedBy(WalletTheme.spacing.medium)
+            ) {
+                MiniStatChip(
+                    label = stringResource(R.string.income),
+                    value = formatMoney(totals.income, currencyCode),
+                    background = extendedColors.incomeSoft,
+                    contentColor = extendedColors.income,
+                    modifier = Modifier.weight(1f)
+                )
+                MiniStatChip(
+                    label = stringResource(R.string.expense),
+                    value = formatMoney(totals.expense, currencyCode),
+                    background = extendedColors.expenseSoft,
+                    contentColor = extendedColors.expense,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            BarChart(
+                entries = trendBuckets.map { BarChartEntry(it.label, it.amount.toFloat()) },
+                barColor = { _, entry ->
+                    if (entry.value > 0f) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = WalletTheme.spacing.medium)
+            )
+        }
+    }
+}
+
+@Composable
+private fun MiniStatChip(
+    label: String,
+    value: String,
+    background: Color,
+    contentColor: Color,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    Column(
+        modifier = modifier
+            .background(color = background, shape = RoundedCornerShape(14.dp))
+            .padding(horizontal = WalletTheme.spacing.medium, vertical = WalletTheme.spacing.small)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Row {
-                Text(
-                    text = stringResource(R.string.total),
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-                Text(
-                    text = " $transactionTypeLabel",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Row(
-                modifier = Modifier.padding(top = 4.dp),
-                horizontalArrangement = Arrangement.Start
-            ) {
-                Text(text = currencyCode, fontWeight = FontWeight.Bold)
-                Text(
-                    text = " $total",
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-        }
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.labelLarge,
+            color = contentColor
+        )
     }
 }
 
@@ -148,8 +184,8 @@ private fun TotalSummaryCard(
 private fun PeriodDetailScreenPreview() {
     WalletExpenseTheme {
         PeriodDetailScreen(
+            period = DetailPeriod.WEEKLY,
             dateLabel = "03 Jan to 09 Jan",
-            transactionTypeLabel = "This Week",
             currencyCode = "$",
             transactions = listOf(
                 Transaction(
@@ -157,8 +193,8 @@ private fun PeriodDetailScreenPreview() {
                     date = Extra.currentDayDate(),
                     transactionType = TransactionType.EXPENSE,
                     amount = 450.0,
-                    tag = TransactionTag.FOOD,
-                    paymentType = PaymentType.CASH,
+                    tag = "Food",
+                    paymentType = PaymentMode.CASH,
                     id = 1
                 ),
                 Transaction(
@@ -166,10 +202,19 @@ private fun PeriodDetailScreenPreview() {
                     date = Extra.currentDayDate(),
                     transactionType = TransactionType.INCOME,
                     amount = 50000.0,
-                    tag = TransactionTag.SALARY,
-                    paymentType = PaymentType.ONLINE,
+                    tag = "Salary",
+                    paymentType = PaymentMode.ONLINE_BANKING,
                     id = 2
                 )
+            ),
+            trendBuckets = listOf(
+                DetailBucket("M", 100.0),
+                DetailBucket("T", 0.0),
+                DetailBucket("W", 250.0),
+                DetailBucket("T", 40.0),
+                DetailBucket("F", 450.0),
+                DetailBucket("S", 0.0),
+                DetailBucket("S", 0.0)
             ),
             onPrevious = {},
             onNext = {},

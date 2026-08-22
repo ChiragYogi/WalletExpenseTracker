@@ -4,10 +4,10 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.Transaction
-import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
+import com.babacode.walletexpensetracker.ui.home.HomeUiState
 import com.babacode.walletexpensetracker.ui.home.compose.HomeScreen
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
 import com.babacode.walletexpensetracker.utiles.Extra
@@ -24,8 +24,8 @@ class HomeScreenTest {
         date = Extra.currentDayDate(),
         transactionType = TransactionType.EXPENSE,
         amount = 450.0,
-        tag = TransactionTag.FOOD,
-        paymentType = PaymentType.CASH,
+        tag = "Food",
+        paymentType = PaymentMode.CASH,
         id = 1
     )
 
@@ -39,7 +39,10 @@ class HomeScreenTest {
             WalletExpenseTheme {
                 HomeScreen(
                     currencyCode = "$",
-                    transactions = transactions,
+                    uiState = HomeUiState(
+                        hasAnyTransactions = transactions.isNotEmpty(),
+                        recentTransactions = transactions
+                    ),
                     onIncomeClick = onIncomeClick,
                     onExpenseClick = onExpenseClick,
                     onTransactionClick = onTransactionClick,

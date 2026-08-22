@@ -3,7 +3,11 @@ package com.babacode.walletexpensetracker.ui.addedit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.babacode.walletexpensetracker.data.model.Frequency
+import com.babacode.walletexpensetracker.data.model.RecurringRule
+import com.babacode.walletexpensetracker.data.model.TagCatalog
 import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.repository.RecurringRepository
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
@@ -11,11 +15,12 @@ import com.babacode.walletexpensetracker.ui.addedit.compose.TransactionAddEditUi
 import com.babacode.walletexpensetracker.utiles.Extra.AMOUNT_CHECK_FOR_ADD
 import com.babacode.walletexpensetracker.utiles.Extra.NOTE_LENGTH_VALIDATE
 import com.babacode.walletexpensetracker.utiles.Extra.convertLongDateToStringDate
+import com.babacode.walletexpensetracker.utiles.Extra.convertLocalLongDateToStringAndGetLocalDate
+import com.babacode.walletexpensetracker.utiles.Extra.convertLocalDateToLong
 import com.babacode.walletexpensetracker.utiles.Extra.convertStringDateToLong
 import com.babacode.walletexpensetracker.utiles.Extra.currentDayDate
 import com.babacode.walletexpensetracker.utiles.Extra.parseDouble
 import com.babacode.walletexpensetracker.utiles.Extra.paymentMode
-import com.babacode.walletexpensetracker.utiles.Extra.transactionTag
 import com.babacode.walletexpensetracker.utiles.Extra.transactionType
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,6 +37,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TransactionAddEditViewModel @Inject constructor(
     private val repository: TransactionRepository,
+    private val recurringRepository: RecurringRepository,
 ) : ViewModel() {
 
     private var hasInitialized = false
@@ -53,13 +59,15 @@ class TransactionAddEditViewModel @Inject constructor(
                 note = editTransaction?.note.orEmpty(),
                 date = editTransaction?.let { transaction -> convertLongDateToStringDate(transaction.date) }
                     ?: convertLongDateToStringDate(currentDayDate()),
-                tag = editTransaction?.tag?.toString().orEmpty(),
+                tag = editTransaction?.tag.orEmpty(),
                 paymentMode = editTransaction?.paymentType?.toString().orEmpty(),
             )
         }
     }
 
-    fun onTypeChanged(value: String) = _uiState.update { it.copy(type = value) }
+    fun onTypeChanged(value: String) = _uiState.update {
+        it.copy(type = value, tag = TagCatalog.tagsFor(transactionType(value)).firstOrNull().orEmpty())
+    }
 
     fun onAmountChanged(value: String) = _uiState.update { it.copy(amount = value) }
 
@@ -72,6 +80,8 @@ class TransactionAddEditViewModel @Inject constructor(
     fun onTagChanged(value: String) = _uiState.update { it.copy(tag = value) }
 
     fun onPaymentModeChanged(value: String) = _uiState.update { it.copy(paymentMode = value) }
+
+    fun onRepeatMonthlyChanged(value: Boolean) = _uiState.update { it.copy(repeatMonthly = value) }
 
     fun onSaveClicked() {
         val state = _uiState.value
@@ -126,7 +136,7 @@ class TransactionAddEditViewModel @Inject constructor(
 
         val addAmount = parseDouble(state.amount)
         val addType = transactionType(state.type)
-        val addTag = transactionTag(state.tag)
+        val addTag = state.tag
         val addPaymentMode = paymentMode(state.paymentMode)
 
         if (state.transactionId == 0) {
@@ -139,7 +149,7 @@ class TransactionAddEditViewModel @Inject constructor(
                 addPaymentMode,
                 state.transactionId
             )
-            createTransaction(addNewTransaction)
+            createTransaction(addNewTransaction, repeatMonthly = state.repeatMonthly)
         } else {
             val updateCurrentTransaction = Transaction(
                 state.note,
@@ -155,8 +165,29 @@ class TransactionAddEditViewModel @Inject constructor(
     }
 
 
-    private fun createTransaction(transaction: Transaction) = viewModelScope.launch {
-        runCatching { repository.insertNewTransaction(transaction) }
+    private fun createTransaction(transaction: Transaction, repeatMonthly: Boolean) = viewModelScope.launch {
+        runCatching {
+            repository.insertNewTransaction(transaction)
+            if (repeatMonthly) {
+                recurringRepository.insertRecurringRule(
+                    RecurringRule(
+                        type = transaction.transactionType,
+                        amount = transaction.amount,
+                        note = transaction.note,
+                        tag = transaction.tag,
+                        mode = transaction.paymentType,
+                        frequency = Frequency.MONTHLY,
+                        // The transaction just saved covers this month's occurrence, so the rule's
+                        // next auto-post (RecurringPostWorker, Phase 13) is due one month from now —
+                        // not on the transaction's own date, which would look immediately overdue.
+                        nextDate = convertLocalDateToLong(
+                            convertLocalLongDateToStringAndGetLocalDate(transaction.date).plusMonths(1)
+                        ),
+                        active = true
+                    )
+                )
+            }
+        }
             .onSuccess {
                 addEditTransactionChannel.send(
                     AddEditTransactionEvent.NavigateBackWithResult(ADD_TRANSACTION_RESULT_OK)

@@ -1,27 +1,25 @@
 package com.babacode.walletexpensetracker.ui.home.compose
 
 import android.widget.Toast
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,39 +35,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
-import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.Transaction
-import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
+import com.babacode.walletexpensetracker.ui.compose.EmptyState
+import com.babacode.walletexpensetracker.ui.compose.ThresholdProgressBar
 import com.babacode.walletexpensetracker.ui.compose.TransactionRow
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
+import com.babacode.walletexpensetracker.ui.compose.charts.DonutChart
+import com.babacode.walletexpensetracker.ui.compose.charts.DonutSlice
+import com.babacode.walletexpensetracker.ui.home.BudgetProgress
+import com.babacode.walletexpensetracker.ui.home.HomeUiState
 import com.babacode.walletexpensetracker.ui.home.HomeViewModel
+import com.babacode.walletexpensetracker.ui.theme.ShapeThreeExtraLarge
+import com.babacode.walletexpensetracker.ui.theme.ShapeTwoExtraLarge
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
+import com.babacode.walletexpensetracker.ui.theme.WalletTheme
 import com.babacode.walletexpensetracker.utiles.Extra
-import java.time.LocalDate
-import kotlin.math.cos
-import kotlin.math.sin
-
-private val ExpenseColor = Color(0xFFEF2727)
-private val IncomeColor = Color(0xFF86DF3B)
+import com.babacode.walletexpensetracker.utiles.formatMoney
+import kotlin.math.roundToInt
 
 @Composable
 fun HomeRoute(
@@ -77,14 +73,16 @@ fun HomeRoute(
     viewModel: HomeViewModel,
     resultEvent: Int?,
     onResultEventConsumed: () -> Unit,
-    onAddClick: () -> Unit,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
-    onOpenAnalysisClick: () -> Unit,
     onOpenCalenderClick: () -> Unit,
     onOpenSettingsClick: () -> Unit,
+    onOpenSearchClick: () -> Unit,
+    onOpenRecurringClick: () -> Unit,
+    onManageBudgetsClick: () -> Unit,
+    onSeeAllTransactionsClick: () -> Unit,
     showNotificationPermissionSnackbar: Boolean,
     onNotificationPermissionSnackbarShown: () -> Unit,
     onOpenNotificationSettings: () -> Unit,
@@ -121,7 +119,7 @@ fun HomeRoute(
         }
     }
 
-    val transactions by viewModel.recentTransaction.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier,
@@ -129,16 +127,16 @@ fun HomeRoute(
             WalletTopAppBar(
                 title = stringResource(R.string.home_title),
                 actions = {
-                    IconButton(onClick = onOpenAnalysisClick) {
+                    IconButton(onClick = onOpenSearchClick) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_baseline_bar_chart_24),
-                            contentDescription = stringResource(R.string.calender)
+                            painter = painterResource(R.drawable.search_vector),
+                            contentDescription = stringResource(R.string.search_icon_description)
                         )
                     }
-                    IconButton(onClick = onOpenCalenderClick) {
+                    IconButton(onClick = onOpenRecurringClick) {
                         Icon(
-                            painter = painterResource(R.drawable.yearly_calender),
-                            contentDescription = stringResource(R.string.calender)
+                            painter = painterResource(R.drawable.repeat_vector),
+                            contentDescription = stringResource(R.string.recurring_icon_description)
                         )
                     }
                     IconButton(onClick = onOpenSettingsClick) {
@@ -150,27 +148,19 @@ fun HomeRoute(
                 }
             )
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddClick,
-                containerColor = MaterialTheme.colorScheme.primary
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.add_transaction_vectore),
-                    contentDescription = stringResource(R.string.add_transaction_for_income_or_expense)
-                )
-            }
-        }
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
         HomeScreen(
             modifier = Modifier.padding(innerPadding),
             currencyCode = currencyCode,
-            transactions = transactions,
+            uiState = uiState,
             onIncomeClick = onIncomeClick,
             onExpenseClick = onExpenseClick,
             onTransactionClick = onTransactionClick,
-            onLongPress = onLongPress
+            onLongPress = onLongPress,
+            onOpenCalenderClick = onOpenCalenderClick,
+            onManageBudgetsClick = onManageBudgetsClick,
+            onSeeAllTransactionsClick = onSeeAllTransactionsClick
         )
     }
 }
@@ -178,205 +168,339 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     currencyCode: String,
-    transactions: List<Transaction>?,
+    uiState: HomeUiState,
     onIncomeClick: () -> Unit,
     onExpenseClick: () -> Unit,
     onTransactionClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onOpenCalenderClick: () -> Unit = {},
+    onManageBudgetsClick: () -> Unit = {},
+    onSeeAllTransactionsClick: () -> Unit = {}
 ) {
-    if (transactions == null) {
+    if (uiState.isLoading) {
         LoadingHomeState(modifier = modifier.fillMaxSize())
         return
     }
 
-    if (transactions.isEmpty()) {
+    if (!uiState.hasAnyTransactions) {
         EmptyHomeState(modifier = modifier.fillMaxSize())
         return
     }
 
-    val monthRange = Extra.getLocalDateStartEndDateMonth(LocalDate.now())
-    val monthTransactions = transactions.filter { it.date in monthRange.startDate..monthRange.endDate }
-    val (expenseThisMonth, incomeThisMonth) = monthTransactions.partition { it.transactionType == TransactionType.EXPENSE }
-    val incomeTotal = incomeThisMonth.sumOf { it.amount }
-    val expenseTotal = expenseThisMonth.sumOf { it.amount }
+    val spacing = WalletTheme.spacing
 
-    LazyColumn(modifier = modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = modifier.fillMaxSize(),
+        contentPadding = PaddingValues(spacing.default),
+        verticalArrangement = Arrangement.spacedBy(spacing.medium)
+    ) {
         item {
-            Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
-                SummaryCard(
-                    title = stringResource(R.string.income),
-                    currencyCode = currencyCode,
-                    total = incomeTotal,
-                    onClick = onIncomeClick,
-                    modifier = Modifier.weight(1f).padding(4.dp)
-                )
-                SummaryCard(
-                    title = stringResource(R.string.expense),
-                    currencyCode = currencyCode,
-                    total = expenseTotal,
-                    onClick = onExpenseClick,
-                    modifier = Modifier.weight(1f).padding(4.dp)
-                )
-            }
-        }
-
-        item {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .padding(8.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(spacing.medium)
             ) {
-                ExpenseIncomePieChart(
-                    incomeTotal = incomeTotal,
-                    expenseTotal = expenseTotal,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
+                SummaryCard(
+                    testTagKey = stringResource(R.string.income),
+                    label = stringResource(R.string.income_this_month),
+                    currencyCode = currencyCode,
+                    amount = uiState.monthIncome,
+                    amountColor = WalletTheme.extendedColors.income,
+                    onClick = onIncomeClick,
+                    modifier = Modifier.weight(1f)
+                )
+                SummaryCard(
+                    testTagKey = stringResource(R.string.expense),
+                    label = stringResource(R.string.expense_this_month),
+                    currencyCode = currencyCode,
+                    amount = uiState.monthExpense,
+                    amountColor = WalletTheme.extendedColors.expense,
+                    onClick = onExpenseClick,
+                    modifier = Modifier.weight(1f)
                 )
             }
         }
 
         item {
-            Text(
-                text = stringResource(R.string.recent_transaction),
-                modifier = Modifier.padding(start = 8.dp, top = 16.dp),
-                fontSize = 18.sp,
-                color = MaterialTheme.colorScheme.onBackground
+            NetBalanceBanner(
+                currencyCode = currencyCode,
+                net = uiState.monthIncome - uiState.monthExpense
             )
         }
 
-        items(transactions, key = { it.id }) { transaction ->
-            TransactionRow(
-                transaction = transaction,
+        item {
+            SpendingDonutCard(
                 currencyCode = currencyCode,
-                onClick = onTransactionClick,
-                onLongPress = onLongPress
+                income = uiState.monthIncome,
+                expense = uiState.monthExpense
             )
+        }
+
+        item {
+            CalendarLinkRow(onClick = onOpenCalenderClick)
+        }
+
+        if (uiState.topBudgets.isNotEmpty()) {
+            item {
+                BudgetsSection(
+                    currencyCode = currencyCode,
+                    topBudgets = uiState.topBudgets,
+                    onManageClick = onManageBudgetsClick
+                )
+            }
+        }
+
+        item {
+            SectionHeaderRow(
+                title = stringResource(R.string.recent_transactions_title),
+                actionLabel = stringResource(R.string.see_all_link),
+                onActionClick = onSeeAllTransactionsClick
+            )
+        }
+
+        if (uiState.recentTransactions.isEmpty()) {
+            item {
+                EmptyState(message = stringResource(R.string.no_recent_transactions))
+            }
+        } else {
+            items(uiState.recentTransactions, key = { it.id }) { transaction ->
+                TransactionRow(
+                    transaction = transaction,
+                    currencyCode = currencyCode,
+                    onClick = onTransactionClick,
+                    onLongPress = onLongPress
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun SummaryCard(
-    title: String,
+    testTagKey: String,
+    label: String,
     currencyCode: String,
-    total: Double,
+    amount: Double,
+    amountColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         onClick = onClick,
-        modifier = modifier.testTag("summary_card_$title"),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+        modifier = modifier.testTag("summary_card_$testTagKey"),
+        shape = ShapeTwoExtraLarge,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-            Row {
-                Text(text = title, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
-                Text(
-                    text = " " + stringResource(R.string.thisMonthTxt),
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Row(modifier = Modifier.padding(top = 4.dp)) {
-                Text(text = currencyCode, fontWeight = FontWeight.Bold)
-                Text(text = " $total", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground)
-            }
-        }
-    }
-}
-
-@Composable
-    private fun ExpenseIncomePieChart(
-    incomeTotal: Double,
-    expenseTotal: Double,
-    modifier: Modifier = Modifier
-) {
-    val total = incomeTotal + expenseTotal
-    if (total <= 0.0) {
-        Row(modifier = modifier, horizontalArrangement = Arrangement.Center) {
+        Column(modifier = Modifier.padding(WalletTheme.spacing.default)) {
             Text(
-                text = stringResource(R.string.no_chart_data_available),
-                color = Color(0xFFFFA500)
+                text = label,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-        }
-        return
-    }
-
-    val expenseFraction = (expenseTotal / total).toFloat()
-    val incomeFraction = (incomeTotal / total).toFloat()
-
-    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        Canvas(
-            modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1f)
-        ) {
-            val diameter = minOf(size.width, size.height)
-            val topLeft = Offset((size.width - diameter) / 2f, (size.height - diameter) / 2f)
-            val arcSize = Size(diameter, diameter)
-            val startAngle = -90f
-            val expenseSweep = expenseFraction * 360f
-            val incomeSweep = incomeFraction * 360f
-
-            drawArc(
-                color = ExpenseColor,
-                startAngle = startAngle,
-                sweepAngle = expenseSweep,
-                useCenter = true,
-                topLeft = topLeft,
-                size = arcSize
+            Text(
+                text = formatMoney(amount, currencyCode),
+                style = MaterialTheme.typography.titleLarge,
+                color = amountColor,
+                modifier = Modifier.padding(top = WalletTheme.spacing.extraSmall)
             )
-            drawArc(
-                color = IncomeColor,
-                startAngle = startAngle + expenseSweep,
-                sweepAngle = incomeSweep,
-                useCenter = true,
-                topLeft = topLeft,
-                size = arcSize
-            )
-
-            val center = Offset(topLeft.x + diameter / 2f, topLeft.y + diameter / 2f)
-            val labelRadius = diameter / 2f * 0.6f
-
-            drawIntoCanvas { canvas ->
-                val paint = android.graphics.Paint().apply {
-                    color = android.graphics.Color.BLACK
-                    textSize = diameter * 0.07f
-                    textAlign = android.graphics.Paint.Align.CENTER
-                    isAntiAlias = true
-                }
-
-                fun drawPercentLabel(midAngleDeg: Float, fraction: Float) {
-                    val rad = Math.toRadians(midAngleDeg.toDouble())
-                    val x = center.x + labelRadius * cos(rad).toFloat()
-                    val y = center.y + labelRadius * sin(rad).toFloat()
-                    canvas.nativeCanvas.drawText("%.1f%%".format(fraction * 100f), x, y, paint)
-                }
-
-                drawPercentLabel(startAngle + expenseSweep / 2f, expenseFraction)
-                drawPercentLabel(startAngle + expenseSweep + incomeSweep / 2f, incomeFraction)
-            }
-        }
-
-        Column(modifier = Modifier.padding(start = 8.dp)) {
-            PieLegendEntry(color = ExpenseColor, label = stringResource(R.string.expense))
-            PieLegendEntry(color = IncomeColor, label = stringResource(R.string.income))
         }
     }
 }
 
 @Composable
-private fun PieLegendEntry(color: Color, label: String) {
-    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(vertical = 2.dp)) {
-        Box(modifier = Modifier.size(12.dp).background(color))
-        Spacer(modifier = Modifier.width(4.dp))
-        Text(text = label, color = MaterialTheme.colorScheme.onBackground)
+private fun NetBalanceBanner(currencyCode: String, net: Double) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(
+                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.1f),
+                shape = ShapeTwoExtraLarge
+            )
+            .padding(horizontal = WalletTheme.spacing.default, vertical = WalletTheme.spacing.medium),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(R.string.net_balance),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = formatMoney(net, currencyCode),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun SpendingDonutCard(currencyCode: String, income: Double, expense: Double) {
+    val extendedColors = WalletTheme.extendedColors
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = ShapeThreeExtraLarge,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(WalletTheme.spacing.large),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            DonutChart(
+                slices = listOf(
+                    DonutSlice(value = expense.toFloat(), color = extendedColors.expense),
+                    DonutSlice(value = income.toFloat(), color = extendedColors.income)
+                ),
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .aspectRatio(1f)
+            ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = stringResource(R.string.spent_label),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = formatMoney(expense, currencyCode),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                    Text(
+                        text = if (income > 0) {
+                            stringResource(R.string.percent_of_income, (expense / income * 100).roundToInt())
+                        } else {
+                            stringResource(R.string.no_income_yet)
+                        },
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier.padding(top = WalletTheme.spacing.medium),
+                horizontalArrangement = Arrangement.spacedBy(WalletTheme.spacing.large)
+            ) {
+                DonutLegendEntry(color = extendedColors.income, label = stringResource(R.string.income))
+                DonutLegendEntry(color = extendedColors.expense, label = stringResource(R.string.expense))
+            }
+        }
+    }
+}
+
+@Composable
+private fun DonutLegendEntry(color: Color, label: String) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(10.dp)
+                .background(color = color, shape = CircleShape)
+        )
+        Text(
+            text = label,
+            modifier = Modifier.padding(start = WalletTheme.spacing.extraSmall),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun CalendarLinkRow(onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = MaterialTheme.colorScheme.surface, shape = ShapeTwoExtraLarge)
+            .clickable(onClick = onClick)
+            .padding(WalletTheme.spacing.default),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(R.drawable.weekly_calender_vector),
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp)
+            )
+            Text(
+                text = stringResource(R.string.view_spending_calendar),
+                modifier = Modifier.padding(start = WalletTheme.spacing.small),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+        Text(
+            text = stringResource(R.string.see_by_day),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun BudgetsSection(
+    currencyCode: String,
+    topBudgets: List<BudgetProgress>,
+    onManageClick: () -> Unit
+) {
+    Column {
+        SectionHeaderRow(
+            title = stringResource(R.string.budgets_section_title),
+            actionLabel = stringResource(R.string.budgets_manage_link),
+            onActionClick = onManageClick
+        )
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = ShapeTwoExtraLarge,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(WalletTheme.spacing.default),
+                verticalArrangement = Arrangement.spacedBy(WalletTheme.spacing.medium)
+            ) {
+                topBudgets.forEach { budget -> BudgetProgressRow(currencyCode = currencyCode, budget = budget) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BudgetProgressRow(currencyCode: String, budget: BudgetProgress) {
+    val over = budget.spent > budget.limitAmount
+    Column {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(text = budget.tag, style = MaterialTheme.typography.labelMedium)
+            Text(
+                text = "${formatMoney(budget.spent, currencyCode)} / ${formatMoney(budget.limitAmount, currencyCode)}",
+                style = MaterialTheme.typography.labelSmall,
+                color = if (over) WalletTheme.extendedColors.expense else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        ThresholdProgressBar(
+            progress = if (budget.limitAmount > 0) (budget.spent / budget.limitAmount).toFloat() else 0f,
+            modifier = Modifier.padding(top = WalletTheme.spacing.extraSmall)
+        )
+    }
+}
+
+@Composable
+private fun SectionHeaderRow(title: String, actionLabel: String, onActionClick: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = title, style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = actionLabel,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.clickable(onClick = onActionClick)
+        )
     }
 }
 
@@ -390,7 +514,7 @@ private fun LoadingHomeState(modifier: Modifier = Modifier) {
 @Composable
 private fun EmptyHomeState(modifier: Modifier = Modifier) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(WalletTheme.spacing.default),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -403,15 +527,14 @@ private fun EmptyHomeState(modifier: Modifier = Modifier) {
         )
         Text(
             text = stringResource(R.string.no_transaction_yet),
-            fontSize = 24.sp,
-            modifier = Modifier.padding(top = 8.dp),
-            color = MaterialTheme.colorScheme.onBackground
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(top = WalletTheme.spacing.small)
         )
         Text(
             text = stringResource(R.string.add_a_new_transaction_to_get_started),
-            modifier = Modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
+            modifier = Modifier.padding(top = WalletTheme.spacing.small),
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground
+            color = MaterialTheme.colorScheme.onSurfaceVariant
         )
     }
 }
@@ -422,24 +545,33 @@ private fun HomeScreenPreview() {
     WalletExpenseTheme {
         HomeScreen(
             currencyCode = "$",
-            transactions = listOf(
-                Transaction(
-                    note = "Groceries",
-                    date = Extra.currentDayDate(),
-                    transactionType = TransactionType.EXPENSE,
-                    amount = 450.0,
-                    tag = TransactionTag.FOOD,
-                    paymentType = PaymentType.CASH,
-                    id = 1
+            uiState = HomeUiState(
+                hasAnyTransactions = true,
+                monthIncome = 50000.0,
+                monthExpense = 6500.0,
+                recentTransactions = listOf(
+                    Transaction(
+                        note = "Groceries",
+                        date = Extra.currentDayDate(),
+                        transactionType = TransactionType.EXPENSE,
+                        amount = 450.0,
+                        tag = "Food",
+                        paymentType = PaymentMode.CASH,
+                        id = 1
+                    ),
+                    Transaction(
+                        note = "Salary",
+                        date = Extra.currentDayDate(),
+                        transactionType = TransactionType.INCOME,
+                        amount = 50000.0,
+                        tag = "Salary",
+                        paymentType = PaymentMode.ONLINE_BANKING,
+                        id = 2
+                    )
                 ),
-                Transaction(
-                    note = "Salary",
-                    date = Extra.currentDayDate(),
-                    transactionType = TransactionType.INCOME,
-                    amount = 50000.0,
-                    tag = TransactionTag.SALARY,
-                    paymentType = PaymentType.ONLINE,
-                    id = 2
+                topBudgets = listOf(
+                    BudgetProgress(tag = "Food", spent = 450.0, limitAmount = 3000.0),
+                    BudgetProgress(tag = "Rent", spent = 3200.0, limitAmount = 3000.0)
                 )
             ),
             onIncomeClick = {},
@@ -456,7 +588,7 @@ private fun HomeScreenEmptyPreview() {
     WalletExpenseTheme {
         HomeScreen(
             currencyCode = "$",
-            transactions = emptyList(),
+            uiState = HomeUiState(hasAnyTransactions = false),
             onIncomeClick = {},
             onExpenseClick = {},
             onTransactionClick = {},
@@ -471,7 +603,7 @@ private fun HomeScreenLoadingPreview() {
     WalletExpenseTheme {
         HomeScreen(
             currencyCode = "$",
-            transactions = null,
+            uiState = HomeUiState.Loading,
             onIncomeClick = {},
             onExpenseClick = {},
             onTransactionClick = {},

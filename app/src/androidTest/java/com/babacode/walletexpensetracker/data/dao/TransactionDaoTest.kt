@@ -4,9 +4,8 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.babacode.walletexpensetracker.data.database.TransactionDatabase
-import com.babacode.walletexpensetracker.data.model.PaymentType
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.Transaction
-import com.babacode.walletexpensetracker.data.model.TransactionTag
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -42,8 +41,8 @@ class TransactionDaoTest {
         date = date,
         transactionType = TransactionType.EXPENSE,
         amount = 5.0,
-        tag = TransactionTag.FOOD,
-        paymentType = PaymentType.CASH,
+        tag = "Food",
+        paymentType = PaymentMode.CASH,
         id = id
     )
 

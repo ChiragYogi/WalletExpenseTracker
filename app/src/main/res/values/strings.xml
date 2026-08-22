@@ -30,7 +30,7 @@
     <string name="date">Date</string>
     <string name="amount">Amount</string>
     <string name="type">Type</string>
-    <string name="what_s_this_for">What\'s this for?</string>
+    <string name="what_s_this_for">What was this for?</string>
     <string name="add_a_note_to_self">Add a note to self</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="tag_for_transaction">Tag for Transaction</string>

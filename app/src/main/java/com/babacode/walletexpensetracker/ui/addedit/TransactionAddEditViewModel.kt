@@ -5,8 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.babacode.walletexpensetracker.data.model.Frequency
 import com.babacode.walletexpensetracker.data.model.RecurringRule
+import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.TagCatalog
 import com.babacode.walletexpensetracker.data.model.Transaction
+import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.repository.RecurringRepository
 import com.babacode.walletexpensetracker.repository.TransactionRepository
 import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
@@ -54,13 +56,13 @@ class TransactionAddEditViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 transactionId = editTransaction?.id ?: 0,
-                type = editTransaction?.transactionType?.toString().orEmpty(),
+                type = editTransaction?.transactionType?.toString() ?: TransactionType.EXPENSE.toString(),
                 amount = editTransaction?.amount?.toInt()?.toString().orEmpty(),
                 note = editTransaction?.note.orEmpty(),
                 date = editTransaction?.let { transaction -> convertLongDateToStringDate(transaction.date) }
                     ?: convertLongDateToStringDate(currentDayDate()),
-                tag = editTransaction?.tag.orEmpty(),
-                paymentMode = editTransaction?.paymentType?.toString().orEmpty(),
+                tag = editTransaction?.tag ?: TagCatalog.tagsFor(TransactionType.EXPENSE).first(),
+                paymentMode = editTransaction?.paymentType?.toString() ?: PaymentMode.CASH.toString(),
             )
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -17,15 +18,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -174,15 +177,20 @@ fun AddTransactionScreen(
             onAmountChange = { raw -> onAmountChange(raw.filter { it.isDigit() }) }
         )
 
-        TextField(
-            value = uiState.note,
-            onValueChange = onNoteChange,
-            label = { Text(stringResource(R.string.add_a_note_to_self)) },
-            singleLine = true,
-            shape = ShapeMedium,
-            colors = formFieldColors(),
-            modifier = Modifier.fillMaxWidth()
-        )
+        Column {
+            FieldLabel(stringResource(R.string.add_a_note_to_self))
+            OutlinedTextField(
+                value = uiState.note,
+                onValueChange = onNoteChange,
+                placeholder = { Text(stringResource(R.string.what_s_this_for)) },
+                singleLine = true,
+                shape = ShapeMedium,
+                colors = formFieldColors(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = spacing.extraSmall)
+            )
+        }
 
         DateField(
             label = stringResource(R.string.date),
@@ -318,7 +326,10 @@ private fun AmountCard(
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = WalletTheme.spacing.extraSmall)
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = WalletTheme.spacing.extraSmall)
             ) {
                 Text(
                     text = currencyCode,
@@ -329,16 +340,34 @@ private fun AmountCard(
                     value = amount,
                     onValueChange = onAmountChange,
                     textStyle = MaterialTheme.typography.headlineLarge.copy(textAlign = TextAlign.Center),
-                    placeholder = { Text("0", style = MaterialTheme.typography.headlineLarge) },
+                    placeholder = {
+                        Text(
+                            text = "0",
+                            style = MaterialTheme.typography.headlineLarge.copy(textAlign = TextAlign.Center),
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    colors = formFieldColors(),
-                    modifier = Modifier.padding(start = WalletTheme.spacing.extraSmall)
+                    colors = amountFieldColors(),
+                    modifier = Modifier
+                        .padding(start = WalletTheme.spacing.extraSmall)
+                        .width(160.dp)
                 )
             }
         }
     }
 }
+
+@Composable
+private fun amountFieldColors() = TextFieldDefaults.colors(
+    focusedContainerColor = Color.Transparent,
+    unfocusedContainerColor = Color.Transparent,
+    disabledContainerColor = Color.Transparent,
+    focusedIndicatorColor = Color.Transparent,
+    unfocusedIndicatorColor = Color.Transparent,
+    disabledIndicatorColor = Color.Transparent
+)
 
 @Composable
 private fun RepeatMonthlyRow(checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
@@ -351,10 +380,10 @@ private fun RepeatMonthlyRow(checked: Boolean, onCheckedChange: (Boolean) -> Uni
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = stringResource(R.string.repeat_monthly_label), style = MaterialTheme.typography.bodyMedium)
-        Switch(
+        Checkbox(
             checked = checked,
             onCheckedChange = onCheckedChange,
-            colors = SwitchDefaults.colors(checkedTrackColor = MaterialTheme.colorScheme.primary)
+            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colorScheme.primary)
         )
     }
 }

@@ -9,7 +9,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
@@ -31,9 +30,8 @@ import com.babacode.walletexpensetracker.ui.navigation.Insights
 import com.babacode.walletexpensetracker.ui.navigation.TabActions
 import com.babacode.walletexpensetracker.ui.navigation.TabRoute
 import com.babacode.walletexpensetracker.ui.navigation.TransactionTypeDetail
-import com.babacode.walletexpensetracker.ui.navigation.navBackTransitionSpec
-import com.babacode.walletexpensetracker.ui.navigation.navForwardTransitionSpec
-import com.babacode.walletexpensetracker.ui.navigation.navPredictiveBackTransitionSpec
+import com.babacode.walletexpensetracker.ui.navigation.navInstantPredictiveBackTransitionSpec
+import com.babacode.walletexpensetracker.ui.navigation.navInstantTransitionSpec
 
 // Hosts the 4-tab section (Home, Detail, Insights, Budgets) behind its own inner
 // NavDisplay + bottom nav, as a single destination on the outer NavDisplay
@@ -84,7 +82,12 @@ fun MainTabsScaffold(
             onBack = { tabBackStack.removeLastOrNull() },
             entryDecorators = listOf(
                 rememberSaveableStateHolderNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator()
+                // Bottom-nav switches replace the whole backstack (see onBottomNavigate below),
+                // which pops the tab being left. Without this override, Nav3's default
+                // behavior would clear that tab's ViewModelStore on every switch, forcing
+                // Home/Insights/Budgets/Detail to reload from the database each time they're
+                // revisited instead of reusing their already-loaded state.
+                rememberViewModelStoreNavEntryDecorator(removeViewModelStoreOnPop = { false })
             ),
             entryProvider = entryProvider {
                 entry<Home> {
@@ -152,9 +155,9 @@ fun MainTabsScaffold(
                     )
                 }
             },
-            transitionSpec = navForwardTransitionSpec<NavKey>(),
-            popTransitionSpec = navBackTransitionSpec<NavKey>(),
-            predictivePopTransitionSpec = navPredictiveBackTransitionSpec<NavKey>()
+            transitionSpec = navInstantTransitionSpec(),
+            popTransitionSpec = navInstantTransitionSpec(),
+            predictivePopTransitionSpec = navInstantPredictiveBackTransitionSpec()
         )
     }
 }

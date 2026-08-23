@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.search
 
+import androidx.compose.runtime.Immutable
 import com.babacode.walletexpensetracker.data.model.PaymentMode
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
@@ -21,6 +22,10 @@ data class SearchFilters(
     val maxAmount: String = ""
 )
 
+// Always republished wholesale from the ViewModel's StateFlow pipeline, never mutated in
+// place, so it's safe to mark @Immutable despite the plain List<Transaction> field — see
+// HomeUiState.
+@Immutable
 data class SearchUiState(
     val results: List<Transaction> = emptyList(),
     val totals: FinanceCompute.Totals = FinanceCompute.Totals(0.0, 0.0, 0.0)

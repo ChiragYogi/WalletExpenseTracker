@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +28,7 @@ import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.compose.CursorHeader
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
+import com.babacode.walletexpensetracker.ui.compose.rememberTransactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.charts.BarChart
 import com.babacode.walletexpensetracker.ui.compose.charts.BarChartEntry
@@ -51,6 +53,8 @@ fun PeriodDetailScreen(
     modifier: Modifier = Modifier
 ) {
     val spacing = WalletTheme.spacing
+    val totals = remember(transactions) { FinanceCompute.totals(transactions) }
+    val transactionGroups = rememberTransactionDateGroups(transactions)
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -65,7 +69,7 @@ fun PeriodDetailScreen(
             PeriodSummaryCard(
                 totalLabel = stringResource(period.totalLabelRes),
                 currencyCode = currencyCode,
-                totals = FinanceCompute.totals(transactions),
+                totals = totals,
                 trendBuckets = trendBuckets
             )
         }
@@ -76,7 +80,7 @@ fun PeriodDetailScreen(
             }
         } else {
             transactionDateGroups(
-                transactions = transactions,
+                groups = transactionGroups,
                 currencyCode = currencyCode,
                 onClick = onTransactionClick,
                 onLongPress = onLongPress
@@ -93,6 +97,9 @@ private fun PeriodSummaryCard(
     trendBuckets: List<DetailBucket>
 ) {
     val extendedColors = WalletTheme.extendedColors
+    val barEntries = remember(trendBuckets) {
+        trendBuckets.map { BarChartEntry(it.label, it.amount.toFloat()) }
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -138,7 +145,7 @@ private fun PeriodSummaryCard(
             }
 
             BarChart(
-                entries = trendBuckets.map { BarChartEntry(it.label, it.amount.toFloat()) },
+                entries = barEntries,
                 barColor = { _, entry ->
                     if (entry.value > 0f) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
                 },

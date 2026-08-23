@@ -45,6 +45,7 @@ import com.babacode.walletexpensetracker.ui.addedit.compose.DateField
 import com.babacode.walletexpensetracker.ui.addedit.compose.DropdownField
 import com.babacode.walletexpensetracker.ui.addedit.compose.formFieldColors
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
+import com.babacode.walletexpensetracker.ui.compose.rememberTransactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.search.SearchFilters
@@ -149,6 +150,7 @@ fun SearchScreen(
     modifier: Modifier = Modifier
 ) {
     val spacing = WalletTheme.spacing
+    val resultGroups = rememberTransactionDateGroups(uiState.results)
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -192,7 +194,7 @@ fun SearchScreen(
             item { EmptyState(message = stringResource(R.string.no_transactions_match_filters)) }
         } else {
             transactionDateGroups(
-                transactions = uiState.results,
+                groups = resultGroups,
                 currencyCode = currencyCode,
                 onClick = onTransactionClick,
                 onLongPress = onLongPress

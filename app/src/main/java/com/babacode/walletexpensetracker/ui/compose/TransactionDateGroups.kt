@@ -12,6 +12,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.babacode.walletexpensetracker.data.model.Transaction
@@ -22,27 +24,47 @@ import com.babacode.walletexpensetracker.utiles.FinanceCompute
 import com.babacode.walletexpensetracker.utiles.formatMoney
 import java.time.LocalDate
 
-// Groups a transaction list into per-day sections (date header + one card per day, rows
-// separated by dividers) instead of one standalone card per transaction — matches the
+// Always built fresh by rememberTransactionDateGroups, never mutated in place, so it's safe
+// to mark @Immutable despite the plain List<Transaction> field — see HomeUiState for the
+// full rationale.
+@Immutable
+data class TransactionDateGroup(
+    val date: LocalDate,
+    val transactions: List<Transaction>,
+    val dayNet: Double
+)
+
+// Sorting/grouping/summing a transaction list is real work that shouldn't re-run on every
+// recomposition — call this once in the enclosing screen composable (before the LazyColumn)
+// and pass the memoized result into transactionDateGroups() below.
+@Composable
+fun rememberTransactionDateGroups(transactions: List<Transaction>): List<TransactionDateGroup> =
+    remember(transactions) {
+        FinanceCompute.sortByDateDesc(transactions)
+            .groupBy { Extra.convertLocalLongDateToStringAndGetLocalDate(it.date) }
+            .map { (date, dayTransactions) ->
+                TransactionDateGroup(date, dayTransactions, FinanceCompute.totals(dayTransactions).net)
+            }
+    }
+
+// Renders pre-grouped transactions into per-day sections (date header + one card per day,
+// rows separated by dividers) instead of one standalone card per transaction — matches the
 // "Recent activity" grouped list from the reference design.
 fun LazyListScope.transactionDateGroups(
-    transactions: List<Transaction>,
+    groups: List<TransactionDateGroup>,
     currencyCode: String,
     onClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit
 ) {
-    val grouped = FinanceCompute.sortByDateDesc(transactions)
-        .groupBy { Extra.convertLocalLongDateToStringAndGetLocalDate(it.date) }
-
-    grouped.forEach { (date, dayTransactions) ->
-        item(key = "date_header_$date") {
+    groups.forEach { group ->
+        item(key = "date_header_${group.date}") {
             DateGroupHeader(
-                date = date,
+                date = group.date,
                 currencyCode = currencyCode,
-                dayNet = FinanceCompute.totals(dayTransactions).net
+                dayNet = group.dayNet
             )
         }
-        item(key = "date_group_$date") {
+        item(key = "date_group_${group.date}") {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = ShapeLarge,
@@ -50,7 +72,7 @@ fun LazyListScope.transactionDateGroups(
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
             ) {
                 Column {
-                    dayTransactions.forEachIndexed { index, transaction ->
+                    group.transactions.forEachIndexed { index, transaction ->
                         TransactionRow(
                             transaction = transaction,
                             currencyCode = currencyCode,
@@ -58,7 +80,7 @@ fun LazyListScope.transactionDateGroups(
                             onLongPress = onLongPress,
                             showCard = false
                         )
-                        if (index != dayTransactions.lastIndex) {
+                        if (index != group.transactions.lastIndex) {
                             HorizontalDivider(
                                 modifier = Modifier.padding(start = 72.dp),
                                 color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)

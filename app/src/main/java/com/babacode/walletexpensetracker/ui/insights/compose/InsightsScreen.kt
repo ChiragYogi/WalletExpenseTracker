@@ -20,6 +20,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -223,6 +224,9 @@ private fun HeroCard(
     val spacing = WalletTheme.spacing
     val extendedColors = WalletTheme.extendedColors
     val increased = uiState.deltaPercent > 0
+    val trendEntries = remember(uiState.trend) {
+        uiState.trend.map { BarChartEntry(it.label, it.amount.toFloat()) }
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -267,7 +271,7 @@ private fun HeroCard(
             }
 
             BarChart(
-                entries = uiState.trend.map { BarChartEntry(it.label, it.amount.toFloat()) },
+                entries = trendEntries,
                 barColor = { index, _ ->
                     if (index == uiState.trend.lastIndex) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.tertiary
                 },

@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.budgets
 
+import androidx.compose.runtime.Immutable
 import com.babacode.walletexpensetracker.data.model.Budget
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
@@ -20,6 +21,9 @@ data class BudgetRow(
     val isOver: Boolean
 )
 
+// Always republished wholesale from the ViewModel's StateFlow pipeline, never mutated in
+// place, so it's safe to mark @Immutable despite the plain List<T> fields — see HomeUiState.
+@Immutable
 data class BudgetsUiState(
     val isLoading: Boolean = true,
     val monthLabel: String = "",

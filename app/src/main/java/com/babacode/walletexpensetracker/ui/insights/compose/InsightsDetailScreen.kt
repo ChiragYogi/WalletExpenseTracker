@@ -25,6 +25,7 @@ import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
 import com.babacode.walletexpensetracker.ui.compose.StatCard
+import com.babacode.walletexpensetracker.ui.compose.rememberTransactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.insights.InsightsDetailSubtitleKind
@@ -84,6 +85,7 @@ fun InsightsDetailScreen(
         InsightsDetailSubtitleKind.TOP_SPENDS -> uiState.monthLabel
         InsightsDetailSubtitleKind.ALL_TRANSACTIONS -> stringResource(R.string.insights_detail_all_transactions_subtitle)
     }
+    val transactionGroups = rememberTransactionDateGroups(uiState.transactions)
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -165,7 +167,7 @@ fun InsightsDetailScreen(
             item { EmptyState(message = stringResource(R.string.insights_detail_no_matches)) }
         } else {
             transactionDateGroups(
-                transactions = uiState.transactions,
+                groups = transactionGroups,
                 currencyCode = currencyCode,
                 onClick = onTransactionClick,
                 onLongPress = onLongPress

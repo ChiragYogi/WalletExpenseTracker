@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.insights
 
+import androidx.compose.runtime.Immutable
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.utiles.Extra
@@ -13,6 +14,9 @@ data class CategoryBreakdown(val tag: String, val amount: Double)
 data class ModeBreakdown(val mode: String, val amount: Double)
 data class TrendPoint(val label: String, val amount: Double)
 
+// Always republished wholesale from the ViewModel's StateFlow pipeline, never mutated in
+// place, so it's safe to mark @Immutable despite the plain List<T> fields — see HomeUiState.
+@Immutable
 data class InsightsUiState(
     val isLoading: Boolean = true,
     val currentMonthLabel: String = "",

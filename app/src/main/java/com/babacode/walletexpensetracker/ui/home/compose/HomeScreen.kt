@@ -51,6 +51,7 @@ import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
 import com.babacode.walletexpensetracker.ui.compose.ThresholdProgressBar
+import com.babacode.walletexpensetracker.ui.compose.rememberTransactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.compose.charts.DonutChart
@@ -188,6 +189,7 @@ fun HomeScreen(
     }
 
     val spacing = WalletTheme.spacing
+    val recentTransactionGroups = rememberTransactionDateGroups(uiState.recentTransactions)
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -263,7 +265,7 @@ fun HomeScreen(
             }
         } else {
             transactionDateGroups(
-                transactions = uiState.recentTransactions,
+                groups = recentTransactionGroups,
                 currencyCode = currencyCode,
                 onClick = onTransactionClick,
                 onLongPress = onLongPress

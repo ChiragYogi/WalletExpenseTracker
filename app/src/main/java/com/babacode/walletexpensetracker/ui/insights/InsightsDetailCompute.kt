@@ -1,5 +1,6 @@
 package com.babacode.walletexpensetracker.ui.insights
 
+import androidx.compose.runtime.Immutable
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.navigation.InsightKind
@@ -14,6 +15,10 @@ import kotlin.math.roundToInt
 // Composable layer via string resources, keeping this file free of Android string lookups.
 enum class InsightsDetailSubtitleKind { CATEGORY, PAYMENT_MODE, TOP_SPENDS, ALL_TRANSACTIONS }
 
+// Always republished wholesale from the ViewModel's StateFlow pipeline, never mutated in
+// place, so it's safe to mark @Immutable despite the plain List<Transaction> field — see
+// HomeUiState.
+@Immutable
 data class InsightsDetailUiState(
     val isLoading: Boolean = true,
     val title: String = "",

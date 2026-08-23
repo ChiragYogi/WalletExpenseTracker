@@ -24,6 +24,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -87,6 +90,7 @@ fun BudgetsScreen(
     if (uiState.isLoading) return
 
     val spacing = WalletTheme.spacing
+    var pendingDeleteRow by remember { mutableStateOf<BudgetRow?>(null) }
 
     LazyColumn(
         modifier = modifier.fillMaxSize(),
@@ -114,7 +118,7 @@ fun BudgetsScreen(
                         row = row,
                         currencyCode = currencyCode,
                         daysLeft = uiState.daysLeft,
-                        onDelete = { onDeleteBudget(row) }
+                        onDelete = { pendingDeleteRow = row }
                     )
                 }
             }
@@ -128,6 +132,18 @@ fun BudgetsScreen(
                 onSaveBudgetClicked = onSaveBudgetClicked
             )
         }
+    }
+
+    pendingDeleteRow?.let { row ->
+        DeleteBudgetDialog(
+            tag = row.tag,
+            onDismissRequest = { pendingDeleteRow = null },
+            onCancelClick = { pendingDeleteRow = null },
+            onConfirmClick = {
+                onDeleteBudget(row)
+                pendingDeleteRow = null
+            }
+        )
     }
 }
 

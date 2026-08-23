@@ -183,6 +183,8 @@
     <string name="budgets_month_days_left">%1$s · %2$d days left</string>
     <string name="overspent_warning">You went over budget in %1$s this month.</string>
     <string name="budget_delete_description">Delete %1$s budget</string>
+    <string name="delete_budget_title">Delete Budget</string>
+    <string name="delete_budget_msg">Delete the budget for %1$s?</string>
     <string name="remaining_per_day">%1$s/day left</string>
     <string name="over_by">%1$s over</string>
     <string name="set_a_budget_title">Set a budget</string>

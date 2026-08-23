@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,7 +45,7 @@ import com.babacode.walletexpensetracker.ui.addedit.compose.DateField
 import com.babacode.walletexpensetracker.ui.addedit.compose.DropdownField
 import com.babacode.walletexpensetracker.ui.addedit.compose.formFieldColors
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
-import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.search.SearchFilters
 import com.babacode.walletexpensetracker.ui.search.SearchUiState
@@ -192,14 +191,12 @@ fun SearchScreen(
         if (uiState.results.isEmpty()) {
             item { EmptyState(message = stringResource(R.string.no_transactions_match_filters)) }
         } else {
-            items(uiState.results, key = { it.id }) { transaction ->
-                TransactionRow(
-                    transaction = transaction,
-                    currencyCode = currencyCode,
-                    onClick = onTransactionClick,
-                    onLongPress = onLongPress
-                )
-            }
+            transactionDateGroups(
+                transactions = uiState.results,
+                currencyCode = currencyCode,
+                onClick = onTransactionClick,
+                onLongPress = onLongPress
+            )
         }
     }
 }

@@ -118,6 +118,11 @@ object Extra {
         return LocalDate.parse(newDate, formatter)
     }
 
+    fun convertLocalDateToStringDayHeader(date: LocalDate): String {
+        val formatter = DateTimeFormatter.ofPattern("EEE, dd MMM", Locale.US)
+        return date.format(formatter)
+    }
+
     fun convertCalenderDateToLong(currentDate: Date): Long{
 
         val date = SimpleDateFormat("dd MMM, yyyy", Locale.US)

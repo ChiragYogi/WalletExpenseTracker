@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -54,7 +55,8 @@ fun TransactionRow(
     currencyCode: String,
     onClick: (Transaction) -> Unit,
     onLongPress: (Transaction) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showCard: Boolean = true
 ) {
     val extendedColors = WalletTheme.extendedColors
     val (tint, softBackground) = when (transaction.transactionType) {
@@ -62,77 +64,96 @@ fun TransactionRow(
         TransactionType.INCOME -> extendedColors.income to extendedColors.incomeSoft
     }
 
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(4.dp)
-            .combinedClickable(
-                onClick = { onClick(transaction) },
-                onLongClick = { onLongPress(transaction) }
-            ),
-        shape = ShapeLarge,
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-    ) {
-        Row(
-            modifier = Modifier.padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
+    if (showCard) {
+        Card(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(4.dp)
+                .combinedClickable(
+                    onClick = { onClick(transaction) },
+                    onLongClick = { onLongPress(transaction) }
+                ),
+            shape = ShapeLarge,
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
         ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(softBackground, CircleShape)
-                    .padding(12.dp)
-            ) {
-                Icon(
-                    painter = painterResource(tagIcon(transaction.tag)),
-                    contentDescription = stringResource(R.string.transaction_type_tag),
-                    tint = tint
+            TransactionRowContent(
+                transaction = transaction,
+                currencyCode = currencyCode,
+                tint = tint,
+                softBackground = softBackground,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    } else {
+        TransactionRowContent(
+            transaction = transaction,
+            currencyCode = currencyCode,
+            tint = tint,
+            softBackground = softBackground,
+            modifier = modifier
+                .fillMaxWidth()
+                .combinedClickable(
+                    onClick = { onClick(transaction) },
+                    onLongClick = { onLongPress(transaction) }
                 )
-            }
+                .padding(horizontal = 12.dp, vertical = 10.dp)
+        )
+    }
+}
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = transaction.note,
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.weight(1f),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = Extra.convertLongDateToStringDate(transaction.date),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 8.dp)
-                ) {
-                    Text(
-                        text = "$currencyCode ${transaction.amount}",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = transaction.paymentType.toString(),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
+@Composable
+private fun TransactionRowContent(
+    transaction: Transaction,
+    currencyCode: String,
+    tint: Color,
+    softBackground: Color,
+    modifier: Modifier
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .background(softBackground, CircleShape)
+                .padding(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(tagIcon(transaction.tag)),
+                contentDescription = stringResource(R.string.transaction_type_tag),
+                tint = tint
+            )
+        }
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp)
+        ) {
+            Text(
+                text = transaction.note,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.fillMaxWidth(),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                text = transaction.paymentType.toString(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+        Column (
+            modifier = Modifier
+        ) {
+            Text(
+                text = "$currencyCode ${transaction.amount}",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
         }
     }
 }

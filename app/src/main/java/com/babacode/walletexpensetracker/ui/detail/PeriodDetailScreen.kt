@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,7 +27,7 @@ import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.data.model.TransactionType
 import com.babacode.walletexpensetracker.ui.compose.CursorHeader
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
-import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.charts.BarChart
 import com.babacode.walletexpensetracker.ui.compose.charts.BarChartEntry
 import com.babacode.walletexpensetracker.ui.theme.ShapeThreeExtraLarge
@@ -76,14 +75,12 @@ fun PeriodDetailScreen(
                 EmptyState(message = stringResource(R.string.nothing_recorded_this_period))
             }
         } else {
-            items(transactions, key = { it.id }) { transaction ->
-                TransactionRow(
-                    transaction = transaction,
-                    currencyCode = currencyCode,
-                    onClick = onTransactionClick,
-                    onLongPress = onLongPress
-                )
-            }
+            transactionDateGroups(
+                transactions = transactions,
+                currencyCode = currencyCode,
+                onClick = onTransactionClick,
+                onLongPress = onLongPress
+            )
         }
     }
 }

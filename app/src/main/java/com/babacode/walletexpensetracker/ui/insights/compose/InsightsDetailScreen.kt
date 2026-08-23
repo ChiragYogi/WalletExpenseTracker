@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +25,7 @@ import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.data.model.Transaction
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
 import com.babacode.walletexpensetracker.ui.compose.StatCard
-import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.insights.InsightsDetailSubtitleKind
 import com.babacode.walletexpensetracker.ui.insights.InsightsDetailUiState
@@ -124,7 +123,7 @@ fun InsightsDetailScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = spacing.medium),
-                        horizontalArrangement = Arrangement.spacedBy(spacing.small)
+                        horizontalArrangement = Arrangement.spacedBy(spacing.extraSmall)
                     ) {
                         StatCard(
                             label = stringResource(R.string.transactions_label),
@@ -165,14 +164,12 @@ fun InsightsDetailScreen(
         if (uiState.transactions.isEmpty()) {
             item { EmptyState(message = stringResource(R.string.insights_detail_no_matches)) }
         } else {
-            items(uiState.transactions, key = { it.id }) { transaction ->
-                TransactionRow(
-                    transaction = transaction,
-                    currencyCode = currencyCode,
-                    onClick = onTransactionClick,
-                    onLongPress = onLongPress
-                )
-            }
+            transactionDateGroups(
+                transactions = uiState.transactions,
+                currencyCode = currencyCode,
+                onClick = onTransactionClick,
+                onLongPress = onLongPress
+            )
         }
     }
 }

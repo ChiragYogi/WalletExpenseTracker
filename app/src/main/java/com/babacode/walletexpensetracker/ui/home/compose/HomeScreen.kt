@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -52,7 +51,7 @@ import com.babacode.walletexpensetracker.ui.ADD_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.EDIT_TRANSACTION_RESULT_OK
 import com.babacode.walletexpensetracker.ui.compose.EmptyState
 import com.babacode.walletexpensetracker.ui.compose.ThresholdProgressBar
-import com.babacode.walletexpensetracker.ui.compose.TransactionRow
+import com.babacode.walletexpensetracker.ui.compose.transactionDateGroups
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
 import com.babacode.walletexpensetracker.ui.compose.charts.DonutChart
 import com.babacode.walletexpensetracker.ui.compose.charts.DonutSlice
@@ -263,14 +262,12 @@ fun HomeScreen(
                 EmptyState(message = stringResource(R.string.no_recent_transactions))
             }
         } else {
-            items(uiState.recentTransactions, key = { it.id }) { transaction ->
-                TransactionRow(
-                    transaction = transaction,
-                    currencyCode = currencyCode,
-                    onClick = onTransactionClick,
-                    onLongPress = onLongPress
-                )
-            }
+            transactionDateGroups(
+                transactions = uiState.recentTransactions,
+                currencyCode = currencyCode,
+                onClick = onTransactionClick,
+                onLongPress = onLongPress
+            )
         }
     }
 }

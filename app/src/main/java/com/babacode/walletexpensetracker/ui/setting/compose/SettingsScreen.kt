@@ -1,6 +1,11 @@
 package com.babacode.walletexpensetracker.ui.setting.compose
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,14 +19,20 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.babacode.walletexpensetracker.R
 import com.babacode.walletexpensetracker.ui.compose.WalletTopAppBar
@@ -40,6 +51,33 @@ fun SettingsRoute(
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    var showNotificationPermissionHint by remember { mutableStateOf(false) }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        showNotificationPermissionHint = !granted
+        if (granted) {
+            viewModel.onNotificationToggle(true)
+        }
+    }
+
+    val onNotificationToggle: (Boolean) -> Unit = { enabled ->
+        val permissionMissing = enabled &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        if (permissionMissing) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            showNotificationPermissionHint = false
+            viewModel.onNotificationToggle(enabled)
+        }
+    }
+
     Scaffold(
         modifier = modifier,
         topBar = { WalletTopAppBar(title = stringResource(R.string.setting), onBack = onBack) }
@@ -47,7 +85,8 @@ fun SettingsRoute(
         SettingsScreen(
             uiState = uiState,
             onCurrencySelected = viewModel::onCurrencySelected,
-            onNotificationToggle = viewModel::onNotificationToggle,
+            onNotificationToggle = onNotificationToggle,
+            showNotificationPermissionHint = showNotificationPermissionHint,
             onPrivacyPolicyClick = onPrivacyPolicyClick,
             onContactSupportClick = onContactSupportClick,
             onReportBugClick = onReportBugClick,
@@ -64,7 +103,8 @@ fun SettingsScreen(
     onPrivacyPolicyClick: () -> Unit,
     onContactSupportClick: () -> Unit,
     onReportBugClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showNotificationPermissionHint: Boolean = false
 ) {
     val currencyEntries = stringArrayResource(R.array.currency_entries)
     val currencyValues = stringArrayResource(R.array.currency_values)
@@ -93,12 +133,22 @@ fun SettingsScreen(
             item { SectionHeader(stringResource(R.string.notifications)) }
             item {
                 SettingsCard {
-                    SettingsCheckboxRow(
-                        icon = painterResource(R.drawable.notifications_vector),
-                        title = stringResource(R.string.notificationTitle),
-                        checked = uiState.notificationsEnabled,
-                        onCheckedChange = onNotificationToggle
-                    )
+                    Column {
+                        SettingsCheckboxRow(
+                            icon = painterResource(R.drawable.notifications_vector),
+                            title = stringResource(R.string.notificationTitle),
+                            checked = uiState.notificationsEnabled,
+                            onCheckedChange = onNotificationToggle
+                        )
+                        if (showNotificationPermissionHint) {
+                            Text(
+                                text = stringResource(R.string.notification_permission_required_hint),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = WalletTheme.extendedColors.expense,
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                            )
+                        }
+                    }
                 }
             }
 

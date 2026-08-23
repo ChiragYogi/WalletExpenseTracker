@@ -95,6 +95,7 @@
     <string name="notifications">Notifications</string>
     <string name="notificationKey">notificationKey</string>
     <string name="notificationTitle">Notification For New Day</string>
+    <string name="notification_permission_required_hint">You need to give notification permission for this new day notification.</string>
     <string name="sync">Sync</string>
     <string name="claude_sync_title">Claude Sync</string>
     <string name="claude_sync_subtitle">Back up and sync across devices</string>

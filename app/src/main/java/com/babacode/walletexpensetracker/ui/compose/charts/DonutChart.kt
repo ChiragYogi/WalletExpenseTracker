@@ -3,7 +3,9 @@ package com.babacode.walletexpensetracker.ui.compose.charts
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,7 +18,9 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import com.babacode.walletexpensetracker.ui.theme.WalletExpenseTheme
+import kotlin.math.sqrt
 
 data class DonutSlice(val value: Float, val color: Color)
 
@@ -29,13 +33,21 @@ data class DonutSlice(val value: Float, val color: Color)
 fun DonutChart(
     slices: List<DonutSlice>,
     modifier: Modifier = Modifier,
-    strokeWidthFraction: Float = 0.2f,
+    strokeWidthFraction: Float = 0.15f,
     emptyStateColor: Color = MaterialTheme.colorScheme.surfaceVariant,
     centerContent: @Composable BoxScope.() -> Unit = {}
 ) {
     val total = slices.sumOf { it.value.toDouble() }.toFloat()
 
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
+    BoxWithConstraints(modifier = modifier, contentAlignment = Alignment.Center) {
+        // The ring's inner edge sits at minDimension * (1 - 2 * strokeWidthFraction) (the
+        // stroke is centered on the arc path, eating into the hole by half its width on each
+        // side). Capping centerContent to that hole circle's inscribed square (diameter /
+        // sqrt(2)) keeps even the text's corners clear of the ring instead of just centering
+        // blindly in the full box.
+        val holeDiameter = min(maxWidth, maxHeight) * (1f - 2f * strokeWidthFraction)
+        val centerContentSize = holeDiameter / sqrt(1f)
+
         Canvas(modifier = Modifier.fillMaxSize()) {
             val strokeWidth = size.minDimension * strokeWidthFraction
             val diameter = size.minDimension - strokeWidth
@@ -71,7 +83,11 @@ fun DonutChart(
                 }
             }
         }
-        centerContent()
+        Box(
+            modifier = Modifier.size(centerContentSize).padding(4.dp),
+            contentAlignment = Alignment.Center,
+            content = centerContent
+        )
     }
 }
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wallet Expense Tracker</string>
+    <string name="app_name">Wallet</string>
     <string name="transaction_added">Transaction added</string>
     <string name="transaction_update">Transaction updated</string>
     <string name="income_vector_image">income vector image</string>

@@ -12,14 +12,14 @@ plugins {
 
 android {
     namespace = "com.babacode.walletexpensetracker"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.babacode.walletexpensetracker"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 6
-        versionName = "1.6"
+        minSdk = 26
+        targetSdk = 37
+        versionCode = 7
+        versionName = "1.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -60,6 +60,7 @@ dependencies {
     // core
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.material)
 
     // Navigation 3

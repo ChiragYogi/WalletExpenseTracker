@@ -5,10 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
@@ -120,27 +123,34 @@ fun BottomNav(
             cornerRadius = RadiusTwoExtraLarge
         )
     }
+    val navBarInset = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    val barHeightWithInset = BarHeight + navBarInset
 
-    // The Box is sized to exactly the bar's own height (not the FAB's protrusion above
-    // it), so Scaffold reserves only that much space for content — otherwise content
-    // stops short by an extra FabDiameter/2, leaving a band of plain background color
-    // between the last content and the bar's rounded top edge. The FAB instead pokes
-    // above the Box via a negative offset, which shifts it in the placement phase
-    // without inflating the Box's measured size.
+    // The bar's shape/background extends all the way down to the real bottom of the
+    // screen (flush, no gap) so there's no seam of plain background color showing
+    // through underneath it — with gesture nav's transparent nav bar that seam would
+    // otherwise be visible as a jarring mismatched patch. Only the tab/FAB content is
+    // padded up by navBarInset so it clears the gesture handle. The Box is sized to
+    // this same barHeightWithInset (not the FAB's protrusion above it), so Scaffold
+    // reserves only that much space — otherwise content stops short by an extra
+    // FabDiameter/2, leaving a band of plain background color between the last content
+    // and the bar's rounded top edge. The FAB instead pokes above the Box via a
+    // negative offset, which shifts it in the placement phase without inflating the
+    // Box's measured size.
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .navigationBarsPadding()
-            .height(BarHeight)
+            .height(barHeightWithInset)
     ) {
         Row(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
-                .height(BarHeight)
+                .height(barHeightWithInset)
                 .shadow(elevation = 8.dp, shape = barShape, clip = false)
                 .clip(barShape)
-                .background(MaterialTheme.colorScheme.surface, barShape),
+                .background(MaterialTheme.colorScheme.surface, barShape)
+                .padding(bottom = navBarInset),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.SpaceEvenly) {

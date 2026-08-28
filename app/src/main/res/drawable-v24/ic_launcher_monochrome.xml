@@ -10,7 +10,7 @@
         android:scaleX="0.95"
         android:scaleY="0.95">
         <path
-            android:fillColor="#0B0D12"
+            android:fillColor="@color/brand_mark"
             android:fillType="evenOdd"
             android:pathData="M30 30h40a10 10 0 0 1 10 10v2H70a8 8 0 0 0 0 16h10v2a10 10 0 0 1-10 10H30a10 10 0 0 1-10-10V40a10 10 0 0 1 10-10zM75.2 50A4.2 4.2 0 1 1 66.8 50A4.2 4.2 0 1 1 75.2 50Z" />
     </group>

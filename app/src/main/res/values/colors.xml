@@ -17,4 +17,7 @@
     <color name="expenseColor">#EF2727</color>
     <color name="background">#FFFFFF</color>
     <color name="chartCenterBackground">?attr/colorOnBackground</color>
+    <color name="brand_blue">#5287FF</color>
+    <color name="brand_mark">#3A6EE8</color>
+    <color name="splash_background">#F7F8FA</color>
     </resources>

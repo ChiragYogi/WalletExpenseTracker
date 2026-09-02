@@ -1,66 +1,47 @@
-# Wallet Expense Tracker
+# Wallet
 
-A Simple App to Mange Daily Expense and Income .
-
+A simple, clean app to track your daily expenses and income — built entirely with Jetpack Compose.
 
 [![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-
-![MINIMUM SDK VERSION](https://img.shields.io/badge/minimum%20sdk%20version-Oreo%20(API%2026)-brightgreen)
-
-![Target SDK VERSION](https://img.shields.io/badge/target%20sdk%20version-Android%2016%20(API%2036)-brightgreen)
+![Minimum SDK](https://img.shields.io/badge/minimum%20sdk-Oreo%20(API%2026)-brightgreen)
+![Target SDK](https://img.shields.io/badge/target%20sdk-Android%2016%20(API%2037)-brightgreen)
 
 <a href='https://play.google.com/store/apps/details?id=com.babacode.walletexpensetracker'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width=200/></a>
 
-
-
-
-
 ## Screenshots
 
-<image src=https://user-images.githubusercontent.com/36261180/153186208-3886612a-0bf8-4ea0-9bbe-3f3da2e55e2e.jpg with=500dp height=500dp> &nbsp; &nbsp;
-<image src=https://user-images.githubusercontent.com/36261180/153186253-ca890f78-7081-42d8-95cf-fedda00339a6.jpg with=500dp height=500dp> &nbsp; &nbsp;
-<image src=https://user-images.githubusercontent.com/36261180/153186315-d145417c-7b98-4af9-9631-2bb1baadb3bd.jpg with=500dp height=500dp> &nbsp; &nbsp;
-<image src=https://user-images.githubusercontent.com/36261180/153186287-f4b187f0-f263-4d25-8d35-586cd89e3063.jpg with=500dp height=500dp> &nbsp; &nbsp;
-<image src=https://user-images.githubusercontent.com/36261180/153186359-52107754-3823-4d04-af2a-d1e6cdb517d4.jpg with=500dp height=500dp> &nbsp; &nbsp;
-<image src=https://user-images.githubusercontent.com/36261180/153186381-bcdd9b91-5714-4c8b-8ac3-59c420e697ea.jpg with=500dp height=500dp> &nbsp; &nbsp;
-<image src=https://user-images.githubusercontent.com/36261180/153186406-ae64a4fe-41fb-4843-9ce8-81bcbe0ac172.jpg with=500dp height=500dp> &nbsp; &nbsp;
-
-
-
-
-
-
-
-
-
+<img src="docs/screenshots/home.jpg" width="200"> <img src="docs/screenshots/add-transaction.jpg" width="200"> <img src="docs/screenshots/detail.jpg" width="200"> <img src="docs/screenshots/calendar.jpg" width="200">
+<img src="docs/screenshots/budgets.jpg" width="200"> <img src="docs/screenshots/insights.jpg" width="200"> <img src="docs/screenshots/search.jpg" width="200"> <img src="docs/screenshots/settings.jpg" width="200">
 
 ## Features
 
+- Track income and expenses with a fast add/edit flow
+- Budgets — set spending limits per category and track progress
+- Recurring transactions — automate regular income/expenses
+- Insights — spending trends and breakdowns over time
+- Weekly, monthly, and yearly detail views with charts
+- Calendar view of transactions
+- In-app search across transactions
+- CSV export
+- Daily/recurring reminder notifications
+- Light and dark theme
 
-- Simple UI, Easy To Use, Clean and Intuitive Expense & Income Tracker
-- Light Theme /Dark Theme
-- Intuitive Pie Chart For Monthly Spending
-- Weekly, Monthly, Yearly Detail View
-- Calendar View
-- Reminder Notification
+## Tech Stack
 
+- **UI:** Jetpack Compose, Material 3
+- **Navigation:** Jetpack Navigation 3
+- **Architecture:** MVVM, Hilt for DI
+- **Persistence:** Room (with migrations), DataStore Preferences
+- **Background work:** WorkManager (recurring transactions, reminders)
+- **Build:** Gradle Kotlin DSL with a version catalog
+- **Testing:** JUnit, Compose UI tests, Room instrumented tests
 
 ## Getting Started
 
-Clone or fork this project
+1. Clone or fork this project
+2. Create a Firebase project and add your `google-services.json` to `app/` for Crashlytics/Analytics
+3. Open in Android Studio and run
 
-Create firebase project for Crashlytics
-
-    
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
-
-## Open source libraries used:
-
-- MPAndroidChart - https://github.com/PhilJay/MPAndroidChart
-
-
-
-

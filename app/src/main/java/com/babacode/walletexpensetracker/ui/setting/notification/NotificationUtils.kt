@@ -1,14 +1,19 @@
 package com.babacode.walletexpensetracker.ui.setting.notification
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.RingtoneManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.navigation.NavDeepLinkBuilder
 import com.babacode.walletexpensetracker.R
+import com.babacode.walletexpensetracker.ui.MainActivity
 
 
 class NotificationUtils(context: Context) {
@@ -31,10 +36,15 @@ class NotificationUtils(context: Context) {
 
 
         //Intent For Add Transaction Screen
-        val pendingIntent = NavDeepLinkBuilder(mContext)
-            .setGraph(R.navigation.nav_graph)
-            .setDestination(R.id.homeFragment)
-            .createPendingIntent()
+        val intent = Intent(mContext, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent = PendingIntent.getActivity(
+            mContext,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
 
         //Create Notification With Notification Builder
         notificationBuilder = NotificationCompat.Builder(mContext, MY_CHANNEL_ID)
@@ -52,33 +62,37 @@ class NotificationUtils(context: Context) {
     private fun createNotification() {
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            val name = MY_CHANNEL_NAME
-            val description = MY_CHANNEL_DESCRIPTION
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
+        val name = MY_CHANNEL_NAME
+        val description = MY_CHANNEL_DESCRIPTION
+        val importance = NotificationManager.IMPORTANCE_DEFAULT
 
 
-            val notificationChannel = NotificationChannel(
-                MY_CHANNEL_ID,
-                name,
-                importance
-            ).apply {
-                this.description = description
-            }
-
-
-            val notificationManagerForChannel =
-                mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-            notificationManagerForChannel.createNotificationChannel(notificationChannel)
-
-
+        val notificationChannel = NotificationChannel(
+            MY_CHANNEL_ID,
+            name,
+            importance
+        ).apply {
+            this.description = description
         }
+
+
+        val notificationManagerForChannel =
+            mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        notificationManagerForChannel.createNotificationChannel(notificationChannel)
+
+
     }
 
     fun launchNotification() {
         with(NotificationManagerCompat.from(mContext)) {
+            if (ActivityCompat.checkSelfPermission(
+                    mContext,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                return
+            }
             notificationManager.notify(MY_NOTIFICATION_ID, notificationBuilder.build())
         }
 

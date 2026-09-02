@@ -91,3 +91,5 @@ keys/
 # Claude Code
 # =========================================
 .claude/
+/refrence
+/plans

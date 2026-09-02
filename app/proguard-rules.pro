@@ -20,5 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class androidx.navigation.fragment.NavHostFragment
 -keepnames class com.babacode.walletexpensetracker.data.model.*

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wallet Expense Tracker</string>
+    <string name="app_name">Wallet</string>
     <string name="transaction_added">Transaction added</string>
     <string name="transaction_update">Transaction updated</string>
     <string name="income_vector_image">income vector image</string>
@@ -14,7 +14,7 @@
     <string name="date">Date</string>
     <string name="amount">Amount</string>
     <string name="type">Type</string>
-    <string name="what_s_this_for">What\'s this for?</string>
+    <string name="what_s_this_for">What was this for?</string>
     <string name="add_a_note_to_self">Add a note to self</string>
     <string name="transaction_type">Transaction Type</string>
     <string name="tag_for_transaction">Tag for Transaction</string>
@@ -69,20 +69,9 @@
     <string name="noTransaction">No Transaction To Show</string>
     <string name="currency_code_header">Select Currency</string>
     <string name="currency">Set Your Currency</string>
-    <string name="theme">Theme</string>
     <string name="currencyKey">currencyCodeKey</string>
     <string name="defultValueCurrency">RUP</string>
 
-    <string name="dark_theme_preference_value">2</string>
-    <string name="light_theme_preference_value">1</string>
-    <string name="system_theme_preference_value">-1</string>
-
-    <string name="dark_theme_description">Dark mode</string>
-    <string name="light_theme_description">Light mode</string>
-    <string name="system_theme_description">System default</string>
-
-
-    <string name="themeKey">theme</string>
     <string name="notifications">Notifications</string>
     <string name="notificationKey">notificationKey</string>
     <string name="notificationTitle">Notification For New Day</string>
